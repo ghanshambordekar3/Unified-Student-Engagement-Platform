@@ -1,0 +1,137 @@
+[
+  {
+    "id": "first_login",
+    "name": "Pioneer",
+    "description": "Joined EduPath",
+    "icon": "🌟",
+    "xp": 50,
+    "category": "Engagement",
+    "condition": "login_count >= 1"
+  },
+  {
+    "id": "streak_3",
+    "name": "On a Roll",
+    "description": "3-day login streak",
+    "icon": "⚡",
+    "xp": 100,
+    "category": "Engagement",
+    "condition": "streak >= 3"
+  },
+  {
+    "id": "streak_7",
+    "name": "Week Warrior",
+    "description": "7-day login streak",
+    "icon": "🔥",
+    "xp": 250,
+    "category": "Engagement",
+    "condition": "streak >= 7"
+  },
+  {
+    "id": "chatbot_first",
+    "name": "First Question",
+    "description": "Used Career Chatbot",
+    "icon": "🤖",
+    "xp": 75,
+    "category": "Exploration",
+    "condition": "chatbot_queries >= 1"
+  },
+  {
+    "id": "chatbot_10",
+    "name": "Curious Mind",
+    "description": "Asked 10 chatbot questions",
+    "icon": "🧠",
+    "xp": 200,
+    "category": "Exploration",
+    "condition": "chatbot_queries >= 10"
+  },
+  {
+    "id": "roi_calculated",
+    "name": "Smart Investor",
+    "description": "Calculated your ROI",
+    "icon": "📈",
+    "xp": 100,
+    "category": "Finance",
+    "condition": "roi_calculated >= 1"
+  },
+  {
+    "id": "loan_checked",
+    "name": "Loan Ready",
+    "description": "Checked loan eligibility",
+    "icon": "🏦",
+    "xp": 150,
+    "category": "Finance",
+    "condition": "loan_checked >= 1"
+  },
+  {
+    "id": "sop_generated",
+    "name": "Wordsmith",
+    "description": "Generated your first SOP",
+    "icon": "✍️",
+    "xp": 200,
+    "category": "Application",
+    "condition": "sop_generated >= 1"
+  },
+  {
+    "id": "predictor_used",
+    "name": "Know Your Odds",
+    "description": "Used Admission Predictor",
+    "icon": "🎯",
+    "xp": 100,
+    "category": "Application",
+    "condition": "predictor_used >= 1"
+  },
+  {
+    "id": "timeline_viewed",
+    "name": "Planner",
+    "description": "Viewed Application Timeline",
+    "icon": "📅",
+    "xp": 75,
+    "category": "Application",
+    "condition": "timeline_viewed >= 1"
+  },
+  {
+    "id": "checklist_25",
+    "name": "Getting Started",
+    "description": "25% checklist complete",
+    "icon": "🌱",
+    "xp": 100,
+    "category": "Progress",
+    "condition": "checklist_pct >= 25"
+  },
+  {
+    "id": "checklist_50",
+    "name": "Halfway Hero",
+    "description": "50% checklist complete",
+    "icon": "⭐",
+    "xp": 200,
+    "category": "Progress",
+    "condition": "checklist_pct >= 50"
+  },
+  {
+    "id": "checklist_100",
+    "name": "Application Ready",
+    "description": "100% checklist complete",
+    "icon": "🏆",
+    "xp": 500,
+    "category": "Progress",
+    "condition": "checklist_pct >= 100"
+  },
+  {
+    "id": "referral_sent",
+    "name": "Ambassador",
+    "description": "Shared a referral link",
+    "icon": "🤝",
+    "xp": 150,
+    "category": "Social",
+    "condition": "referrals >= 1"
+  },
+  {
+    "id": "loan_applied",
+    "name": "Loan Champion",
+    "description": "Completed loan application flow",
+    "icon": "💰",
+    "xp": 300,
+    "category": "Finance",
+    "condition": "loan_applied >= 1"
+  }
+]

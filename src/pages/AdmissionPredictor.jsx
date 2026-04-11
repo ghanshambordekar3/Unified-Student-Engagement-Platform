@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TrendingUp, Info } from 'lucide-react';
 import { calculateAdmissionScore } from '../utils/scoring';
+import { trackEvent } from '../utils/rewards';
 
 export default function AdmissionPredictor() {
   const [form, setForm] = useState({ gpa: '', ielts: '', experience: '' });
@@ -13,6 +14,7 @@ export default function AdmissionPredictor() {
     setResult(res);
     setAnimated(false);
     setTimeout(() => setAnimated(true), 50);
+    trackEvent('predictor_used');
   };
 
   const getBarColor = (score) => {

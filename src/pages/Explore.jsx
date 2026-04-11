@@ -5,6 +5,7 @@ import ChatMessage from '../components/ChatMessage';
 import UniversityCard from '../components/UniversityCard';
 import storage from '../utils/storage';
 import universitiesData from '../data/universities.json';
+import { trackEvent } from '../utils/rewards';
 
 const CHAT_KEY = 'edupath_chat_history';
 
@@ -77,6 +78,7 @@ export default function Explore() {
     setMessages((m) => [...m, userMsg]);
     setInputValue('');
     setIsTyping(true);
+    trackEvent('chatbot_queries');
 
     // Simulate typing delay
     setTimeout(() => {

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "ms_cs",
+    "title": "MS Computer Science SOP",
+    "course": "Computer Science",
+    "intro": "From building my first web scraper at the age of {age_start} to architecting scalable microservices, my journey in computer science has been driven by an insatiable curiosity about how technology can solve real-world problems. With a strong academic foundation — a {gpa} GPA from {undergrad_uni} — and {experience} years of industry experience at {company}, I am eager to deepen my expertise through the {course} program at {university}.",
+    "academic": "During my undergraduate studies in {field}, I developed a rigorous foundation in data structures, algorithms, and software engineering. My thesis on '{thesis_topic}' earned recognition from the faculty and honed my ability to approach complex technical challenges with precision and creativity. I have consistently ranked in the top {rank_percentile}% of my class, reflecting my commitment to academic excellence.",
+    "professional": "At {company}, I contributed to {professional_achievement}. This experience taught me the importance of bridging theoretical knowledge with practical implementation — a skill I look forward to refining through research at {university}. My project on {project_name} resulted in {project_outcome}, directly impacting {impact_area}.",
+    "why_program": "The {course} program at {university} stands out for its emphasis on {program_strength}. I am particularly excited about the research led by Professor {professor_name} in the area of {research_area}, which aligns closely with my interest in {your_interest}. The curriculum's balance between theory and applied work will enable me to develop both the depth and breadth needed for {career_goal}.",
+    "career": "Upon graduation, I aim to {career_goal}. My long-term vision is to {long_term_vision}, contributing to {contribution_area} in {target_country}.",
+    "closing": "I am confident that the {course} program at {university} will provide the intellectual environment and resources to transform my aspirations into impact. I look forward to contributing to the vibrant academic community and am excited about the opportunity to learn from world-class faculty and collaborate with talented peers from across the globe."
+  },
+  {
+    "id": "mba",
+    "title": "MBA SOP",
+    "course": "MBA",
+    "intro": "My {experience} years of experience in {industry}, combined with a consistent track record of {achievement}, have solidified my ambition to transition into a global leadership role. I believe the MBA program at {university} is the ideal catalyst for this transformation.",
+    "academic": "Graduating with a {gpa} GPA in {field} from {undergrad_uni}, I developed a strong analytical foundation that I have applied throughout my career. My academic achievements included {academic_achievement}, which laid the groundwork for my professional journey.",
+    "professional": "As a {job_title} at {company}, I led {team_size} professionals through {professional_achievement}. This experience revealed the critical importance of strategic thinking, cross-functional collaboration, and data-driven decision-making — competencies I seek to formalize through an MBA education. A highlight of my career was {project_name}, which delivered {project_outcome}.",
+    "why_program": "The MBA program at {university} is uniquely positioned to help me achieve my goals through its renowned {program_strength}. The school's emphasis on global business, combined with its network of {alumni_count}+ alumni in {target_country}, aligns perfectly with my plan to {career_goal}. I am particularly drawn to courses in {specific_course} and the opportunity to engage with the case study methodology.",
+    "career": "In the short term, I aspire to {short_term_goal} at a leading {industry} firm. Over the next decade, I envision {long_term_vision}, driving innovation and sustainable business practices in {industry}.",
+    "closing": "The diversity of thought, global perspective, and entrepreneurial spirit at {university} resonate deeply with my own values. I am eager to contribute my international experience to classroom discussions, learn from peers with varied backgrounds, and leverage the MBA to unlock my full potential as a business leader."
+  },
+  {
+    "id": "ds",
+    "title": "MS Data Science SOP",
+    "course": "Data Science",
+    "intro": "In an era where data is the new currency, my passion lies in transforming raw information into actionable insights that drive meaningful decisions. With a {gpa} GPA in {field}, {experience} years of experience in analytics at {company}, and hands-on expertise in Python, SQL, and machine learning, I am ready to elevate my capabilities through the MS Data Science program at {university}.",
+    "academic": "My undergraduate journey in {field} from {undergrad_uni} introduced me to the mathematical rigor underpinning modern AI: linear algebra, probability theory, and statistical inference. My capstone project — '{thesis_topic}' — involved building a predictive model that achieved {project_outcome}, sparking my passion for applying machine learning to {impact_area}.",
+    "professional": "At {company}, I designed and deployed {professional_achievement}, reducing {pain_point} by {percentage}%. Working with terabytes of data, I developed proficiency in cloud platforms (AWS/GCP), Spark, and deep learning frameworks. My initiative to {project_name} generated direct business value estimated at {project_outcome}.",
+    "why_program": "The MS Data Science program at {university} stands out for its {program_strength} and strong industry partnerships. I am excited about Professor {professor_name}'s work on {research_area}, which aligns with my interest in applying {your_interest} to solve problems in {impact_area}. The program's curriculum on advanced ML, NLP, and data engineering will give me the tools to lead high-impact data science teams.",
+    "career": "My goal is to become a {career_goal} at a tech company or research institution, building systems that {long_term_vision}. I am particularly excited about opportunities in {target_country}'s growing AI ecosystem.",
+    "closing": "The combination of {university}'s cutting-edge research environment, industry-connected curriculum, and collaborative culture makes it my top choice. I am committed to making the most of this opportunity — both as a learner and as a contributor to the data science community."
+  },
+  {
+    "id": "engineering",
+    "title": "MS Engineering SOP",
+    "course": "Engineering",
+    "intro": "Engineering, at its core, is problem-solving at scale. My {experience} years working on {professional_achievement} at {company}, combined with a {gpa} GPA in {field}, have equipped me with both the technical rigour and systems-level thinking required to tackle complex engineering challenges. I am excited to pursue the MS {course} program at {university} to take my expertise to the next level.",
+    "academic": "At {undergrad_uni}, my coursework in thermodynamics, control systems, and computational methods formed the backbone of my engineering intuition. My distinction project on '{thesis_topic}' involved designing {project_name}, which was directly implemented in {impact_area}, reflecting my drive to create solutions that transcend the classroom.",
+    "professional": "My role at {company} as a {job_title} exposed me to real-world engineering challenges including {professional_achievement}. I am particularly proud of {project_name}, which {project_outcome} and demonstrated how systematic engineering thinking drives measurable results.",
+    "why_program": "The MS {course} program at {university} is distinguished by its {program_strength}. I am deeply interested in the work of Professor {professor_name} on {research_area} and see a clear synergy with my background in {your_interest}. The program's emphasis on both innovation and practical application mirrors my own engineering philosophy.",
+    "career": "My career aspiration is to {career_goal}, with a focus on developing sustainable and scalable engineering solutions. In {target_country}, where engineering talent is in high demand, I hope to {long_term_vision} and contribute meaningfully to the field.",
+    "closing": "I am confident that {university}'s rigorous academic environment, state-of-the-art research facilities, and diverse community will provide the foundation I need to become a world-class engineer. I am grateful for the opportunity to present my application and look forward to contributing to the {university} community."
+  }
+]

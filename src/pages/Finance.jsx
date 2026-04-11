@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Calculator, Landmark, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
 import { calculateROI, calculateLoanEligibility } from '../utils/scoring';
 import storage from '../utils/storage';
+import { trackEvent } from '../utils/rewards';
 
 const courses = ['Computer Science', 'MBA', 'Data Science', 'Engineering'];
 const countries = ['Canada', 'UK', 'Australia', 'Germany', 'USA'];
@@ -45,6 +46,7 @@ export default function Finance() {
     if (!roiForm.course || !roiForm.country || !roiForm.cost) return;
     const result = calculateROI(parseFloat(roiForm.cost), roiForm.course, roiForm.country);
     setRoiResult(result);
+    trackEvent('roi_calculated');
   };
 
   const handleLoan = () => {
@@ -55,6 +57,7 @@ export default function Finance() {
       loanForm.collateral
     );
     setLoanResult(result);
+    trackEvent('loan_checked');
   };
 
   const formatCurrency = (n) =>
