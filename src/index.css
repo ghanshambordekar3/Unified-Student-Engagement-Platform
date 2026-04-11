@@ -12,9 +12,24 @@
   }
 
   body {
-    @apply bg-bg text-white font-sans;
+    @apply text-gray-900 font-sans selection:bg-teal-500/30;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: #ffffff;
+    min-height: 100vh;
+  }
+
+  /* Premium Light Background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+    pointer-events: none;
   }
 
   ::-webkit-scrollbar {
@@ -23,169 +38,90 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-surface;
+    background: #f1f5f9;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-surface-border rounded-full;
+    background-color: #cbd5e1;
+    border-radius: 9999px;
+    transition: all 0.2s;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted;
+    background-color: #94a3b8;
   }
 }
 
 @layer components {
-  .card {
-    @apply bg-surface-card rounded-2xl border border-surface-border p-6 transition-all duration-200;
-  }
-
-  .card-hover {
-    @apply card hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 cursor-pointer;
-  }
-
-  .btn-primary {
-    @apply bg-primary hover:bg-primary-light text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary/30 active:scale-95;
-  }
-
-  .btn-secondary {
-    @apply bg-surface-card border border-surface-border hover:border-primary/50 text-white font-medium px-6 py-3 rounded-xl transition-all duration-200;
-  }
-
-  .btn-teal {
-    @apply bg-teal hover:bg-teal-light text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-teal/30 active:scale-95;
-  }
-
-  .input-field {
-    @apply w-full bg-surface border border-surface-border text-white placeholder-muted rounded-xl px-4 py-3 outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/20 transition-all duration-200;
-  }
-
-  .label {
-    @apply block text-sm font-medium text-muted mb-2;
-  }
-
-  .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-400 to-teal-400 bg-clip-text text-transparent;
-  }
-
   .glass {
-    background: rgba(26, 31, 46, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(46, 53, 72, 0.5);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
   }
 
-  .progress-ring {
-    transform: rotate(-90deg);
-    transform-origin: center;
+  .premium-card {
+    @apply glass rounded-[20px] transition-all duration-300;
+  }
+
+  .premium-card-hover {
+    @apply premium-card hover:scale-[1.02] hover:-translate-y-1 hover:border-teal-500/50 hover:shadow-[0_0_20px_rgba(20,184,166,0.3)];
+  }
+
+  .btn-premium {
+    @apply relative overflow-hidden font-semibold px-6 py-3 rounded-xl transition-all duration-300 active:scale-95;
+    background: linear-gradient(135deg, #3b82f6, #14b8a6);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+  }
+
+  .btn-premium:hover {
+    @apply scale-[1.05];
+    box-shadow: 0 0 25px rgba(20, 184, 166, 0.6);
+  }
+
+  .input-premium {
+    @apply w-full glass text-gray-900 placeholder-gray-400 rounded-xl px-4 py-3 outline-none focus:border-teal-500/70 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent;
   }
 
   .nav-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-muted hover:text-white hover:bg-surface-card transition-all duration-200 font-medium;
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 font-medium;
   }
 
   .nav-link-active {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-white bg-primary/20 border border-primary/30 font-medium;
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-900 bg-teal-500/10 border border-teal-500/30 font-medium shadow-[0_0_15px_rgba(20,184,166,0.1)];
   }
 }
 
 @layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-blue-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent;
+  .glow-teal {
+    box-shadow: 0 0 20px rgba(20, 184, 166, 0.4);
   }
 
   .glow-blue {
-    box-shadow: 0 0 20px rgba(29, 78, 143, 0.4);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
   }
 
-  .glow-teal {
-    box-shadow: 0 0 20px rgba(15, 110, 86, 0.4);
-  }
-
-  .animate-delay-100 {
-    animation-delay: 100ms;
-  }
-
-  .animate-delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .animate-delay-300 {
-    animation-delay: 300ms;
+  .bg-navy {
+    background-color: #f1f5f9;
   }
 }
 
-/* Custom animations */
-@keyframes gradientShift {
+@keyframes gradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-@keyframes floatUp {
+@keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(200%); }
-}
-
-@keyframes progressFill {
-  from { stroke-dashoffset: 440; }
-  to { stroke-dashoffset: var(--target-offset); }
+  50% { transform: translateY(-10px); }
 }
 
 .animate-float {
-  animation: floatUp 4s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradientShift 4s ease infinite;
-}
-
-.shimmer-loading {
-  position: relative;
-  overflow: hidden;
-}
-
-.shimmer-loading::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-  animation: shimmer 1.5s infinite;
-}
-
-/* Progress bar animation */
-.progress-bar-fill {
-  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Chat message animations */
-.chat-message-bot {
-  animation: slideIn 0.3s ease-out;
-}
-
-.chat-message-user {
-  animation: slideUp 0.2s ease-out;
-}
-
-/* Checklist item hover */
-.checklist-item:hover {
-  @apply bg-surface/50;
-}
-
-/* Tooltip */
-.tooltip {
-  @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-surface-card border border-surface-border text-xs rounded-lg whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-200;
-}
-
-.has-tooltip:hover .tooltip {
-  @apply opacity-100;
+  animation: float 4s ease-in-out infinite;
 }

@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Landmark, CheckCircle, ChevronRight, Star, AlertCircle, FileCheck, Calculator, Send } from 'lucide-react';
+import { Landmark, CheckCircle, ChevronRight, Star, AlertCircle, FileCheck, Calculator, Send, Users, Home, TrendingUp, Clock, ShieldCheck } from 'lucide-react';
 import loanOffersData from '../data/loanOffers.json';
 import storage from '../utils/storage';
 import { calculateLoanEligibility } from '../utils/scoring';
 import { trackEvent } from '../utils/rewards';
 import ProgressBar from '../components/ProgressBar';
+import { GlassCard } from '../components/ui/GlassCard';
+import { Button } from '../components/ui/Button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../utils/cn';
 
 const LOAN_APP_KEY = 'edupath_loan_application';
 
 const steps = [
-  { id: 1, title: 'Eligibility Check', icon: '🔍' },
-  { id: 2, title: 'Loan Offers', icon: '🏦' },
-  { id: 3, title: 'EMI Planner', icon: '📊' },
+  { id: 1, title: 'Eligibility', icon: '🔍' },
+  { id: 2, title: 'Offers', icon: '🏦' },
+  { id: 3, title: 'Planner', icon: '📊' },
   { id: 4, title: 'Apply', icon: '📝' },
-  { id: 5, title: 'Documents', icon: '📋' },
+  { id: 5, title: 'Docs', icon: '📋' },
 ];
 
 function formatINR(n) {
@@ -35,7 +39,7 @@ export default function Loans() {
     income: saved?.income || '',
     coApplicant: saved?.coApplicant || false,
     collateral: saved?.collateral || false,
-    loanAmount: saved?.loanAmount || '',
+    loanAmount: saved?.loanAmount || '25',
   });
   const [eligResult, setEligResult] = useState(null);
 
@@ -69,7 +73,6 @@ export default function Loans() {
     setStep(2);
   };
 
-  // Filter offers based on eligibility tier
   const filteredOffers = loanOffersData.filter((o) => {
     if (!eligResult) return true;
     return parseFloat(eligForm.income) >= o.incomeMin;
@@ -92,432 +95,532 @@ export default function Loans() {
   };
 
   const loanAmount = eligForm.loanAmount
-    ? parseFloat(eligForm.loanAmount) * 100000  // in lakhs to rupees
-    : eligResult?.loanMax || 2000000;
+    ? parseFloat(eligForm.loanAmount) * 100000 
+    : 2500000;
   const emi = selectedOffer ? calcEMI(loanAmount, parseFloat(selectedOffer.interest), tenure * 12) : 0;
   const totalPayable = emi * tenure * 12;
   const totalInterest = totalPayable - loanAmount;
 
-  // Auto-fill document list based on profile
   const docChecklist = [
-    { label: 'Passport (self)', done: true, prefilled: true },
-    { label: `Admission offer letter from ${profile.targetCourse ? 'university' : '[University Name]'}`, done: true, prefilled: true },
-    { label: 'Income proof (Form 16 / ITR last 2 years)', done: false, prefilled: false },
-    { label: 'Bank statements (last 6 months)', done: false, prefilled: false },
-    { label: 'Academic transcripts', done: false, prefilled: false },
-    { label: 'Identity proof (Aadhaar / PAN)', done: false, prefilled: false },
-    { label: eligForm.coApplicant ? 'Co-applicant income proof ✅ added' : 'Co-applicant income proof (optional)', done: eligForm.coApplicant, prefilled: eligForm.coApplicant },
-    { label: eligForm.collateral ? 'Collateral documents ✅ added' : 'Collateral documents (if applicable)', done: eligForm.collateral, prefilled: eligForm.collateral },
+    { label: 'Passport (Self)', done: true, prefilled: true },
+    { label: `Admission Offer: ${profile.targetCourse || 'Target Program'}`, done: true, prefilled: true },
+    { label: 'Income Proof (ITR/Form 16)', done: false, prefilled: false },
+    { label: 'Bank Statement (6 Months)', done: false, prefilled: false },
+    { label: 'Academic Meta-Data', done: false, prefilled: false },
+    { label: 'Identity Node (Aadhaar/PAN)', done: false, prefilled: false },
+    { label: eligForm.coApplicant ? 'Co-Applicant Verification ✅' : 'Co-Applicant Node (Optional)', done: eligForm.coApplicant, prefilled: eligForm.coApplicant },
+    { label: eligForm.collateral ? 'Asset Documentation ✅' : 'Asset Documentation (Optional)', done: eligForm.collateral, prefilled: eligForm.collateral },
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-10 pb-20">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-black text-white flex items-center gap-3">
-          <Landmark className="text-teal-400" size={26} />
-          Loan Conversion Hub
-        </h1>
-        <p className="text-muted text-sm mt-1">End-to-end education loan journey — eligibility to application</p>
-      </div>
-
-      {/* Step Progress */}
-      <div className="card p-4">
-        <div className="flex items-center justify-between relative">
-          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-surface-border mx-8" />
-          {steps.map((s) => (
-            <div key={s.id} className="relative flex flex-col items-center gap-1 cursor-pointer" onClick={() => s.id < step && setStep(s.id)}>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border-2 transition-all duration-300 z-10 ${
-                step === s.id ? 'bg-primary border-primary shadow-lg shadow-primary/40' :
-                step > s.id ? 'bg-teal border-teal' : 'bg-surface border-surface-border'
-              }`}>
-                {step > s.id ? '✓' : s.icon}
-              </div>
-              <span className={`text-xs font-medium hidden sm:block ${step >= s.id ? 'text-white' : 'text-muted'}`}>
-                {s.title}
-              </span>
-            </div>
-          ))}
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-2">
+          <motion.div 
+             initial={{ opacity: 0, x: -20 }}
+             animate={{ opacity: 1, x: 0 }}
+             className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-full w-fit"
+          >
+            <ShieldCheck size={14} className="text-teal-400" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-teal-700">Financial Logistics Alpha</span>
+          </motion.div>
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">Loan <span className="text-gradient">Conversion</span> Hub</h1>
+          <p className="text-gray-500 font-medium text-sm">End-to-end capital deployment pipeline for global academic missions.</p>
         </div>
-      </div>
+      </section>
 
-      {/* Step 1: Eligibility */}
-      {step === 1 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="card space-y-5">
-            <h2 className="font-bold text-white flex items-center gap-2">🔍 Eligibility Check</h2>
-            <p className="text-sm text-muted">Tell us about your financial background to find the best loan options.</p>
+      {/* Navigation Progress */}
+      <GlassCard className="p-4" hoverable={false}>
+        <div className="flex items-center justify-between px-2 md:px-8 relative">
+           <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-px bg-gray-100" />
+           {steps.map((s) => (
+             <motion.div 
+               key={s.id}
+               onClick={() => s.id < step && setStep(s.id)}
+               className="relative z-10 flex flex-col items-center gap-2 cursor-pointer group"
+             >
+                <div className={cn(
+                  "w-12 h-12 rounded-2xl flex items-center justify-center text-xl border transition-all duration-500",
+                  step === s.id ? "bg-teal-500 border-teal-400 text-gray-900 shadow-[0_0_20px_rgba(20,184,166,0.3)]" :
+                  step > s.id ? "bg-teal-500/20 border-teal-500/40 text-teal-400" :
+                  "bg-gray-100 border-gray-200 text-gray-900/20 group-hover:border-gray-300"
+                )}>
+                  {step > s.id ? "✓" : s.icon}
+                </div>
+                <span className={cn(
+                  "text-[9px] font-black uppercase tracking-widest hidden md:block",
+                  step >= s.id ? "text-teal-700" : "text-gray-900/20"
+                )}>{s.title}</span>
+             </motion.div>
+           ))}
+        </div>
+      </GlassCard>
 
-            <div>
-              <label className="label">Family Annual Income (₹ Lakhs) *</label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted font-bold text-sm">₹</span>
-                <input id="loan-income" type="number" className="input-field pl-8" placeholder="e.g. 7.5" value={eligForm.income} onChange={(e) => setEligForm({ ...eligForm, income: e.target.value })} />
-              </div>
-            </div>
-
-            <div>
-              <label className="label">Loan Amount Required (₹ Lakhs)</label>
-              <input id="loan-amount" type="number" className="input-field" placeholder="e.g. 25 (for ₹25L)" value={eligForm.loanAmount} onChange={(e) => setEligForm({ ...eligForm, loanAmount: e.target.value })} />
-            </div>
-
-            <div className="space-y-3">
-              {[
-                { key: 'coApplicant', label: 'Co-Applicant Available', sub: 'Increases loan ceiling & lowers rate', icon: '👥' },
-                { key: 'collateral', label: 'Collateral Available', sub: 'Property or FD as security', icon: '🏠' },
-              ].map(({ key, label, sub, icon }) => (
-                <div key={key}
-                  className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${
-                    eligForm[key] ? 'bg-primary/15 border-primary/40' : 'bg-surface border-surface-border hover:border-primary/20'
-                  }`}
-                  onClick={() => setEligForm({ ...eligForm, [key]: !eligForm[key] })}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{icon}</span>
+      <AnimatePresence mode="wait">
+        {/* Step 1: Eligibility */}
+        {step === 1 && (
+          <motion.div 
+            key="step1" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: -20 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+          >
+            <div className="lg:col-span-7">
+               <GlassCard className="p-10 space-y-8" hoverable={false}>
+                 <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-primary">
+                       <Landmark size={24} />
+                    </div>
                     <div>
-                      <p className="text-sm font-medium text-white">{label}</p>
-                      <p className="text-xs text-muted">{sub}</p>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Eligibility Diagnostics</h3>
+                      <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Financial Telemetry Submission</p>
                     </div>
-                  </div>
-                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${eligForm[key] ? 'bg-primary border-primary' : 'border-surface-border'}`}>
-                    {eligForm[key] && <span className="text-white text-xs font-bold">✓</span>}
-                  </div>
-                </div>
-              ))}
-            </div>
+                 </div>
 
-            <button id="loan-check-eligibility" onClick={handleEligibility} disabled={!eligForm.income} className="btn-teal w-full disabled:opacity-50">
-              Check My Eligibility →
-            </button>
-          </div>
-
-          <div className="card flex flex-col justify-center items-center text-center py-10 bg-gradient-to-br from-teal/10 to-primary/10 border-teal/20">
-            <div className="text-5xl mb-4">🏦</div>
-            <h3 className="font-bold text-white mb-2">How It Works</h3>
-            <div className="space-y-3 text-left w-full max-w-xs mt-4">
-              {steps.map((s) => (
-                <div key={s.id} className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-surface border border-surface-border flex items-center justify-center text-sm flex-shrink-0">{s.icon}</div>
-                  <span className="text-sm text-muted">{s.title}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Step 2: Loan Offers */}
-      {step === 2 && eligResult && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-bold text-white">🏦 Personalized Loan Offers</h2>
-            <span className={`badge border font-semibold ${
-              eligResult.tier === 'High' ? 'bg-green-500/20 border-green-500/40 text-green-400' :
-              eligResult.tier === 'Medium' ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-400' :
-              'bg-red-500/20 border-red-500/40 text-red-400'
-            }`}>{eligResult.label}</span>
-          </div>
-
-          <div className="card bg-gradient-to-r from-primary/10 to-teal/10 border-primary/20 flex items-center gap-4 flex-wrap">
-            <div className="text-3xl">💡</div>
-            <div>
-              <p className="font-semibold text-white">Your eligible loan range: {formatINR(eligResult.loanMin)} – {formatINR(eligResult.loanMax)}</p>
-              <p className="text-sm text-muted">Based on family income of ₹{eligForm.income}L{eligForm.coApplicant ? ' + co-applicant' : ''}{eligForm.collateral ? ' + collateral' : ''}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filteredOffers.map((offer) => (
-              <div key={offer.id} className={`card-hover group relative overflow-hidden ${selectedOffer?.id === offer.id ? 'border-primary/60' : ''}`}>
-                {offer.tag && (
-                  <div className="absolute top-3 right-3">
-                    <span className="badge bg-primary/20 border border-primary/30 text-blue-300 text-xs">{offer.tag}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-3xl">{offer.logo}</span>
-                  <div>
-                    <h3 className="font-bold text-white text-sm">{offer.bank}</h3>
-                    <p className="text-xs text-muted">{offer.name}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                  <div className="bg-surface rounded-lg p-2 text-center">
-                    <p className="text-xs text-muted">Max Loan</p>
-                    <p className="text-sm font-bold text-white">{formatINR(offer.maxAmount)}</p>
-                  </div>
-                  <div className="bg-surface rounded-lg p-2 text-center">
-                    <p className="text-xs text-muted">Interest</p>
-                    <p className="text-sm font-bold text-white">{offer.interest}%</p>
-                  </div>
-                </div>
-
-                <div className="space-y-1 mb-4">
-                  {offer.features.slice(0, 3).map((f) => (
-                    <div key={f} className="flex items-center gap-1.5 text-xs text-muted">
-                      <CheckCircle size={12} className="text-teal-400 flex-shrink-0" /> {f}
+                 <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Family Income (₹ Lakhs)</label>
+                          <div className="relative">
+                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">₹</span>
+                             <input type="number" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-8 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={eligForm.income} onChange={(e) => setEligForm({ ...eligForm, income: e.target.value })} placeholder="7.5" />
+                          </div>
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Required Amount (₹ Lakhs)</label>
+                          <input type="number" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={eligForm.loanAmount} onChange={(e) => setEligForm({ ...eligForm, loanAmount: e.target.value })} placeholder="25" />
+                       </div>
                     </div>
-                  ))}
-                </div>
 
-                <button
-                  id={`loan-select-${offer.id}`}
-                  onClick={() => handleSelectOffer(offer)}
-                  className="btn-primary w-full text-sm flex items-center justify-center gap-2"
-                >
-                  Select This Offer <ChevronRight size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+                    <div className="space-y-4">
+                       {[
+                         { key: 'coApplicant', label: 'Co-Applicant Node', sub: 'Reduces interest overhead by 0.5%', icon: <Users size={20} /> },
+                         { key: 'collateral', label: 'Asset Collateral', sub: 'Unlocks high-tier credit limits', icon: <Home size={20} /> },
+                       ].map(({ key, label, sub, icon }) => (
+                         <div 
+                           key={key}
+                           onClick={() => setEligForm({ ...eligForm, [key]: !eligForm[key] })}
+                           className={cn(
+                             "flex items-center justify-between p-5 rounded-2xl border cursor-pointer transition-all duration-500",
+                             eligForm[key] ? "bg-teal-100 border-teal-500/40 shadow-[0_0_20px_rgba(20,184,166,0.05)]" : "bg-gray-100 border-gray-100 hover:border-gray-200"
+                           )}
+                         >
+                            <div className="flex items-center gap-4">
+                               <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-colors", eligForm[key] ? "text-teal-400 bg-teal-100" : "text-gray-500 bg-gray-100")}>
+                                 {icon}
+                               </div>
+                               <div>
+                                 <p className="text-[11px] font-black uppercase tracking-widest text-gray-900">{label}</p>
+                                 <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mt-0.5">{sub}</p>
+                               </div>
+                            </div>
+                            <div className={cn("w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-500", eligForm[key] ? "bg-teal-500 border-teal-400" : "border-gray-200")}>
+                               {eligForm[key] && <CheckCircle size={14} className="text-gray-900" />}
+                            </div>
+                         </div>
+                       ))}
+                    </div>
+                 </div>
 
-          <button onClick={() => setStep(1)} className="text-sm text-muted hover:text-white transition-colors">← Back to eligibility check</button>
-        </div>
-      )}
-
-      {/* Step 3: EMI Planner */}
-      {step === 3 && selectedOffer && (
-        <div className="space-y-6">
-          <h2 className="font-bold text-white">📊 EMI Planner</h2>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="card space-y-5">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{selectedOffer.logo}</span>
-                <div>
-                  <h3 className="font-bold text-white">{selectedOffer.name}</h3>
-                  <p className="text-sm text-muted">{selectedOffer.interest}% p.a. interest</p>
-                </div>
-              </div>
-
-              <div>
-                <label className="label">Loan Amount (₹)</label>
-                <input type="number" className="input-field" placeholder="e.g. 2500000" value={loanAmount} onChange={(e) => {}} readOnly />
-                <p className="text-xs text-muted mt-1">Adjust in Step 1 eligibility form</p>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-2">
-                  <label className="label mb-0">Repayment Tenure</label>
-                  <span className="text-sm font-bold text-white">{tenure} years</span>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {selectedOffer.tenure.map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setTenure(t)}
-                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                        tenure === t ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-surface border border-surface-border text-muted hover:text-white'
-                      }`}
-                    >
-                      {t} yrs
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs text-muted mb-3">Moratorium Period</p>
-                <div className="bg-surface rounded-xl p-3 border border-surface-border">
-                  <p className="text-sm text-white">{selectedOffer.moratorium}</p>
-                  <p className="text-xs text-muted mt-1">No EMI during this period</p>
-                </div>
-              </div>
-
-              <button onClick={() => setStep(4)} className="btn-teal w-full flex items-center justify-center gap-2">
-                Proceed to Application <ChevronRight size={16} />
-              </button>
+                 <Button onClick={handleEligibility} disabled={!eligForm.income} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow>
+                    Initialize Selection Matrix
+                 </Button>
+               </GlassCard>
             </div>
 
-            <div className="card space-y-4">
-              <h3 className="font-semibold text-white">EMI Breakdown</h3>
-
-              <div className="bg-gradient-to-br from-primary/20 to-teal/10 rounded-2xl p-6 text-center border border-primary/20">
-                <p className="text-sm text-muted mb-1">Monthly EMI</p>
-                <p className="text-4xl font-black text-white">{formatINR(emi)}</p>
-                <p className="text-xs text-muted mt-1">for {tenure} years</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-surface rounded-xl p-4 text-center">
-                  <p className="text-xs text-muted mb-1">Principal</p>
-                  <p className="text-lg font-bold text-white">{formatINR(loanAmount)}</p>
-                </div>
-                <div className="bg-surface rounded-xl p-4 text-center">
-                  <p className="text-xs text-muted mb-1">Total Interest</p>
-                  <p className="text-lg font-bold text-red-400">{formatINR(totalInterest)}</p>
-                </div>
-              </div>
-
-              <div className="bg-surface rounded-xl p-4">
-                <div className="flex justify-between text-sm mb-3">
-                  <span className="text-muted">Principal</span>
-                  <span className="text-white font-medium">{Math.round((loanAmount / totalPayable) * 100)}%</span>
-                </div>
-                <ProgressBar
-                  percentage={Math.round((loanAmount / totalPayable) * 100)}
-                  color="from-primary to-teal"
-                  showLabel={false}
-                  height="h-3"
-                />
-                <div className="flex justify-between text-xs text-muted mt-2">
-                  <span>Principal: {formatINR(loanAmount)}</span>
-                  <span>Total: {formatINR(totalPayable)}</span>
-                </div>
-              </div>
-
-              {/* Tax benefit */}
-              <div className="flex items-start gap-2 p-3 bg-teal/10 border border-teal/20 rounded-xl">
-                <Star size={14} className="text-yellow-400 flex-shrink-0 mt-0.5" />
-                <p className="text-xs text-muted">
-                  <strong className="text-white">Tax benefit u/s 80E:</strong> Full interest paid on education loan is deductible from taxable income for up to 8 years.
-                </p>
-              </div>
+            <div className="lg:col-span-5 h-full">
+               <GlassCard className="h-full min-h-[400px] p-10 flex flex-col justify-center items-center text-center border-teal-500/10" hoverable={false}>
+                  <div className="w-20 h-20 rounded-3xl bg-teal-100 border border-teal-500/20 flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(20,184,166,0.1)]">
+                    🏛️
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Deployment Workflow</h3>
+                  <div className="w-full space-y-4 mt-8">
+                     {steps.map((s, i) => (
+                       <div key={s.id} className="flex items-center gap-4 group">
+                          <div className="w-8 h-8 rounded-xl bg-gray-100 border border-gray-100 flex items-center justify-center text-xs group-hover:border-teal-500/30 transition-colors">
+                            {s.icon}
+                          </div>
+                          <div className={cn("h-px flex-1 bg-gray-100", i === steps.length - 1 && "hidden")} />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-teal-400 transition-colors">{s.title}</span>
+                       </div>
+                     ))}
+                  </div>
+               </GlassCard>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
 
-      {/* Step 4: Application Form */}
-      {step === 4 && (
-        <div className="space-y-6">
-          <h2 className="font-bold text-white">📝 Loan Application</h2>
-
-          {appSubmitted ? (
-            <div className="card text-center py-12 border border-green-500/30 bg-green-500/5 animate-bounce-in">
-              <div className="text-6xl mb-4">🎉</div>
-              <h3 className="text-2xl font-black text-white mb-2">Application Submitted!</h3>
-              <p className="text-muted mb-6">Your loan application with <strong className="text-white">{selectedOffer?.bank}</strong> has been submitted. You'll receive a call within 48 hours.</p>
-              <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-6">
-                <div className="bg-surface rounded-xl p-3 text-center">
-                  <p className="text-xs text-muted">Bank</p>
-                  <p className="text-sm font-bold text-white">{selectedOffer?.bank}</p>
-                </div>
-                <div className="bg-surface rounded-xl p-3 text-center">
-                  <p className="text-xs text-muted">Rate</p>
-                  <p className="text-sm font-bold text-white">{selectedOffer?.interest}%</p>
-                </div>
-                <div className="bg-surface rounded-xl p-3 text-center">
-                  <p className="text-xs text-muted">Status</p>
-                  <p className="text-sm font-bold text-green-400">Pending</p>
-                </div>
-              </div>
-              <button onClick={() => setStep(5)} className="btn-primary flex items-center justify-center gap-2 mx-auto">
-                View Document Checklist <ChevronRight size={16} />
-              </button>
+        {/* Step 2: Offers */}
+        {step === 2 && (
+          <motion.div 
+            key="step2" 
+            initial={{ opacity: 0, x: 20 }} 
+            animate={{ opacity: 1, x: 0 }} 
+            exit={{ opacity: 0, x: -20 }}
+            className="space-y-8"
+          >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+               <div>
+                  <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Bank Consensus Matrix</h2>
+                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Available Capital nodes based on telemetry</p>
+               </div>
+               <div className={cn("px-4 py-2 rounded-xl border font-black text-[10px] uppercase tracking-widest", 
+                 eligResult?.tier === 'High' ? "bg-teal-100 border-teal-500/20 text-teal-400" : "bg-yellow-100 border-yellow-500/20 text-yellow-400"
+               )}>
+                 Credit Tier: {eligResult?.label || 'Verified'}
+               </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="card space-y-4">
-                <h3 className="font-semibold text-white flex items-center gap-2">
-                  <span className="text-xl">{selectedOffer?.logo}</span> Apply with {selectedOffer?.bank}
-                </h3>
 
-                <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+               {filteredOffers.map((offer) => (
+                 <GlassCard 
+                   key={offer.id} 
+                   className={cn(
+                     "p-8 transition-all duration-500 group relative overflow-hidden",
+                     selectedOffer?.id === offer.id && "border-primary/30 bg-primary/5"
+                   )}
+                 >
+                    {offer.tag && (
+                      <div className="absolute top-4 right-4">
+                         <span className="text-[8px] font-black px-2 py-1 bg-primary/20 text-blue-300 border border-primary/30 uppercase tracking-[0.2em] rounded-md">{offer.tag}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-4 mb-8">
+                       <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-4xl shadow-2xl">
+                          {offer.logo}
+                       </div>
+                       <div>
+                          <h3 className="font-black text-gray-900 text-sm uppercase tracking-tight">{offer.bank}</h3>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{offer.name}</p>
+                       </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-8">
+                       <div className="bg-gray-100 rounded-2xl p-4 border border-gray-100">
+                          <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Max Ceiling</p>
+                          <p className="text-xs font-black text-gray-900">{formatINR(offer.maxAmount)}</p>
+                       </div>
+                       <div className="bg-gray-100 rounded-2xl p-4 border border-gray-100 text-right">
+                          <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Base Rate</p>
+                          <p className="text-xs font-black text-teal-400">{offer.interest}% p.a.</p>
+                       </div>
+                    </div>
+
+                    <div className="space-y-2.5 mb-8">
+                       {offer.features.slice(0, 3).map((f, i) => (
+                         <div key={i} className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-tight">
+                            <CheckCircle size={10} className="text-teal-400 shrink-0" /> {f}
+                         </div>
+                       ))}
+                    </div>
+
+                    <Button onClick={() => handleSelectOffer(offer)} className="w-full text-[10px] font-black uppercase tracking-widest group-hover:scale-[1.02]" variant={selectedOffer?.id === offer.id ? "primary" : "secondary"}>
+                       Analyze Offer <ChevronRight size={14} className="ml-1" />
+                    </Button>
+                 </GlassCard>
+               ))}
+            </div>
+            
+            <button onClick={() => setStep(1)} className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-gray-900 transition-colors">← Recalibrate Diagnostics</button>
+          </motion.div>
+        )}
+
+        {/* Step 3: Planner */}
+        {step === 3 && selectedOffer && (
+          <motion.div 
+            key="step3" 
+            initial={{ opacity: 0, scale: 0.98 }} 
+            animate={{ opacity: 1, scale: 1 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+          >
+            <div className="lg:col-span-6 space-y-6">
+               <GlassCard className="p-10 space-y-8" hoverable={false}>
+                  <div className="flex items-center gap-4">
+                     <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-4xl shadow-2xl">
+                        {selectedOffer.logo}
+                     </div>
+                     <div>
+                        <h3 className="font-black text-gray-900 uppercase tracking-tight">{selectedOffer.bank}</h3>
+                        <p className="text-[10px] text-teal-400 font-black uppercase tracking-widest">Rate: {selectedOffer.interest}% p.a.</p>
+                     </div>
+                  </div>
+
+                  <div className="space-y-6 pt-4">
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Capital Requirement (₹)</label>
+                        <input type="text" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-black focus:outline-none text-sm transition-all opacity-50 cursor-not-allowed" value={formatINR(loanAmount)} readOnly />
+                     </div>
+
+                     <div className="space-y-4">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Repayment Horizon</label>
+                        <div className="flex gap-2 flex-wrap">
+                           {selectedOffer.tenure.map((t) => (
+                             <button
+                               key={t}
+                               onClick={() => setTenure(t)}
+                               className={cn(
+                                 "flex-1 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all duration-300",
+                                 tenure === t ? "bg-teal-500 border-teal-400 text-gray-900 shadow-lg" : "bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-200"
+                               )}
+                             >
+                               {t} Units
+                             </button>
+                           ))}
+                        </div>
+                     </div>
+
+                     <div className="p-4 bg-teal-50 border border-teal-500/10 rounded-2xl">
+                        <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest mb-1.5">Moratorium Protocol</p>
+                        <p className="text-xs font-bold text-gray-600 italic leading-relaxed">{selectedOffer.moratorium}</p>
+                     </div>
+                  </div>
+
+                  <Button onClick={() => setStep(4)} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow>
+                     Lock Configuration
+                  </Button>
+               </GlassCard>
+            </div>
+
+            <div className="lg:col-span-6 space-y-6">
+               <GlassCard className="p-10 space-y-8" hoverable={false}>
                   <div>
-                    <label className="label">Full Name</label>
-                    <input className="input-field" value={appForm.fullName} onChange={(e) => setAppForm({ ...appForm, fullName: e.target.value })} placeholder="Your full name" />
+                    <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">EMI Projection</h3>
+                    <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Automated Amortization Preview</p>
                   </div>
-                  <div>
-                    <label className="label">Phone Number</label>
-                    <input className="input-field" value={appForm.phone} onChange={(e) => setAppForm({ ...appForm, phone: e.target.value })} placeholder="+91 98765 43210" />
+
+                  <div className="bg-gradient-to-br from-teal-500/20 to-blue-500/10 rounded-3xl p-8 text-center border border-teal-500/20 shadow-inner">
+                     <p className="text-[10px] font-black text-teal-700 uppercase tracking-[0.2em] mb-2 opacity-50">Monthly Payload</p>
+                     <p className="text-5xl font-black text-gray-900 tracking-tighter">{formatINR(emi)}</p>
+                     <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-4">For {tenure} Full Cycles</p>
                   </div>
-                </div>
 
-                <div>
-                  <label className="label">Email Address</label>
-                  <input type="email" className="input-field" value={appForm.email} onChange={(e) => setAppForm({ ...appForm, email: e.target.value })} placeholder="you@email.com" />
-                </div>
-
-                <div>
-                  <label className="label">University Name</label>
-                  <input className="input-field" value={appForm.universityName} onChange={(e) => setAppForm({ ...appForm, universityName: e.target.value })} placeholder="University you're applying to" />
-                </div>
-
-                <div>
-                  <label className="label">Course Start Date</label>
-                  <input type="date" className="input-field" value={appForm.courseStart} onChange={(e) => setAppForm({ ...appForm, courseStart: e.target.value })} />
-                </div>
-
-                <div>
-                  <label className="label">Current Address</label>
-                  <textarea className="input-field h-20 resize-none" value={appForm.address} onChange={(e) => setAppForm({ ...appForm, address: e.target.value })} placeholder="Your full address" />
-                </div>
-
-                <button
-                  id="loan-submit-application"
-                  onClick={handleSubmitApp}
-                  disabled={!appForm.fullName || !appForm.phone || !appForm.email}
-                  className="btn-teal w-full flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <Send size={16} /> Submit Application
-                </button>
-              </div>
-
-              <div className="card bg-surface space-y-4">
-                <h3 className="font-semibold text-white">Application Summary</h3>
-                {[
-                  { label: 'Bank', value: selectedOffer?.bank },
-                  { label: 'Loan Amount', value: formatINR(loanAmount) },
-                  { label: 'Interest Rate', value: `${selectedOffer?.interest}% p.a.` },
-                  { label: 'Tenure', value: `${tenure} years` },
-                  { label: 'Monthly EMI', value: formatINR(emi) },
-                  { label: 'Co-Applicant', value: eligForm.coApplicant ? 'Yes ✓' : 'No' },
-                  { label: 'Collateral', value: eligForm.collateral ? 'Yes ✓' : 'No' },
-                ].map(({ label, value }) => (
-                  <div key={label} className="flex justify-between py-2 border-b border-surface-border last:border-0">
-                    <span className="text-sm text-muted">{label}</span>
-                    <span className="text-sm font-semibold text-white">{value}</span>
+                  <div className="grid grid-cols-2 gap-4">
+                     <div className="bg-gray-100 rounded-2xl p-5 border border-gray-100">
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Principal</p>
+                        <p className="text-sm font-black text-gray-900">{formatINR(loanAmount)}</p>
+                     </div>
+                     <div className="bg-gray-100 rounded-2xl p-5 border border-gray-100 text-right">
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Interest Component</p>
+                        <p className="text-sm font-black text-red-400">{formatINR(totalInterest)}</p>
+                     </div>
                   </div>
-                ))}
+
+                  <div className="space-y-4">
+                     <ProgressBar 
+                       percentage={Math.round((loanAmount / totalPayable) * 100)} 
+                       label="Capital Ratio"
+                       color="from-teal-500 to-blue-600"
+                       height="h-4"
+                     />
+                     <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-gray-500">
+                        <span>LTV: Standard</span>
+                        <span>Aggregate: {formatINR(totalPayable)}</span>
+                     </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 bg-yellow-50 border border-yellow-400/10 rounded-2xl">
+                     <Star size={16} className="text-yellow-400 shrink-0 mt-0.5" />
+                     <p className="text-[10px] text-gray-500 font-bold uppercase leading-relaxed">
+                       <span className="text-gray-900">Tax Arbitrage (u/s 80E):</span> 100% Interest component is tax-deductible for 8 consecutive cycles.
+                     </p>
+                  </div>
+               </GlassCard>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 4: Apply */}
+        {step === 4 && (
+          <motion.div 
+            key="step4" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            {appSubmitted ? (
+              <GlassCard className="max-w-3xl mx-auto p-12 text-center border-teal-500/30 bg-teal-50" hoverable={false}>
+                 <motion.div 
+                   initial={{ scale: 0 }} 
+                   animate={{ scale: 1 }} 
+                   transition={{ type: "spring", damping: 10 }}
+                   className="w-24 h-24 rounded-full bg-teal-500/20 border-2 border-teal-500/40 flex items-center justify-center text-5xl mx-auto mb-8 shadow-[0_0_40px_rgba(20,184,166,0.2)]"
+                 >
+                   🎉
+                 </motion.div>
+                 <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Transmission Successful</h2>
+                 <p className="text-gray-500 font-medium mt-4 max-w-lg mx-auto leading-relaxed">
+                   Your financial dossier has been transmitted to <span className="text-gray-900 font-black">{selectedOffer?.bank}</span>. Node synchronization will complete within 48 operational hours.
+                 </p>
+                 
+                 <div className="grid grid-cols-3 gap-4 max-w-md mx-auto my-10">
+                    {[
+                      { l: 'Endpoint', v: selectedOffer?.bank },
+                      { l: 'Base Rate', v: `${selectedOffer?.interest}%` },
+                      { l: 'Status', v: 'PENDING', c: 'text-yellow-400' }
+                    ].map((item, i) => (
+                      <div key={i} className="bg-gray-100 p-4 rounded-2xl border border-gray-100">
+                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">{item.l}</p>
+                         <p className={cn("text-xs font-black truncate", item.c || "text-gray-900")}>{item.v}</p>
+                      </div>
+                    ))}
+                 </div>
+
+                 <Button glow onClick={() => setStep(5)} className="px-10 h-14 font-black uppercase text-xs tracking-widest">
+                    Manage Documentary Assets <ChevronRight size={16} className="ml-2" />
+                 </Button>
+              </GlassCard>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                 <div className="lg:col-span-7">
+                    <GlassCard className="p-10 space-y-8" hoverable={false}>
+                       <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-4xl shadow-2xl">
+                             {selectedOffer?.logo}
+                          </div>
+                          <div>
+                             <h3 className="font-black text-gray-900 uppercase tracking-tight">Dossier Submission</h3>
+                             <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-0.5">Direct Channel: {selectedOffer?.bank}</p>
+                          </div>
+                       </div>
+
+                       <div className="space-y-6">
+                          <div className="grid grid-cols-2 gap-4">
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Full Name</label>
+                                <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.fullName} onChange={(e) => setAppForm({ ...appForm, fullName: e.target.value })} placeholder="Full Identity" />
+                             </div>
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Contact Number</label>
+                                <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.phone} onChange={(e) => setAppForm({ ...appForm, phone: e.target.value })} placeholder="+91" />
+                             </div>
+                          </div>
+
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Secure Email</label>
+                             <input type="email" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.email} onChange={(e) => setAppForm({ ...appForm, email: e.target.value })} placeholder="alpha@network.com" />
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">University Node</label>
+                                <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.universityName} onChange={(e) => setAppForm({ ...appForm, universityName: e.target.value })} placeholder="Institution" />
+                             </div>
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Course Genesis</label>
+                                <input type="date" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all appearance-none" value={appForm.courseStart} onChange={(e) => setAppForm({ ...appForm, courseStart: e.target.value })} />
+                             </div>
+                          </div>
+
+                          <Button onClick={handleSubmitApp} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow disabled={!appForm.fullName || !appForm.phone}>
+                             Initialize Transmission <Send size={16} className="ml-2" />
+                          </Button>
+                       </div>
+                    </GlassCard>
+                 </div>
+
+                 <div className="lg:col-span-5">
+                    <GlassCard className="p-8 space-y-6" hoverable={false}>
+                       <h3 className="text-xs font-black uppercase tracking-widest text-gray-900">Application Manifest</h3>
+                       <div className="space-y-2">
+                          {[
+                            { l: 'Capital Endpoint', v: selectedOffer?.bank },
+                            { l: 'Credit Volume', v: formatINR(loanAmount) },
+                            { l: 'Interest Vector', v: `${selectedOffer?.interest}% p.a.` },
+                            { l: 'Temporal Scope', v: `${tenure} Years` },
+                            { l: 'Monthly Payload', v: formatINR(emi) },
+                            { l: 'Co-Applicant Protocol', v: eligForm.coApplicant ? 'ENABLED' : 'DISABLED' },
+                          ].map((item, i) => (
+                            <div key={i} className="flex justify-between py-4 border-b border-gray-100 last:border-0">
+                               <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{item.l}</span>
+                               <span className="text-xs font-black text-gray-900 uppercase tracking-tight">{item.v}</span>
+                            </div>
+                          ))}
+                       </div>
+                    </GlassCard>
+                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </motion.div>
+        )}
 
-      {/* Step 5: Documents */}
-      {step === 5 && (
-        <div className="space-y-5">
-          <h2 className="font-bold text-white">📋 Document Checklist</h2>
+        {/* Step 5: Docs */}
+        {step === 5 && (
+          <motion.div 
+            key="step5" 
+            initial={{ opacity: 0, scale: 0.95 }} 
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-10"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+               <div className="lg:col-span-8 space-y-6">
+                  <div className="flex items-center gap-4 px-4">
+                     <FileCheck size={24} className="text-teal-400" />
+                     <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Requirement Checklist</h2>
+                  </div>
 
-          <div className="card border border-teal/20 bg-teal/5 flex items-start gap-3">
-            <FileCheck size={20} className="text-teal-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold text-white text-sm">Auto-filled from your profile</p>
-              <p className="text-xs text-muted">Documents marked ✅ were identified from your onboarding profile. Collect the remaining ones.</p>
-            </div>
-          </div>
+                  <GlassCard className="p-6 space-y-3" hoverable={false}>
+                     {docChecklist.map((doc, i) => (
+                       <div 
+                         key={i} 
+                         className={cn(
+                           "flex items-center gap-4 p-5 rounded-2xl border transition-all duration-500",
+                           doc.done ? "bg-teal-100 border-teal-500/40" : "bg-gray-100 border-gray-100"
+                         )}
+                       >
+                          <div className={cn(
+                            "w-8 h-8 rounded-xl flex items-center justify-center border-2 transition-all duration-500",
+                            doc.done ? "bg-teal-500 border-teal-400 text-gray-900" : "border-gray-200 text-gray-900/10"
+                          )}>
+                             {doc.done && <CheckCircle size={16} />}
+                          </div>
+                          <div className="flex-1">
+                             <p className={cn("text-[11px] font-black uppercase tracking-widest", doc.done ? "text-teal-700/50 line-through" : "text-gray-900")}>
+                               {doc.label}
+                             </p>
+                          </div>
+                          {doc.prefilled && (
+                            <span className="text-[8px] font-black uppercase px-2 py-1 bg-teal-500/20 text-teal-400 border border-teal-500/30 rounded-md">Automated Sync</span>
+                          )}
+                       </div>
+                     ))}
+                  </GlassCard>
+               </div>
 
-          <div className="card space-y-3">
-            {docChecklist.map((doc, i) => (
-              <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${
-                doc.done ? 'bg-teal/10 border-teal/20' : 'bg-surface border-surface-border'
-              }`}>
-                <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${
-                  doc.done ? 'bg-teal border-teal border-2' : 'border-2 border-surface-border'
-                }`}>
-                  {doc.done && <span className="text-white text-xs font-bold">✓</span>}
-                </div>
-                <span className={`text-sm flex-1 ${doc.done ? 'text-muted line-through' : 'text-white'}`}>{doc.label}</span>
-                {doc.prefilled && <span className="text-xs text-teal-400 font-medium">Auto-detected</span>}
-              </div>
-            ))}
-          </div>
+               <div className="lg:col-span-4 space-y-6">
+                  <GlassCard className="p-10 text-center space-y-8" hoverable={false}>
+                     <div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Aggregation Stats</h3>
+                        <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Asset Verification Status</p>
+                     </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="card text-center">
-              <p className="text-3xl font-black text-white">{docChecklist.filter((d) => d.done).length}</p>
-              <p className="text-sm text-muted">Ready</p>
+                     <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-gray-100 p-6 rounded-3xl border border-gray-100">
+                           <p className="text-4xl font-black text-teal-400 mb-2">{docChecklist.filter(d => d.done).length}</p>
+                           <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Verified</p>
+                        </div>
+                        <div className="bg-gray-100 p-6 rounded-3xl border border-gray-100">
+                           <p className="text-4xl font-black text-red-500 mb-2">{docChecklist.filter(d => !d.done).length}</p>
+                           <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Missing</p>
+                        </div>
+                     </div>
+
+                     <div className="p-6 bg-teal-100 border border-teal-500/20 rounded-2xl text-left">
+                        <div className="flex items-center gap-2 mb-3">
+                           <TrendingUp size={14} className="text-teal-400" />
+                           <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">System Optimization</p>
+                        </div>
+                        <p className="text-[10px] text-gray-500 font-bold uppercase leading-relaxed">
+                          Synchronizing with <span className="text-gray-900">EduPath Cloud Drive</span> increases verification speed by 42%.
+                        </p>
+                     </div>
+                  </GlassCard>
+               </div>
             </div>
-            <div className="card text-center">
-              <p className="text-3xl font-black text-red-400">{docChecklist.filter((d) => !d.done).length}</p>
-              <p className="text-sm text-muted">Pending</p>
-            </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { FileText, Wand2, Copy, Check, RefreshCw, Download, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Wand2, Copy, Check, RefreshCw, Sparkles, BrainCircuit, Target, ChevronRight, Download, Clock } from 'lucide-react';
 import sopTemplates from '../data/sopTemplates.json';
 import storage from '../utils/storage';
 import { trackEvent } from '../utils/rewards';
+import { GlassCard } from '../components/ui/GlassCard';
+import { Button } from '../components/ui/Button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../utils/cn';
 
 const courseMap = {
   'Computer Science': 'ms_cs',
@@ -110,8 +114,6 @@ export default function SOPGenerator() {
       setGenerated({ sections, template });
       setExpandedSection('intro');
       setIsGenerating(false);
-
-      // Track event
       trackEvent('sop_generated');
     }, 2000 + Math.random() * 1000);
   };
@@ -126,217 +128,247 @@ export default function SOPGenerator() {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleRegenerate = () => {
-    setGenerated(null);
-    handleGenerate();
-  };
-
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-10 pb-20">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-black text-white flex items-center gap-3">
-            <Wand2 className="text-yellow-400" size={26} />
-            AI SOP Generator
-          </h1>
-          <p className="text-muted text-sm mt-1">Generate a personalized Statement of Purpose using AI — free, instant, tailored to you</p>
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-2">
+          <motion.div 
+             initial={{ opacity: 0, x: -20 }}
+             animate={{ opacity: 1, x: 0 }}
+             className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-full w-fit"
+          >
+            <BrainCircuit size={14} className="text-yellow-500" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-yellow-700">Generative Narrative Engine</span>
+          </motion.div>
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">AI SOP <span className="text-gradient">Architect</span></h1>
+          <p className="text-gray-500 font-medium text-sm">Synthesize a high-impact Statement of Purpose tailored to your academic telemetry.</p>
         </div>
-        <span className="badge bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-xs font-bold px-3 py-1.5">
-          ✨ Generative AI
-        </span>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Form */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="card space-y-4">
-            <h2 className="font-bold text-white flex items-center gap-2">
-              <FileText size={18} className="text-primary" />
-              Your Profile
-            </h2>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label">Target Course *</label>
-                <select id="sop-course" className="input-field" value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })}>
-                  <option value="">Select</option>
-                  {Object.keys(courseMap).map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Form Panel */}
+        <div className="lg:col-span-5 space-y-6">
+          <GlassCard className="p-8 space-y-8" hoverable={false}>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-primary relative">
+                <FileText size={24} />
               </div>
               <div>
-                <label className="label">Target University *</label>
-                <select id="sop-university" className="input-field" value={form.university} onChange={(e) => setForm({ ...form, university: e.target.value })}>
-                  <option value="">Select</option>
-                  {universities.map((u) => <option key={u} value={u}>{u}</option>)}
-                </select>
+                <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Narrative Parameters</h3>
+                <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Mission Critical Data Points</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label">GPA / CGPA</label>
-                <input id="sop-gpa" type="number" min="0" max="4" step="0.1" className="input-field" placeholder="3.6" value={form.gpa} onChange={(e) => setForm({ ...form, gpa: e.target.value })} />
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Objective Degree</label>
+                  <select 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-gray-900 font-bold focus:outline-none focus:border-primary/50 text-sm transition-all appearance-none"
+                    value={form.course} 
+                    onChange={(e) => setForm({ ...form, course: e.target.value })}
+                  >
+                    <option value="" className="bg-white">Select Course</option>
+                    {Object.keys(courseMap).map((c) => <option key={c} value={c} className="bg-white">{c}</option>)}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Target Institution</label>
+                  <select 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-gray-900 font-bold focus:outline-none focus:border-primary/50 text-sm transition-all appearance-none"
+                    value={form.university} 
+                    onChange={(e) => setForm({ ...form, university: e.target.value })}
+                  >
+                    <option value="" className="bg-white">Select Uni</option>
+                    {universities.map((u) => <option key={u} value={u} className="bg-white">{u}</option>)}
+                  </select>
+                </div>
               </div>
-              <div>
-                <label className="label">Work Exp (years)</label>
-                <input id="sop-exp" type="number" min="0" max="20" className="input-field" placeholder="2" value={form.experience} onChange={(e) => setForm({ ...form, experience: e.target.value })} />
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Current GPA</label>
+                  <input type="number" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-gray-900 font-bold focus:outline-none focus:border-primary/50 text-sm transition-all" placeholder="3.6" value={form.gpa} onChange={(e) => setForm({ ...form, gpa: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Exp (Years)</label>
+                  <input type="number" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-gray-900 font-bold focus:outline-none focus:border-primary/50 text-sm transition-all" placeholder="2" value={form.experience} onChange={(e) => setForm({ ...form, experience: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Immediate Career Target</label>
+                <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-gray-900 font-bold focus:outline-none focus:border-primary/50 text-sm transition-all" placeholder="e.g. AI Research at Google" value={form.careerGoal} onChange={(e) => setForm({ ...form, careerGoal: e.target.value })} />
               </div>
             </div>
 
-            <div>
-              <label className="label">Current Company</label>
-              <input id="sop-company" type="text" className="input-field" placeholder="e.g. Wipro, Infosys, TCS..." value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
-            </div>
-
-            <div>
-              <label className="label">Current Job Title</label>
-              <input id="sop-title" type="text" className="input-field" placeholder="e.g. Software Engineer" value={form.jobTitle} onChange={(e) => setForm({ ...form, jobTitle: e.target.value })} />
-            </div>
-
-            <div>
-              <label className="label">Industry</label>
-              <input id="sop-industry" type="text" className="input-field" placeholder="e.g. FinTech, Healthcare, EdTech" value={form.industry} onChange={(e) => setForm({ ...form, industry: e.target.value })} />
-            </div>
-
-            <div>
-              <label className="label">Career Goal (after degree)</label>
-              <input id="sop-goal" type="text" className="input-field" placeholder="e.g. AI Research Scientist at Google" value={form.careerGoal} onChange={(e) => setForm({ ...form, careerGoal: e.target.value })} />
-            </div>
-
-            <button
-              id="sop-generate"
+            <Button
               onClick={handleGenerate}
               disabled={!form.course || !form.university || isGenerating}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]"
+              glow
             >
               {isGenerating ? (
-                <>
-                  <RefreshCw size={18} className="animate-spin" />
-                  AI is writing your SOP...
-                </>
+                <div className="flex items-center gap-3">
+                  <RefreshCw className="animate-spin" size={18} />
+                  Processing...
+                </div>
               ) : (
-                <>
+                <div className="flex items-center gap-3">
                   <Wand2 size={18} />
-                  Generate My SOP
-                </>
+                  Synthesize Draft
+                </div>
               )}
-            </button>
-          </div>
+            </Button>
+          </GlassCard>
 
-          {/* Tips */}
-          <div className="card border-l-4 border-l-teal-500 bg-teal/5">
-            <h3 className="text-sm font-semibold text-teal-400 mb-3">✅ SOP Writing Tips</h3>
-            <ul className="space-y-2 text-xs text-muted">
-              <li>• Keep it 800–1000 words (2 pages double-spaced)</li>
-              <li>• Mention specific faculty/research by name</li>
-              <li>• Use quantified achievements: "35% improvement"</li>
-              <li>• Avoid generic phrases like "passionate about"</li>
-              <li>• Review and personalize the AI draft before submitting</li>
-            </ul>
-          </div>
+          {/* Guidelines */}
+          <GlassCard className="p-6 border-teal-200 bg-teal-50" hoverable={false}>
+             <div className="flex items-center gap-3 mb-4">
+               <Target size={18} className="text-teal-500" />
+               <h3 className="text-[10px] font-black uppercase tracking-widest text-teal-600">Optimization Guidelines</h3>
+             </div>
+             <ul className="space-y-3">
+                {[
+                  'Quantify achievements (e.g., 35% efficiency boost)',
+                  'Reference specific institutional faculty names',
+                  'Maintain 800-1000 word structural integrity',
+                  'Align narrative with target industry benchmarks'
+                ].map((tip, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[10px] font-bold text-gray-500 leading-tight">
+                    <span className="text-teal-500 mt-0.5">✓</span> {tip}
+                  </li>
+                ))}
+             </ul>
+          </GlassCard>
         </div>
 
-        {/* Generated SOP */}
-        <div className="lg:col-span-3">
-          {isGenerating ? (
-            <div className="card flex flex-col items-center justify-center text-center py-20">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 rounded-full bg-yellow-500/10 flex items-center justify-center">
-                  <Wand2 size={36} className="text-yellow-400 animate-pulse-slow" />
-                </div>
-                <div className="absolute inset-0 rounded-full border-2 border-yellow-500/30 animate-ping" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">AI is crafting your SOP...</h3>
-              <p className="text-muted text-sm max-w-xs">Personalizing your statement of purpose based on your profile and target program</p>
-              <div className="flex gap-2 mt-6">
-                {['Analyzing profile', 'Crafting narrative', 'Tailoring for ' + (form.university || 'university')].map((step, i) => (
-                  <div key={i} className="flex items-center gap-1 text-xs text-muted">
-                    <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-bounce" style={{ animationDelay: `${i * 200}ms` }} />
-                    {step}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : generated ? (
-            <div className="space-y-4 animate-fade-in">
-              {/* Controls */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-bold text-white">Your Generated SOP</h3>
-                  <p className="text-xs text-muted">For {form.course} at {form.university}</p>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={handleRegenerate} className="btn-secondary flex items-center gap-2 text-sm py-2 px-3">
-                    <RefreshCw size={14} /> Regenerate
-                  </button>
-                  <button onClick={handleCopy} className={`flex items-center gap-2 text-sm py-2 px-3 rounded-xl font-semibold transition-all ${copied ? 'bg-green-500/20 border border-green-500/40 text-green-400' : 'btn-primary'}`}>
-                    {copied ? <><Check size={14} /> Copied!</> : <><Copy size={14} /> Copy All</>}
-                  </button>
-                </div>
-              </div>
-
-              {/* Word count badge */}
-              <div className="flex items-center gap-2">
-                <span className="badge bg-primary/20 text-blue-300 border border-primary/30">
-                  ~{fullSOP.split(' ').length} words
-                </span>
-                <span className="badge bg-teal/20 text-teal-300 border border-teal/30">
-                  {generated.sections.length} sections
-                </span>
-                <span className="badge bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
-                  ✨ AI Generated
-                </span>
-              </div>
-
-              {/* Sections */}
-              <div className="space-y-3">
-                {generated.sections.map((section) => (
-                  <div
-                    key={section.id}
-                    className={`card cursor-pointer transition-all duration-200 hover:border-primary/40 ${
-                      expandedSection === section.id ? 'border-primary/40' : ''
-                    }`}
-                    onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-white text-sm">{section.title}</h4>
-                      {expandedSection === section.id ? (
-                        <ChevronUp size={16} className="text-muted" />
-                      ) : (
-                        <ChevronDown size={16} className="text-muted" />
-                      )}
+        {/* Output Panel */}
+        <div className="lg:col-span-7">
+          <AnimatePresence mode="wait">
+            {isGenerating ? (
+              <motion.div
+                key="generating"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="h-full"
+              >
+                <GlassCard className="h-full min-h-[600px] flex flex-col items-center justify-center text-center p-12 border-gray-200" hoverable={false}>
+                  <div className="relative mb-10">
+                    <div className="w-24 h-24 rounded-[30%] bg-yellow-50 border border-yellow-200 flex items-center justify-center text-yellow-500">
+                      <Wand2 size={40} className="animate-pulse" />
                     </div>
-                    {expandedSection === section.id && (
-                      <div className="mt-3 pt-3 border-t border-surface-border animate-fade-in">
-                        <p className="text-sm text-white/90 leading-7">{section.content}</p>
-                      </div>
-                    )}
+                    <div className="absolute -inset-4 border border-yellow-200 rounded-[35%] animate-spin-slow" />
                   </div>
-                ))}
-              </div>
+                  <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Narrative Synthesis In Progress</h3>
+                  <p className="text-gray-500 text-sm mt-4 max-w-sm font-medium leading-relaxed">
+                    AI is currently correlating your academic profile with institutional requirements to generate a premium Statement of Purpose.
+                  </p>
+                </GlassCard>
+              </motion.div>
+            ) : generated ? (
+              <motion.div
+                key="generated"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-6"
+              >
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4">
+                  <div>
+                    <h3 className="text-xl font-black text-gray-900 tracking-tight">Draft Manifest</h3>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-1.5 border-r border-gray-200 pr-3">
+                        <Clock size={10} /> {fullSOP.split(' ').length} Words
+                      </span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-teal-500">Status: Verified Draft</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button variant="secondary" size="sm" onClick={() => setGenerated(null)} className="h-10 px-6 border-gray-200 bg-gray-50 font-black uppercase text-[10px] tracking-widest">
+                       Reset
+                    </Button>
+                    <Button glow size="sm" onClick={handleCopy} className={cn("h-10 px-8 font-black uppercase text-[10px] tracking-widest transition-all", copied && "bg-teal-500 shadow-teal-500/50")}>
+                       {copied ? "Copied" : "Copy All"}
+                    </Button>
+                  </div>
+                </div>
 
-              {/* Disclaimer */}
-              <div className="p-4 bg-surface rounded-xl border border-surface-border">
-                <p className="text-xs text-muted">
-                  ⚠️ <strong className="text-white">Important:</strong> This AI-generated SOP is a starting draft. Always review, personalize, and ensure authenticity before submitting to universities.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="card flex flex-col items-center justify-center text-center py-20">
-              <div className="text-6xl mb-4 animate-float">✍️</div>
-              <h3 className="text-lg font-bold text-white mb-2">Your SOP will appear here</h3>
-              <p className="text-muted text-sm max-w-xs">Fill in your profile on the left and click "Generate My SOP" to create a personalized statement</p>
-              <div className="mt-6 grid grid-cols-2 gap-3 text-left w-full max-w-xs">
-                {['Personalized to your profile', 'Course-specific narrative', 'University-tailored content', 'Instantly editable'].map((f) => (
-                  <div key={f} className="flex items-center gap-2 text-xs text-muted">
-                    <span className="text-teal-400">✓</span> {f}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                <div className="space-y-4">
+                  {generated.sections.map((section) => {
+                    const isExp = expandedSection === section.id;
+                    return (
+                      <GlassCard 
+                        key={section.id} 
+                        className={cn(
+                          "p-6 transition-all duration-500 cursor-pointer overflow-hidden",
+                          isExp ? "border-primary/30 bg-primary/5" : "hover:border-gray-200"
+                        )}
+                        onClick={() => setExpandedSection(isExp ? null : section.id)}
+                        hoverable={false}
+                      >
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-gray-900 flex items-center gap-3">
+                            <span className="text-[10px] text-gray-400 font-black opacity-30">0{section.id === 'intro' ? 1 : section.title.split('.')[0]}</span>
+                            {section.title.split('.')[1].trim()}
+                          </h4>
+                          <ChevronRight size={18} className={cn("text-gray-400 transition-transform duration-500", isExp && "rotate-90 text-primary")} />
+                        </div>
+                        <AnimatePresence>
+                          {isExp && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                            >
+                              <div className="mt-6 pt-6 border-t border-gray-100">
+                                <p className="text-sm text-gray-700 leading-relaxed font-medium whitespace-pre-wrap">
+                                  {section.content}
+                                </p>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </GlassCard>
+                    );
+                  })}
+                </div>
+
+                <GlassCard className="p-6 border-gray-200 border-dashed" hoverable={false}>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center">
+                    Draft is AI-synthesized. Institutional submission requires manual personalization and verification.
+                  </p>
+                </GlassCard>
+              </motion.div>
+            ) : (
+              <GlassCard className="h-full min-h-[600px] flex flex-col items-center justify-center text-center p-12 border-gray-200 group" hoverable={false}>
+                 <div className="relative mb-10">
+                    <div className="w-24 h-24 rounded-[30%] bg-gray-100 border border-gray-200 flex items-center justify-center text-5xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:bg-primary/5 group-hover:border-primary/20 group-hover:text-primary">
+                      ✍️
+                    </div>
+                    <div className="absolute -inset-4 border border-gray-100 rounded-[35%] group-hover:border-primary/10 transition-colors" />
+                 </div>
+                 <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Awaiting Parameters</h3>
+                 <p className="text-gray-500 text-sm mt-4 max-w-sm font-medium leading-relaxed">
+                   Enter your profile telemetry on the left to initiate the high-spec AI narrative synthesis.
+                 </p>
+                 <div className="mt-10 grid grid-cols-2 gap-4 w-full max-w-sm">
+                    {[
+                      { icon: Sparkles, label: 'AI Tailored' },
+                      { icon: Clock, label: 'Instant Draft' },
+                      { icon: Target, label: 'Course Aligned' },
+                      { icon: Check, label: 'Verified Format' }
+                    ].map((feat, i) => (
+                      <div key={i} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-500 bg-gray-50 p-3 rounded-xl border border-gray-200 group-hover:border-gray-300 transition-colors">
+                        <feat.icon size={12} className="text-primary" />
+                        {feat.label}
+                      </div>
+                    ))}
+                 </div>
+              </GlassCard>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

@@ -5,15 +5,15 @@ export default function ChatMessage({ message }) {
 
   return (
     <div className={`flex ${isBot ? 'justify-start' : 'justify-end'} mb-4 animate-fade-in`}>
-      <div className={`max-w-[85%] ${isBot ? 'chat-message-bot' : 'chat-message-user'}`}>
+      <div className={`max-w-[85%] ${isBot ? '' : ''}`}>
         {/* Avatar */}
         {isBot && (
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-teal flex items-center justify-center text-xs font-bold">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-teal flex items-center justify-center text-xs font-bold text-white">
               AI
             </div>
-            <span className="text-xs text-muted">EduPath AI</span>
-            <span className="text-xs text-muted">{formatTime(timestamp)}</span>
+            <span className="text-xs text-gray-500">EduPath AI</span>
+            <span className="text-xs text-gray-500">{formatTime(timestamp)}</span>
           </div>
         )}
 
@@ -21,12 +21,12 @@ export default function ChatMessage({ message }) {
         <div
           className={`rounded-2xl px-4 py-3 ${
             isBot
-              ? 'bg-surface-card border border-surface-border rounded-tl-sm'
-              : 'bg-primary rounded-tr-sm'
+              ? 'bg-white border border-gray-200 rounded-tl-sm shadow-sm'
+              : 'bg-gradient-to-r from-blue-600 to-teal-500 rounded-tr-sm text-white'
           }`}
         >
           {/* Render markdown-like text */}
-          <div className="text-sm text-white whitespace-pre-wrap leading-relaxed">
+          <div className={`text-sm whitespace-pre-wrap leading-relaxed ${isBot ? 'text-gray-800' : 'text-white'}`}>
             {text.split('\n').map((line, i) => {
               // Bold text: **text**
               const parts = line.split(/(\*\*[^*]+\*\*)/g);
@@ -51,7 +51,7 @@ export default function ChatMessage({ message }) {
             {suggestions.map((s, i) => (
               <button
                 key={i}
-                className="text-xs px-3 py-1.5 rounded-full border border-primary/40 text-blue-300 hover:bg-primary/20 transition-colors"
+                className="text-xs px-3 py-1.5 rounded-full border border-blue-200 text-blue-600 hover:bg-blue-50 transition-colors"
                 onClick={() => {
                   // Dispatch a custom event that Explore.jsx will listen to
                   window.dispatchEvent(new CustomEvent('chatSuggestion', { detail: s }));
@@ -65,7 +65,7 @@ export default function ChatMessage({ message }) {
 
         {/* User timestamp */}
         {!isBot && (
-          <p className="text-xs text-muted text-right mt-1">{formatTime(timestamp)}</p>
+          <p className="text-xs text-gray-500 text-right mt-1">{formatTime(timestamp)}</p>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, DollarSign, TrendingUp, Calendar, CheckSquare, ArrowRight, Landmark, FileText, Trophy, Newspaper } from 'lucide-react';
+import { Compass, DollarSign, TrendingUp, Calendar, CheckSquare, ArrowRight, Landmark, FileText, Trophy, Newspaper, Sparkles, Zap, Target } from 'lucide-react';
 import storage from '../utils/storage';
 import { updateStreak, getStreak, isInactive, updateActivity } from '../utils/streaks';
 import { getLoanReadinessScore, getProgressPercentage } from '../utils/scoring';
@@ -12,18 +12,20 @@ import StreakCounter from '../components/StreakCounter';
 import ProgressBar from '../components/ProgressBar';
 import checklistData from '../data/checklist.json';
 import { PageTransition } from '../components/ui/PageTransition';
-import { AnimatedCard } from '../components/ui/AnimatedCard';
+import { GlassCard } from '../components/ui/GlassCard';
+import { motion } from 'framer-motion';
+import { cn } from '../utils/cn';
 
 const navCards = [
-  { path: '/explore', title: 'Career Chatbot', description: 'AI-powered study abroad advisor', icon: Compass, emoji: '🤖', gradient: 'from-blue-600 to-indigo-700' },
-  { path: '/finance', title: 'ROI & Finance', description: 'ROI calculator & loan eligibility', icon: DollarSign, emoji: '💰', gradient: 'from-teal-600 to-teal-800' },
-  { path: '/loans', title: 'Loan Hub', description: 'Personalized loan offers & apply', icon: Landmark, emoji: '🏦', gradient: 'from-orange-600 to-orange-800' },
-  { path: '/sop', title: 'SOP Generator', description: 'AI-written Statement of Purpose', icon: FileText, emoji: '✍️', gradient: 'from-yellow-600 to-amber-700' },
-  { path: '/predictor', title: 'Admission Score', description: 'Know your admission probability', icon: TrendingUp, emoji: '📊', gradient: 'from-purple-600 to-purple-800' },
-  { path: '/timeline', title: 'Timeline', description: 'Your application road map', icon: Calendar, emoji: '📅', gradient: 'from-pink-600 to-rose-800' },
-  { path: '/progress', title: 'Progress', description: 'Document checklist tracker', icon: CheckSquare, emoji: '✅', gradient: 'from-green-600 to-green-800' },
-  { path: '/rewards', title: 'Rewards', description: 'XP points, badges & levels', icon: Trophy, emoji: '🏆', gradient: 'from-yellow-500 to-orange-600' },
-  { path: '/content', title: 'AI Insights', description: 'Guides, articles & newsletters', icon: Newspaper, emoji: '📰', gradient: 'from-pink-500 to-pink-700' },
+  { path: '/explore', title: 'Career Chatbot', description: 'AI-powered study abroad advisor', icon: Compass, emoji: '🤖', color: 'teal' },
+  { path: '/finance', title: 'ROI & Finance', description: 'ROI calculator & loan eligibility', icon: DollarSign, emoji: '💰', color: 'blue' },
+  { path: '/loans', title: 'Loan Hub', description: 'Personalized loan offers', icon: Landmark, emoji: '🏦', color: 'indigo' },
+  { path: '/sop', title: 'SOP Generator', description: 'AI-written statement of purpose', icon: FileText, emoji: '✍️', color: 'amber' },
+  { path: '/predictor', title: 'Admission Score', description: 'Admission probability analysis', icon: TrendingUp, emoji: '📊', color: 'purple' },
+  { path: '/timeline', title: 'Timeline', description: 'Application roadmap tracker', icon: Calendar, emoji: '📅', color: 'rose' },
+  { path: '/progress', title: 'Progress', description: 'Document checklist tracker', icon: CheckSquare, emoji: '✅', color: 'green' },
+  { path: '/rewards', title: 'Rewards', description: 'XP points, badges & levels', icon: Trophy, emoji: '🏆', color: 'orange' },
+  { path: '/content', title: 'AI Insights', description: 'Guides, articles & newsletters', icon: Newspaper, emoji: '📰', color: 'pink' },
 ];
 
 export default function Dashboard() {
@@ -47,7 +49,8 @@ export default function Dashboard() {
     setSuggestions(personalSuggs);
 
     const state = getRewardsState();
-    setLevelInfo(getLevelInfo(state.xp));
+    const info = getLevelInfo(state.xp);
+    setLevelInfo(info);
 
     if (isInactive(2)) {
       setTimeout(() => setShowNudge(true), 4000);
@@ -56,110 +59,168 @@ export default function Dashboard() {
 
   const firstName = profile.name ? profile.name.split(' ')[0] : 'Student';
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? '🌅 Good morning' : hour < 17 ? '☀️ Good afternoon' : '🌙 Good evening';
+  const greeting = hour < 12 ? 'Morning' : hour < 17 ? 'Afternoon' : 'Evening';
 
   return (
     <PageTransition transitionKey="dashboard">
-    <div className="space-y-7">
-      {/* Hero */}
-      <div className="relative overflow-hidden card bg-gradient-to-br from-primary/30 via-surface-card to-teal/20 border-primary/30">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="relative z-10">
-          <p className="text-muted text-sm mb-1">{greeting},</p>
-          <h1 className="text-3xl font-black text-white mb-2">
-            {firstName}! <span className="text-gradient">Ready to shine?</span>
-          </h1>
-          <p className="text-muted text-sm max-w-md mb-4">
-            Targeting <span className="text-white font-medium">{profile.targetCourse || 'a great course'}</span> in{' '}
-            <span className="text-white font-medium">{profile.preferredCountries?.join(', ') || 'amazing countries'}</span>.
-          </p>
-          <ProgressBar percentage={progress} label="Overall Application Progress" />
-          {levelInfo && (
-            <div className="flex items-center gap-3 mt-3 flex-wrap">
-              <span className="badge bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-xs font-bold">
-                ⚡ {levelInfo.xp} XP • Level {levelInfo.level} {levelInfo.name}
-              </span>
-              <span className="text-xs text-muted">{progress}% complete • {loanScore}% loan ready</span>
-            </div>
-          )}
-        </div>
-      </div>
+      <div className="space-y-10 pb-12">
+        {/* Welcome Hero */}
+        <section>
+          <GlassCard className="p-8 md:p-12 relative overflow-hidden group border-gray-200" hoverable={false}>
+            {/* Ambient Background elements */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
+            
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6">
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-full w-fit"
+                >
+                  <Sparkles size={14} className="text-teal-500" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-teal-700">{greeting}, Commander</span>
+                </motion.div>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { icon: '📈', value: `${progress}%`, label: 'App. Progress', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-          { icon: '🏦', value: `${loanScore}%`, label: 'Loan Readiness', color: 'text-teal-400', bg: 'bg-teal/10' },
-          { icon: streak >= 7 ? '🔥' : streak >= 3 ? '⚡' : '📅', value: `${streak}`, label: 'Day Streak', color: 'text-orange-400', bg: 'bg-orange-500/10' },
-          { icon: '🏅', value: levelInfo ? `Lvl ${levelInfo.level}` : '–', label: levelInfo?.name || 'Level', color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
-        ].map(({ icon, value, label, color, bg }, idx) => (
-          <AnimatedCard key={label} delay={idx * 0.1} className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center text-xl flex-shrink-0`}>{icon}</div>
-            <div>
-              <p className={`text-xl font-bold ${color}`}>{value}</p>
-              <p className="text-xs text-muted">{label}</p>
-            </div>
-          </AnimatedCard>
-        ))}
-      </div>
-
-      {/* Personalized Suggestions */}
-      {suggestions.length > 0 && (
-        <div>
-          <h2 className="text-sm font-bold text-muted uppercase tracking-wider mb-3">🎯 Personalized For You</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {suggestions.map((s) => (
-              <Link key={s.id} to={s.path} className={`card-hover border-l-4 ${s.color} group`}>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">{s.icon}</span>
-                  <div>
-                    <h3 className="font-semibold text-white text-sm group-hover:text-blue-300 transition-colors">{s.title}</h3>
-                    <p className="text-xs text-muted mt-0.5 leading-relaxed">{s.desc}</p>
-                  </div>
-                  <ArrowRight size={14} className="ml-auto text-muted group-hover:text-white transition-colors flex-shrink-0 mt-0.5" />
+                <div className="space-y-2">
+                  <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
+                    Welcome back, <span className="text-gradient">{firstName}!</span>
+                  </h1>
+                  <p className="text-gray-600 font-medium text-lg leading-relaxed max-w-lg">
+                    Your mission to <span className="text-gray-900 font-semibold">{profile.targetCourse || 'Success'}</span> in <span className="text-gray-900 font-semibold">{profile.preferredCountries?.[0] || 'Global Campus'}</span> is tracking well.
+                  </p>
                 </div>
+
+                <div className="pt-4 space-y-4">
+                  <div className="flex justify-between items-end mb-1">
+                    <span className="text-xs font-black uppercase tracking-widest text-gray-500">Mission Completion</span>
+                    <span className="text-teal-500 font-black">{progress}%</span>
+                  </div>
+                  <ProgressBar percentage={progress} className="h-3" />
+                </div>
+              </div>
+
+              <div className="hidden lg:flex justify-center">
+                <div className="relative w-48 h-48">
+                  {/* Outer Ring */}
+                  <svg className="w-full h-full -rotate-90">
+                    <circle cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-200" />
+                    <motion.circle 
+                      cx="96" cy="96" r="88" 
+                      stroke="currentColor" strokeWidth="8" fill="transparent" 
+                      strokeDasharray={552.9}
+                      initial={{ strokeDashoffset: 552.9 }}
+                      animate={{ strokeDashoffset: 552.9 - (552.9 * progress / 100) }}
+                      transition={{ duration: 1.5, ease: "easeOut" }}
+                      className="text-teal-500" 
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                    <span className="text-4xl font-black text-gray-900">{progress}%</span>
+                    <span className="text-[10px] uppercase font-bold text-gray-500">Overall</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </GlassCard>
+        </section>
+
+        {/* Intelligence Grid */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
+              <Target size={14} className="text-teal-500" /> Key Metrics
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: TrendingUp, value: `${progress}%`, label: 'Progress', color: 'text-blue-500', bg: 'bg-blue-50' },
+              { icon: Landmark, value: `${loanScore}%`, label: 'Readiness', color: 'text-teal-500', bg: 'bg-teal-50' },
+              { icon: Zap, value: `${streak}`, label: 'Day Streak', color: 'text-orange-500', bg: 'bg-orange-50' },
+              { icon: Trophy, value: levelInfo ? `Lvl ${levelInfo.level}` : '–', label: levelInfo?.name || 'Level', color: 'text-yellow-500', bg: 'bg-yellow-50' },
+            ].map((stat, idx) => (
+              <GlassCard key={idx} className="p-6 group">
+                <div className="flex flex-col gap-4">
+                  <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500", stat.bg)}>
+                    <stat.icon className={cn("w-6 h-6", stat.color)} />
+                  </div>
+                  <div>
+                    <h4 className="text-2xl font-black text-gray-900">{stat.value}</h4>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">{stat.label}</p>
+                  </div>
+                </div>
+              </GlassCard>
+            ))}
+          </div>
+        </section>
+
+        {/* Personalized Actions */}
+        {suggestions.length > 0 && (
+           <section className="space-y-6">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-500 flex items-center gap-2">
+              <Sparkles size={14} className="text-teal-500" /> AI Insights For You
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {suggestions.map((s, idx) => (
+                <Link key={idx} to={s.path}>
+                  <GlassCard className="p-6 group relative overflow-hidden h-full">
+                    <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity duration-500", 
+                      s.color === 'blue' ? 'from-blue-500' : 'from-teal-500')} />
+                    
+                    <div className="flex gap-4 items-start relative z-10">
+                      <div className="text-3xl filter saturate-[1.5] group-hover:scale-110 transition-transform duration-500">{s.icon}</div>
+                      <div className="flex-1 space-y-2">
+                        <h3 className="font-black text-gray-900 text-sm group-hover:text-teal-500 transition-colors uppercase tracking-tight">{s.title}</h3>
+                        <p className="text-xs text-gray-500 font-medium leading-relaxed">{s.desc}</p>
+                      </div>
+                      <ArrowRight size={14} className="text-gray-400 group-hover:text-teal-500 transition-all transform group-hover:translate-x-1" />
+                    </div>
+                  </GlassCard>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Capabilities Explorer */}
+        <section className="space-y-6">
+          <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-500">OS Capabilities</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {navCards.map((card, idx) => (
+              <Link key={idx} to={card.path} className="group">
+                <GlassCard className="p-8 h-full relative overflow-hidden border-gray-100 hover:border-teal-300">
+                  <div className="relative z-10 space-y-4">
+                    <div className="text-4xl filter group-hover:drop-shadow-[0_0_15px_rgba(20,184,166,0.3)] duration-500 transition-all">{card.emoji}</div>
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-black text-gray-900 group-hover:text-teal-500 transition-colors leading-tight">{card.title}</h3>
+                      <p className="text-xs text-gray-500 font-medium leading-relaxed">{card.description}</p>
+                    </div>
+                    <div className="pt-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-teal-500 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                      Explore Module <ArrowRight size={10} />
+                    </div>
+                  </div>
+                </GlassCard>
               </Link>
             ))}
           </div>
-        </div>
-      )}
+        </section>
 
-      {/* Navigation Cards */}
-      <div>
-        <h2 className="text-lg font-bold text-white mb-4">All Features</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {navCards.map(({ path, title, description, gradient, emoji }) => (
-            <Link key={path} to={path} id={`nav-card-${title.toLowerCase().replace(/\s/g,'-')}`}
-              className="card-hover group relative overflow-hidden">
-              <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-              <div className="relative">
-                <div className="text-2xl mb-2">{emoji}</div>
-                <h3 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors mb-1">{title}</h3>
-                <p className="text-xs text-muted">{description}</p>
-                <div className="mt-3 flex items-center gap-1 text-primary text-xs font-medium group-hover:gap-2 transition-all">
-                  Explore <ArrowRight size={12} />
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {/* Engagement Footers */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-4">
+          <StreakCounter streak={streak} />
+          <DailyTip />
+        </section>
+
+        {showNudge && (
+          <SmartNudge
+            message="System Alert: Your document pipeline is currently idle. Several critical nodes require your intervention."
+            cta="Resolve Progress"
+            ctaPath="/progress"
+            onDismiss={() => setShowNudge(false)}
+          />
+        )}
       </div>
-
-      {/* Streak + Tip */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <StreakCounter streak={streak} />
-        <DailyTip />
-      </div>
-
-      {showNudge && (
-        <SmartNudge
-          message="You haven't checked your progress in a while. Several documents may still be pending!"
-          cta="View Progress"
-          ctaPath="/progress"
-          onDismiss={() => setShowNudge(false)}
-        />
-      )}
-    </div>
     </PageTransition>
   );
 }

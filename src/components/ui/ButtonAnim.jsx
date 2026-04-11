@@ -6,9 +6,9 @@ export const ButtonAnim = ({ children, className = "", variant = "primary", ...p
   
   const variants = {
     primary: "bg-primary hover:bg-primary-light text-white shadow-lg shadow-primary/30",
-    secondary: "bg-surface-card border border-surface-border hover:border-primary/50 text-white",
+    secondary: "bg-white border border-gray-200 hover:border-primary/50 text-gray-900",
     teal: "bg-teal hover:bg-teal-light text-white shadow-lg shadow-teal/30",
-    outline: "border-2 border-primary text-primary hover:bg-primary/10",
+    outline: "border-2 border-primary text-primary hover:bg-blue-50",
   };
 
   return (

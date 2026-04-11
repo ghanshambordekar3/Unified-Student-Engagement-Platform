@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CheckSquare, Award } from 'lucide-react';
+import { CheckSquare, Award, Target, Zap, Waves, Sparkles, GraduationCap, ChevronRight } from 'lucide-react';
 import storage from '../utils/storage';
 import { getLoanReadinessScore, getProgressPercentage } from '../utils/scoring';
 import ChecklistItem from '../components/ChecklistItem';
@@ -7,11 +7,12 @@ import ProgressBar from '../components/ProgressBar';
 import ReferralButton from '../components/ReferralButton';
 import checklistData from '../data/checklist.json';
 import { PageTransition } from '../components/ui/PageTransition';
-import { AnimatedCard } from '../components/ui/AnimatedCard';
+import { GlassCard } from '../components/ui/GlassCard';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../utils/cn';
 
 const COMPLETED_KEY = 'edupath_checklist_completed';
 
-// Group checklist by category
 const grouped = checklistData.reduce((acc, item) => {
   if (!acc[item.category]) acc[item.category] = [];
   acc[item.category].push(item);
@@ -27,32 +28,46 @@ const categoryIcons = {
 };
 
 function CircularProgress({ percentage }) {
-  const radius = 60;
+  const radius = 70;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
 
-  const color = percentage >= 80 ? '#22c55e' : percentage >= 50 ? '#14916F' : '#1D4E8F';
-
   return (
-    <div className="relative inline-flex items-center justify-center w-36 h-36">
-      <svg className="progress-ring w-36 h-36" viewBox="0 0 140 140">
-        <circle cx="70" cy="70" r={radius} fill="none" stroke="#2E3548" strokeWidth="10" />
-        <circle
-          cx="70"
-          cy="70"
+    <div className="relative inline-flex items-center justify-center w-48 h-48">
+      {/* Glow effect */}
+      <div className="absolute inset-4 bg-teal-100 blur-[40px] rounded-full animate-pulse-slow" />
+      
+      <svg className="progress-ring w-48 h-48 transform -rotate-90" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r={radius} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="12" />
+        <motion.circle
+          cx="80"
+          cy="80"
           r={radius}
           fill="none"
-          stroke={color}
-          strokeWidth="10"
+          stroke="url(#progressGradient)"
+          strokeWidth="12"
           strokeLinecap="round"
           strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          style={{ transition: 'stroke-dashoffset 1s ease-out' }}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: offset }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
         />
+        <defs>
+          <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#14b8a6" />
+            <stop offset="100%" stopColor="#3b82f6" />
+          </linearGradient>
+        </defs>
       </svg>
       <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-3xl font-black text-white">{percentage}%</span>
-        <span className="text-xs text-muted">complete</span>
+        <motion.span 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-black text-gray-900 tracking-tighter"
+        >
+          {percentage}<span className="text-xl text-teal-500">%</span>
+        </motion.span>
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Readiness</span>
       </div>
     </div>
   );
@@ -84,122 +99,196 @@ export default function Progress() {
 
   return (
     <PageTransition transitionKey="progress">
-    <div className="space-y-6">
-      {/* Confetti banner */}
-      {showConfetti && (
-        <AnimatedCard className="border border-yellow-500/40 bg-gradient-to-r from-yellow-500/20 to-orange-500/10 text-center py-6 animate-bounce-in">
-          <div className="text-5xl mb-2">🎉</div>
-          <h2 className="text-xl font-black text-white">100% Complete! Congratulations!</h2>
-          <p className="text-muted text-sm mt-1">You've completed your entire checklist. You're ready to apply!</p>
-        </AnimatedCard>
-      )}
+      <div className="space-y-10 pb-20">
+        <AnimatePresence>
+          {showConfetti && (
+            <motion.div 
+               initial={{ opacity: 0, scale: 0.9, y: -20 }}
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               exit={{ opacity: 0, scale: 0.9, y: -20 }}
+               className="relative"
+            >
+              <GlassCard className="border-teal-300 bg-teal-50 text-center py-10 overflow-hidden" hoverable={false}>
+                <div className="absolute inset-0 bg-gradient-to-r from-teal-100 via-transparent to-blue-100 animate-pulse-slow" />
+                <Sparkles className="mx-auto text-teal-500 mb-4" size={48} />
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Mission Accomplished</h2>
+                <p className="text-gray-500 font-medium mt-2 max-w-md mx-auto">Standard operating procedures complete. Your academic profile is now fully verified for global deployment.</p>
+              </GlassCard>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-black text-white">Progress Tracker</h1>
-        <p className="text-muted text-sm mt-1">Track your application documents and readiness</p>
-      </div>
-
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* Circular progress */}
-        <AnimatedCard className="col-span-1 flex flex-col items-center justify-center py-6">
-          <CircularProgress percentage={progress} />
-          <p className="text-sm text-muted mt-3 text-center">
-            {completedCount} of {totalCount} items done
-          </p>
-        </AnimatedCard>
-
-        {/* Loan score */}
-        <AnimatedCard className="flex flex-col justify-between">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-teal/20 flex items-center justify-center text-xl">🏦</div>
-            <div>
-              <p className="text-sm text-muted">Loan Readiness</p>
-              <p className="text-2xl font-black text-white">{loanScore}%</p>
-            </div>
-          </div>
-          <ProgressBar percentage={loanScore} color="from-teal to-cyan-400" showLabel={false} height="h-2.5" />
-          <p className="text-xs text-muted mt-2">
-            {loanScore < 60 ? 'Complete financial docs to improve' :
-             loanScore < 100 ? 'Almost ready for loan application' :
-             '✓ Ready for loan application!'}
-          </p>
-        </AnimatedCard>
-
-        {/* Achievements */}
-        <AnimatedCard>
-          <div className="flex items-center gap-3 mb-4">
-            <Award size={22} className="text-yellow-400" />
-            <h3 className="font-semibold text-white">Milestones</h3>
-          </div>
+        {/* Header */}
+        <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            {[
-              { label: 'First Step', done: completedIds.length >= 1, icon: '🥇' },
-              { label: 'Halfway there', done: progress >= 50, icon: '⚡' },
-              { label: 'Loan Ready', done: loanScore === 100, icon: '🏦' },
-              { label: 'All Done!', done: progress === 100, icon: '🎉' },
-            ].map((m) => (
-              <div key={m.label} className={`flex items-center gap-2 text-sm ${m.done ? 'text-white' : 'text-muted'}`}>
-                <span className={m.done ? '' : 'opacity-40'}>{m.icon}</span>
-                <span className={m.done ? 'font-medium' : ''}>{m.label}</span>
-                {m.done && <span className="ml-auto text-xs text-green-400">✓</span>}
-              </div>
-            ))}
+            <motion.div 
+               initial={{ opacity: 0, x: -20 }}
+               animate={{ opacity: 1, x: 0 }}
+               className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-full w-fit"
+            >
+              <Target size={14} className="text-teal-500" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-teal-700">Operational Readiness Tracker</span>
+            </motion.div>
+            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">Deployment <span className="text-gradient">Status</span></h1>
+            <p className="text-gray-500 font-medium text-sm">Real-time telemetry of your document verification and financial readiness.</p>
           </div>
-        </AnimatedCard>
-      </div>
+        </section>
 
-      {/* Checklist by Category */}
-      <div className="space-y-5">
-        <h2 className="text-lg font-bold text-white">Document Checklist</h2>
-        {Object.entries(grouped).map(([category, items]) => {
-          const catCompleted = items.filter((i) => completedIds.includes(i.id)).length;
-          return (
-            <AnimatedCard key={category}>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{categoryIcons[category] || '📋'}</span>
-                  <h3 className="font-semibold text-white">{category}</h3>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted">{catCompleted}/{items.length}</span>
-                  <div className="w-16 bg-surface rounded-full h-1.5 overflow-hidden">
-                    <div
-                      className="h-1.5 bg-gradient-to-r from-primary to-teal rounded-full transition-all duration-500"
-                      style={{ width: `${(catCompleted / items.length) * 100}%` }}
-                    />
+        {/* System Overview Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main Progress Ring */}
+          <GlassCard className="lg:col-span-5 flex flex-col items-center justify-center py-12" hoverable={false}>
+            <CircularProgress percentage={progress} />
+            <div className="mt-8 flex items-center gap-4">
+              <div className="text-center">
+                <p className="text-xl font-black text-gray-900">{completedCount}</p>
+                <p className="text-[8px] font-black uppercase tracking-widest text-gray-500">Completed</p>
+              </div>
+              <div className="w-px h-8 bg-gray-200" />
+              <div className="text-center">
+                <p className="text-xl font-black text-gray-900">{totalCount}</p>
+                <p className="text-[8px] font-black uppercase tracking-widest text-gray-500">Total Nodes</p>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* Sub-Systems */}
+          <div className="lg:col-span-7 flex flex-col gap-8">
+            {/* Loan Readiness */}
+            <GlassCard className="p-8 flex flex-col justify-between" hoverable={false}>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-teal-100 border border-teal-200 flex items-center justify-center text-teal-500">
+                    <Zap size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-900">Financial Readiness</h3>
+                    <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Asset verification coefficient</p>
                   </div>
                 </div>
+                <div className="text-right">
+                  <p className="text-3xl font-black text-gray-900">{loanScore}<span className="text-xs text-teal-500">%</span></p>
+                </div>
               </div>
-              <div className="space-y-2">
-                {items.map((item) => (
-                  <ChecklistItem
-                    key={item.id}
-                    item={item}
-                    checked={completedIds.includes(item.id)}
-                    onToggle={toggleItem}
+              
+              <div className="space-y-4">
+                <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden p-0.5 border border-gray-100">
+                  <motion.div 
+                     initial={{ width: 0 }}
+                     animate={{ width: `${loanScore}%` }}
+                     className="h-full rounded-full bg-gradient-to-r from-teal-500 to-blue-500"
                   />
+                </div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">
+                   {loanScore < 100 ? "Optimization required in documentation sub-layer" : "Credit facility integration operational"}
+                </p>
+              </div>
+            </GlassCard>
+
+            {/* Achievements/Milestones */}
+            <GlassCard className="p-8" hoverable={false}>
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-2xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-500">
+                  <Award size={24} />
+                </div>
+                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-900">Milestone Matrix</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { label: 'Initial Core', done: completedIds.length >= 1, icon: '🎯' },
+                  { label: 'Half-Life', done: progress >= 50, icon: '⚡' },
+                  { label: 'Credit Ready', done: loanScore === 100, icon: '🏦' },
+                  { label: 'Zero-Origin', done: progress === 100, icon: '💎' },
+                ].map((m) => (
+                  <div key={m.label} className={cn(
+                    "flex items-center gap-3 p-3 rounded-xl border transition-all duration-300",
+                    m.done ? "bg-gray-100 border-teal-300 text-gray-900" : "bg-transparent border-gray-100 text-gray-500 opacity-40 grayscale"
+                  )}>
+                    <span className="text-lg">{m.icon}</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">{m.label}</span>
+                    {m.done && <CheckSquare size={12} className="ml-auto text-teal-500" />}
+                  </div>
                 ))}
               </div>
-            </AnimatedCard>
-          );
-        })}
+            </GlassCard>
+          </div>
+        </div>
+
+        {/* Global Progress Bar */}
+        <GlassCard className="p-8 border-gray-200 shadow-lg" hoverable={false}>
+           <div className="flex justify-between items-end mb-4">
+             <div className="space-y-1">
+               <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-900">Aggregated System Health</h4>
+               <p className="text-[8px] text-gray-500 font-bold tracking-widest uppercase">Verified across all subsystems</p>
+             </div>
+             <p className="text-2xl font-black text-gray-900">{progress}%</p>
+           </div>
+           <div className="h-4 w-full bg-gray-100 rounded-full overflow-hidden p-1 border border-gray-100">
+             <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                className="h-full rounded-full bg-gradient-to-r from-blue-600 via-teal-500 to-cyan-400"
+             />
+           </div>
+        </GlassCard>
+
+        {/* Document Clusters */}
+        <div className="space-y-8">
+          <div className="flex items-center gap-3">
+             <div className="p-2 rounded-xl bg-gray-100 text-gray-500">
+               <CheckSquare size={20} />
+             </div>
+             <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-900">System Checklist Nodes</h3>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6">
+            {Object.entries(grouped).map(([category, items]) => {
+              const catCompleted = items.filter((i) => completedIds.includes(i.id)).length;
+              return (
+                <GlassCard key={category} className="p-8 border-gray-100" hoverable={false}>
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-xl">
+                        {categoryIcons[category]}
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-black uppercase tracking-widest text-gray-900">{category} Cluster</h4>
+                        <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Verification Sub-Module</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-[10px] font-black text-teal-500 uppercase tracking-widest">{catCompleted} / {items.length} COMPLETE</span>
+                      <div className="w-32 bg-gray-100 rounded-full h-1 overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(catCompleted / items.length) * 100}%` }}
+                          className="h-full bg-teal-500 rounded-full"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {items.map((item) => (
+                      <ChecklistItem
+                        key={item.id}
+                        item={item}
+                        checked={completedIds.includes(item.id)}
+                        onToggle={toggleItem}
+                      />
+                    ))}
+                  </div>
+                </GlassCard>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Referal / Actions */}
+        <section className="pt-10 border-t border-gray-100">
+           <ReferralButton />
+        </section>
       </div>
-
-      {/* Overall progress bar */}
-      <AnimatedCard>
-        <ProgressBar
-          percentage={progress}
-          label="Overall Application Progress"
-          color="from-primary via-teal to-cyan-400"
-          height="h-4"
-        />
-      </AnimatedCard>
-
-      {/* Referral */}
-      <ReferralButton />
-    </div>
     </PageTransition>
   );
 }

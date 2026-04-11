@@ -1,18 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Trophy, Star, Zap } from 'lucide-react';
+import { Trophy, Star, Zap, Activity, Award, Flame, Bot, BarChart3, ChevronRight, Sparkles } from 'lucide-react';
 import { getAllBadgesWithStatus, getRewardsState, getLevelInfo, syncStreakBadges } from '../utils/rewards';
 import { getStreak } from '../utils/streaks';
 import ProgressBar from '../components/ProgressBar';
 import { trackPageView } from '../utils/personalization';
-
-const categoryColors = {
-  Engagement: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-  Exploration: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
-  Finance: 'bg-teal-500/10 border-teal-500/20 text-teal-400',
-  Application: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
-  Progress: 'bg-green-500/10 border-green-500/20 text-green-400',
-  Social: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
-};
+import { GlassCard } from '../components/ui/GlassCard';
+import { Button } from '../components/ui/Button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../utils/cn';
 
 export default function Rewards() {
   const [badges, setBadges] = useState([]);
@@ -28,7 +23,7 @@ export default function Rewards() {
     const all = getAllBadgesWithStatus();
     setBadges(all);
     setRewardsState(state);
-    setLevelInfo(getLevelInfo(state.xp));
+    if (state) setLevelInfo(getLevelInfo(state.xp));
   }, []);
 
   if (!rewardsState || !levelInfo) return null;
@@ -36,143 +31,232 @@ export default function Rewards() {
   const categories = ['All', ...new Set(badges.map((b) => b.category))];
   const filteredBadges = activeCategory === 'All' ? badges : badges.filter((b) => b.category === activeCategory);
   const earnedCount = badges.filter((b) => b.earned).length;
-  const nextLevelXP = levelInfo.next?.maxXP === 99999 ? 'MAX' : levelInfo.next?.maxXP;
-  const xpToNext = typeof nextLevelXP === 'number' ? nextLevelXP - rewardsState.xp : 0;
+  const xpToNext = levelInfo.next ? levelInfo.next.maxXP - rewardsState.xp : 0;
+
+  const stats = [
+    { label: 'Total XP', value: rewardsState.xp, icon: <Zap size={20} className="text-yellow-500" />, sub: 'Network Power' },
+    { label: 'Artifacts', value: `${earnedCount}/${badges.length}`, icon: <Award size={20} className="text-blue-500" />, sub: 'Badges Unlocked' },
+    { label: 'Neural Queries', value: rewardsState.stats.chatbot_queries, icon: <Bot size={20} className="text-purple-500" />, sub: 'AI Interactions' },
+    { label: 'Chronos Streak', value: `${getStreak()} Days`, icon: <Flame size={20} className="text-orange-500" />, sub: 'Continuous Sync' },
+  ];
+
+  const earnOptions = [
+    { action: 'Consult Neural Chatbot', xp: '+75 XP', icon: '🤖' },
+    { action: 'Execute ROI Projection', xp: '+100 XP', icon: '📈' },
+    { action: 'Generate Academic SOP', xp: '+200 XP', icon: '✍️' },
+    { action: 'Initialize Loan Protocol', xp: '+300 XP', icon: '🏦' },
+    { action: 'Admission Vector Analysis', xp: '+100 XP', icon: '🎯' },
+    { action: '7-Cycle Synchronization', xp: '+250 XP', icon: '🔥' },
+  ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-10 pb-20">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-black text-white flex items-center gap-3">
-          <Trophy className="text-yellow-400" size={26} />
-          Rewards & Achievements
-        </h1>
-        <p className="text-muted text-sm mt-1">Earn XP, unlock badges, and level up your study abroad journey</p>
-      </div>
-
-      {/* Level Card */}
-      <div className="card bg-gradient-to-br from-yellow-500/20 via-surface-card to-primary/20 border-yellow-500/30 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-yellow-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="relative flex items-center gap-6 flex-wrap">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-4xl shadow-lg shadow-orange-500/30 flex-shrink-0">
-            🏅
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm text-muted mb-1">Current Level</p>
-            <h2 className="text-2xl font-black text-white mb-1">
-              Level {levelInfo.level} — <span className={levelInfo.color}>{levelInfo.name}</span>
-            </h2>
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="badge bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 font-bold">
-                ⚡ {rewardsState.xp} XP
-              </span>
-              {xpToNext > 0 && (
-                <span className="text-xs text-muted">{xpToNext} XP to Level {levelInfo.level + 1}</span>
-              )}
-            </div>
-            <div className="mt-3 max-w-xs">
-              <ProgressBar
-                percentage={levelInfo.progress}
-                color="from-yellow-500 to-orange-400"
-                showLabel={false}
-                height="h-2.5"
-              />
-            </div>
-          </div>
-          <div className="text-center flex-shrink-0">
-            <p className="text-3xl font-black text-white">{earnedCount}</p>
-            <p className="text-sm text-muted">Badges Earned</p>
-            <p className="text-xs text-muted">of {badges.length}</p>
-          </div>
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-2">
+          <motion.div 
+             initial={{ opacity: 0, x: -20 }}
+             animate={{ opacity: 1, x: 0 }}
+             className="flex items-center gap-2 px-3 py-1 bg-yellow-50 border border-yellow-200 rounded-full w-fit"
+          >
+            <Sparkles size={14} className="text-yellow-500" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-yellow-700">Gamification Engine 2.1</span>
+          </motion.div>
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">System <span className="text-gradient">Advancement</span></h1>
+          <p className="text-gray-500 font-medium text-sm">Quantifying your academic evolution through mission achievements.</p>
         </div>
-      </div>
+      </section>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { label: 'Total XP', value: rewardsState.xp, icon: '⚡', color: 'text-yellow-400' },
-          { label: 'Badges', value: `${earnedCount}/${badges.length}`, icon: '🏅', color: 'text-blue-400' },
-          { label: 'Chatbot Queries', value: rewardsState.stats.chatbot_queries, icon: '🤖', color: 'text-purple-400' },
-          { label: 'Login Streak', value: `${getStreak()} days`, icon: '🔥', color: 'text-orange-400' },
-        ].map(({ label, value, icon, color }) => (
-          <div key={label} className="card text-center">
-            <div className="text-2xl mb-1">{icon}</div>
-            <p className={`text-xl font-black ${color}`}>{value}</p>
-            <p className="text-xs text-muted">{label}</p>
-          </div>
-        ))}
-      </div>
+      {/* Level Card - High Spec */}
+      <GlassCard className="p-10 md:p-14 relative overflow-hidden group border-yellow-200" hoverable={false}>
+         {/* Animated Background Elements */}
+         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-yellow-100 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 group-hover:bg-yellow-200 transition-colors duration-1000" />
+         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-100 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 group-hover:bg-blue-200 transition-colors duration-1000" />
 
-      {/* How to Earn */}
-      <div className="card border-l-4 border-l-primary">
-        <h3 className="font-bold text-white mb-3 flex items-center gap-2"><Zap size={16} className="text-yellow-400" /> How to Earn XP</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {[
-            ['Use Career Chatbot', '+75 XP', '🤖'],
-            ['Calculate ROI', '+100 XP', '📈'],
-            ['Generate SOP', '+200 XP', '✍️'],
-            ['Complete Loan Application', '+300 XP', '🏦'],
-            ['Check Admission Predictor', '+100 XP', '🎯'],
-            ['7-Day Streak', '+250 XP', '🔥'],
-            ['Complete Checklist 100%', '+500 XP', '🏆'],
-            ['Share Referral Link', '+150 XP', '🤝'],
-          ].map(([action, xp, icon]) => (
-            <div key={action} className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface">
-              <span className="text-sm text-white flex items-center gap-2"><span>{icon}</span> {action}</span>
-              <span className="text-xs font-bold text-yellow-400">{xp}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Badges */}
-      <div>
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-          <h2 className="font-bold text-white">All Badges</h2>
-          <div className="flex gap-2 flex-wrap">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  activeCategory === cat ? 'bg-primary text-white' : 'bg-surface border border-surface-border text-muted hover:text-white'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-          {filteredBadges.map((badge) => (
-            <div
-              key={badge.id}
-              className={`card text-center relative transition-all duration-200 ${
-                badge.earned
-                  ? 'border-yellow-500/30 bg-yellow-500/5 hover:border-yellow-500/50'
-                  : 'opacity-50 grayscale'
-              }`}
+         <div className="relative flex flex-col lg:flex-row items-center gap-12">
+            <motion.div 
+               initial={{ scale: 0.8, opacity: 0 }}
+               animate={{ scale: 1, opacity: 1 }}
+               className="relative shrink-0"
             >
-              {badge.earned && (
-                <div className="absolute top-2 right-2">
-                  <Star size={12} className="text-yellow-400 fill-yellow-400" />
-                </div>
-              )}
-              <div className="text-4xl mb-2">{badge.icon}</div>
-              <h3 className="text-xs font-bold text-white mb-1">{badge.name}</h3>
-              <p className="text-xs text-muted mb-2 leading-tight">{badge.description}</p>
-              <span className={`badge border text-xs ${
-                badge.earned ? 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400' : 'bg-surface border-surface-border text-muted'
-              }`}>
-                +{badge.xp} XP
-              </span>
-              {badge.earned && (
-                <p className="text-xs text-green-400 mt-2 font-semibold">✓ Earned!</p>
-              )}
+               <div className="w-40 h-40 rounded-[40px] bg-gradient-to-br from-yellow-100 to-orange-200 border border-yellow-300 flex items-center justify-center relative group-hover:rotate-6 transition-transform duration-700">
+                  <div className="absolute inset-0 bg-yellow-200 blur-2xl rounded-full" />
+                  <span className="text-7xl relative z-10">🏅</span>
+               </div>
+               <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center font-black text-2xl text-gray-900 shadow-lg">
+                 {levelInfo.level}
+               </div>
+            </motion.div>
+
+            <div className="flex-1 space-y-6 text-center lg:text-left">
+               <div>
+                  <p className="text-[11px] font-black uppercase tracking-[0.3em] text-yellow-600 mb-2">Evolutionary Status</p>
+                  <h2 className="text-3xl md:text-4xl font-black text-gray-900 uppercase tracking-tight leading-none">
+                    {levelInfo.name} <span className="text-gray-500 block md:inline md:ml-3 text-xl lowercase font-medium">Stage {levelInfo.level}</span>
+                  </h2>
+               </div>
+
+               <div className="space-y-3 max-w-xl mx-auto lg:mx-0">
+                  <div className="flex justify-between items-end px-1">
+                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{rewardsState.xp} / {levelInfo.next?.maxXP || 'MAX'} XP</span>
+                     <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{xpToNext > 0 ? `${xpToNext} XP to next synchronization` : 'Peak Level Reached'}</span>
+                  </div>
+                  <ProgressBar
+                    percentage={levelInfo.progress}
+                    color="from-yellow-500 via-orange-500 to-yellow-600"
+                    showLabel={false}
+                    height="h-4"
+                  />
+               </div>
+
+               <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+                  <div className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-xl">
+                     <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Global Rank</p>
+                     <p className="text-sm font-black text-gray-900">#1,284</p>
+                  </div>
+                  <div className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-xl">
+                     <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Percentile</p>
+                     <p className="text-sm font-black text-teal-500">Top 8%</p>
+                  </div>
+               </div>
             </div>
-          ))}
-        </div>
+         </div>
+      </GlassCard>
+
+      {/* Stats Cluster */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+         {stats.map((s, i) => (
+           <motion.div
+             key={s.label}
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: i * 0.1 }}
+           >
+              <GlassCard className="p-6 h-full flex flex-col items-center text-center group border-gray-200 hover:border-gray-300">
+                 <div className="w-12 h-12 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
+                    {s.icon}
+                 </div>
+                 <p className="text-2xl font-black text-gray-900 tracking-tight">{s.value}</p>
+                 <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-1">{s.label}</p>
+                 <p className="text-[8px] font-bold text-gray-400 uppercase tracking-tight mt-1">{s.sub}</p>
+              </GlassCard>
+           </motion.div>
+         ))}
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+         {/* Badge System */}
+         <div className="lg:col-span-8 space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+               <div>
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Achievement Matrix</h3>
+                  <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-1">Proof of academic accomplishment</p>
+               </div>
+               <div className="flex gap-1 bg-gray-100 p-1 rounded-xl border border-gray-200 overflow-x-auto no-scrollbar">
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={cn(
+                        "px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                        activeCategory === cat ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg" : "text-gray-500 hover:text-gray-900"
+                      )}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+               </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+               <AnimatePresence mode="popLayout">
+                 {filteredBadges.map((badge, i) => (
+                   <motion.div
+                     layout
+                     key={badge.id}
+                     initial={{ opacity: 0, scale: 0.9 }}
+                     animate={{ opacity: 1, scale: 1 }}
+                     exit={{ opacity: 0, scale: 0.9 }}
+                     transition={{ delay: i * 0.05 }}
+                   >
+                     <GlassCard 
+                       className={cn(
+                         "p-6 h-full text-center relative flex flex-col items-center group transition-all duration-500",
+                         badge.earned ? "border-yellow-200 bg-yellow-50" : "opacity-50 grayscale"
+                       )}
+                     >
+                        {badge.earned && (
+                          <div className="absolute top-3 right-3">
+                             <Sparkles size={12} className="text-yellow-500" />
+                          </div>
+                        )}
+                        <div className={cn(
+                          "w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mb-4 transition-transform duration-700",
+                          badge.earned ? "bg-yellow-100" : "bg-gray-100"
+                        )}>
+                           {badge.icon}
+                        </div>
+                        <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-widest leading-tight mb-2 group-hover:text-yellow-600 transition-colors">{badge.name}</h4>
+                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight leading-relaxed mb-4 flex-1">{badge.description}</p>
+                        
+                        <div className={cn(
+                          "px-3 py-1 rounded-lg border text-[8px] font-black uppercase tracking-widest transition-colors",
+                          badge.earned ? "bg-yellow-100 border-yellow-200 text-yellow-600" : "bg-gray-100 border-gray-200 text-gray-500"
+                        )}>
+                           +{badge.xp} XP Vector
+                        </div>
+                        {badge.earned && (
+                           <div className="mt-3 flex items-center gap-1.5 ring-1 ring-teal-200 px-2 py-0.5 rounded-full bg-teal-50">
+                              <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+                              <span className="text-[7px] font-black text-teal-600 uppercase tracking-widest">Synchronized</span>
+                           </div>
+                        )}
+                     </GlassCard>
+                   </motion.div>
+                 ))}
+               </AnimatePresence>
+            </div>
+         </div>
+
+         {/* Acquisition Missions */}
+         <div className="lg:col-span-4 space-y-6">
+            <GlassCard className="p-8 space-y-6 flex flex-col h-full border-gray-200" hoverable={false}>
+               <div>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">XP Acquisition Protocol</h3>
+                  <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Operational directives for power growth</p>
+               </div>
+
+               <div className="space-y-3 flex-1">
+                  {earnOptions.map((opt, i) => (
+                    <motion.div 
+                      key={opt.action}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 + (i * 0.1) }}
+                      className="group flex items-center justify-between p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-teal-300 transition-all cursor-pointer"
+                    >
+                       <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+                             {opt.icon}
+                          </div>
+                          <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest group-hover:text-gray-900 transition-colors">{opt.action}</span>
+                       </div>
+                       <span className="text-[10px] font-black text-yellow-500 tracking-widest">{opt.xp}</span>
+                    </motion.div>
+                  ))}
+               </div>
+
+               <div className="pt-6 border-t border-gray-200">
+                  <div className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
+                     <Trophy size={20} className="text-primary shrink-0" />
+                     <p className="text-[9px] text-gray-600 font-bold uppercase leading-relaxed">
+                       <span className="text-gray-900">Elite Achievement unlocked:</span> "Full Checklist synchronization" provides an <span className="text-primary font-bold">+500 XP</span> payload.
+                     </p>
+                  </div>
+               </div>
+            </GlassCard>
+         </div>
       </div>
     </div>
   );
