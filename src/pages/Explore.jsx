@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, GraduationCap, Filter, Search, SlidersHorizontal } from 'lucide-react';
-import { getChatResponse, createUserMessage } from '../utils/chatbot';
+import { getChatResponseStream, createUserMessage } from '../utils/chatbot';
 import ChatMessage from '../components/ChatMessage';
 import UniversityCard from '../components/UniversityCard';
 import storage from '../utils/storage';
@@ -70,7 +70,7 @@ export default function Explore() {
     return () => window.removeEventListener('chatSuggestion', handler);
   }, []);
 
-  const sendMessage = (text) => {
+  const sendMessage = async (text) => {
     const query = (text || inputValue).trim();
     if (!query) return;
 
@@ -80,13 +80,44 @@ export default function Explore() {
     setIsTyping(true);
     trackEvent('chatbot_queries');
 
-    // Simulate typing delay
-    setTimeout(() => {
-      const botResponse = getChatResponse(query);
-      setMessages((m) => [...m, botResponse]);
-      setIsTyping(false);
-    }, 800 + Math.random() * 600);
+    // Add placeholder bot message immediately (appears within ~300ms)
+    const botMsgId = Date.now();
+    const placeholderMsg = {
+      id: botMsgId,
+      text: '',
+      isBot: true,
+      isStreaming: true,
+      timestamp: new Date().toISOString(),
+      suggestions: [],
+    };
+    setMessages((m) => [...m, placeholderMsg]);
+    setIsTyping(false);
+
+    // Stream tokens in — update the placeholder message live
+    let accumulated = '';
+    await getChatResponseStream(
+      query,
+      (chunk) => {
+        accumulated += chunk;
+        setMessages((m) =>
+          m.map((msg) =>
+            msg.id === botMsgId ? { ...msg, text: accumulated } : msg
+          )
+        );
+      },
+      () => {
+        // Mark streaming done, add suggestions
+        setMessages((m) =>
+          m.map((msg) =>
+            msg.id === botMsgId
+              ? { ...msg, isStreaming: false, suggestions: ['Tell me about Canada', 'MBA programs', 'Education loans', 'IELTS tips'] }
+              : msg
+          )
+        );
+      }
+    );
   };
+
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
