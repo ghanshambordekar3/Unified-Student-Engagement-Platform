@@ -10,7 +10,7 @@ export function calculateAdmissionScore(gpa, ielts, experience) {
   const expScore = Math.min(parseFloat(experience), 5) * 5;
   const total = Math.round(gpaScore + ieltsScore + expScore);
 
-  let verdict, color, label;
+  let verdict, color, label, description;
   if (total >= 70) {
     verdict = 'High';
     color = 'text-green-400';
@@ -25,15 +25,6 @@ export function calculateAdmissionScore(gpa, ielts, experience) {
     verdict = 'Low';
     color = 'text-red-400';
     label = '🔴 Low Probability';
-    description = 'Consider retaking IELTS or gaining more experience before applying.';
-  }
-
-  var description;
-  if (total >= 70) {
-    description = 'Excellent profile! You have strong chances at most universities in your target list.';
-  } else if (total >= 50) {
-    description = 'Good profile. Focus on strong SOP and LOR to strengthen your application.';
-  } else {
     description = 'Consider retaking IELTS or gaining more experience before applying.';
   }
 
@@ -89,52 +80,48 @@ export function calculateROI(cost, course, country) {
  * Rule-based loan eligibility engine
  * Income in lakhs (INR)
  */
-export function calculateLoanEligibility(incomeInLakhs, hasCoApplicant, hasCollateral) {
+export function calculateLoanEligibility(incomeInLakhs, hasCoApplicant, hasCollateral, isTopUniversity = false) {
   const income = parseFloat(incomeInLakhs);
-  let tier, loanMin, loanMax, interestRate, label, color;
+  let tier, loanMax, interestRate, label, color;
 
   if (income > 8) {
     tier = 'High';
-    loanMin = 2000000; // 20L
-    loanMax = 4000000; // 40L
-    interestRate = 8.5;
+    loanMax = isTopUniversity && hasCoApplicant ? 7500000 : 6000000;
+    interestRate = 9.5;
     label = '🟢 High Eligibility';
-    color = 'text-green-400';
+    color = 'text-green-500';
   } else if (income >= 5) {
     tier = 'Medium';
-    loanMin = 1000000; // 10L
-    loanMax = 2000000; // 20L
+    loanMax = hasCoApplicant ? 5000000 : 4000000;
     interestRate = 10.5;
     label = '🟡 Medium Eligibility';
-    color = 'text-yellow-400';
+    color = 'text-yellow-500';
+  } else if (income >= 3) {
+    tier = 'Low-Medium';
+    loanMax = 3000000;
+    interestRate = 11.0;
+    label = '🟠 Moderate Eligibility';
+    color = 'text-orange-500';
   } else {
     tier = 'Low';
-    loanMin = 500000; // 5L
-    loanMax = 1000000; // 10L
-    interestRate = 12.5;
-    label = '🔴 Low Eligibility';
-    color = 'text-red-400';
+    loanMax = 2000000;
+    interestRate = 11.5;
+    label = '🔴 Limited Eligibility';
+    color = 'text-red-500';
   }
 
-  // Co-applicant boosts the upper limit
-  if (hasCoApplicant && tier !== 'High') {
-    loanMax = Math.round(loanMax * 1.3);
-    interestRate -= 0.5;
-  }
-
-  // Collateral reduces interest rate
+  // Adjustments
+  if (hasCoApplicant) interestRate -= 0.5;
   if (hasCollateral) {
     interestRate -= 1.0;
-    loanMax = Math.round(loanMax * 1.2);
+    loanMax = Math.round(loanMax * 1.25);
   }
 
-  // EMI calculation: monthly EMI for 10 year tenure
+  const loanMin = Math.round(loanMax * 0.4);
+
+  // EMI calculation (10 years = 120 months)
   const tenureMonths = 120;
   const monthlyRate = interestRate / 100 / 12;
-  const emiMin = Math.round(
-    (loanMin * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) /
-    (Math.pow(1 + monthlyRate, tenureMonths) - 1)
-  );
   const emiMax = Math.round(
     (loanMax * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) /
     (Math.pow(1 + monthlyRate, tenureMonths) - 1)
@@ -146,12 +133,13 @@ export function calculateLoanEligibility(incomeInLakhs, hasCoApplicant, hasColla
     color,
     loanMin,
     loanMax,
-    interestRate: Math.max(7.0, interestRate).toFixed(1),
-    emiMin,
+    interestRate: Math.max(7.5, interestRate).toFixed(1),
     emiMax,
     tenure: '10 years',
+    description: `Based on your family income of ₹${income}L, you are eligible for loans up to ₹${(loanMax / 100000).toFixed(1)}L.`,
   };
 }
+
 
 /**
  * Calculate loan readiness score from checklist

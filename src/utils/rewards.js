@@ -85,8 +85,8 @@ export function getLevelInfo(xp) {
     { level: 5, name: 'Champion', minXP: 2000, maxXP: 99999, color: 'text-yellow-400' },
   ];
 
-  const current = levels.findLast((l) => xp >= l.minXP) || levels[0];
-  const next = levels[Math.min(current.level, levels.length - 1)];
+  const current = [...levels].reverse().find((l) => xp >= l.minXP) || levels[0];
+  const next = levels[current.level] || levels[levels.length - 1];
   const progress = next
     ? Math.round(((xp - current.minXP) / (next.maxXP - current.minXP)) * 100)
     : 100;

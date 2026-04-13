@@ -428,9 +428,9 @@ export default function Finance() {
                           <div className="p-6 glass bg-gradient-to-r from-teal-500/10 to-blue-500/10 border border-gray-100 rounded-2xl">
                              <div className="flex justify-between items-baseline mb-2">
                                <p className="text-[10px] font-black text-teal-700 uppercase tracking-widest">Estimated EMI</p>
-                               <p className="text-2xl font-black text-gray-900 tracking-tight">
-                                 {formatINR(loanResult.emiMin)} – {formatINR(loanResult.emiMax)}
-                               </p>
+                             <p className="text-2xl font-black text-gray-900 tracking-tight">
+                                  {formatINR(Math.round(loanResult.loanMin / 120))} – {formatINR(loanResult.emiMax)}
+                                </p>
                              </div>
                              <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
                                <motion.div 
