@@ -427,12 +427,12 @@ export default function Dashboard() {
         </section>
 
         {/* ── Engagement Footer ────────────────────────────────────────── */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-4">
           <StreakCounter streak={streak} />
           <DailyTip />
         </section>
 
-        {/* Smart Nudge */}
+        {/* ── Smart Nudge ─────────────────────────────────────────────── */}
         <AnimatePresence>
           {showNudge && (
             <SmartNudge
@@ -446,5 +446,7 @@ export default function Dashboard() {
 
       </div>
     </PageTransition>
+  );
+}
   );
 }

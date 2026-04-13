@@ -23,8 +23,8 @@ export default function ChatMessage({ message }) {
         {/* Message bubble */}
         <div
           className={`rounded-2xl px-4 py-3 ${isBot
-              ? 'bg-white border border-gray-200 rounded-tl-sm shadow-sm'
-              : 'bg-gradient-to-r from-blue-600 to-teal-500 rounded-tr-sm text-white'
+            ? 'bg-white border border-gray-200 rounded-tl-sm shadow-sm'
+            : 'bg-gradient-to-r from-blue-600 to-teal-500 rounded-tr-sm text-white'
             }`}
         >
           {/* Empty state: show pulsing dot while first token loads */}

@@ -21,15 +21,28 @@
     color: #111827;
   }
 
+  /* Premium Light Background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+    pointer-events: none;
+  }
+
   ::selection {
     background-color: rgba(20, 184, 166, 0.25);
     color: #111827;
   }
 
-  /* Light scrollbar */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -136,7 +149,7 @@
   }
 
   .nav-link-active {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-900 bg-teal-500/10 border border-teal-500/30 font-medium;
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-900 bg-teal-500/10 border border-teal-500/30 font-medium shadow-[0_0_15px_rgba(20, 184, 166, 0.1)];
   }
 }
 
@@ -150,7 +163,7 @@
   }
 
   .bg-navy {
-    background-color: #060912;
+    background-color: #f1f5f9;
   }
 
   .text-balance {
@@ -158,7 +171,7 @@
   }
 }
 
-/* ─── Keyframes ─── */
+/* ─── Premium Animations ─── */
 @keyframes gradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -177,8 +190,8 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
 }
 
 @keyframes gradientShift {
@@ -198,12 +211,12 @@
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(-10px); }
+  from { opacity: 0; transform: translateX(-20px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -213,7 +226,7 @@
 }
 
 .animate-float {
-  animation: float 4s ease-in-out infinite;
+  animation: floatUp 4s ease-in-out infinite;
 }
 
 .animate-float-up {
@@ -226,7 +239,7 @@
 
 .animate-gradient {
   background-size: 200% 200%;
-  animation: gradientShift 4s ease infinite;
+  animation: gradientShift 15s ease infinite;
 }
 
 .shimmer-text {
@@ -248,7 +261,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  animation: shimmerLoad 1.5s infinite;
+  animation: shimmer 1.5s infinite;
 }
 
 .progress-bar-fill {
@@ -264,11 +277,11 @@
 }
 
 .checklist-item:hover {
-  @apply bg-surface/50;
+  @apply bg-teal-500/5;
 }
 
 .tooltip {
-  @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-surface-card border border-surface-border text-xs rounded-lg whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-200;
+  @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-white border border-gray-200 text-xs rounded-lg whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-200 shadow-xl;
 }
 
 .has-tooltip:hover .tooltip {
