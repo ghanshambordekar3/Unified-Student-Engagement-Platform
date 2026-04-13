@@ -50,47 +50,75 @@ function filterUniversities(query) {
       if (f.maxFees && u.fees > f.maxFees) return false;
       return true;
     })
-    .slice(0, 3); // Return top 3 for cleaner UI
+    .slice(0, 3);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SIMULATED streaming response (Rule-based)
+// NVIDIA API streaming response
 // ─────────────────────────────────────────────────────────────────────────────
+const SUGGESTIONS = ["Tell me about Canada", "MBA programs", "Education loans"];
+
 export async function getChatResponseStream(userInput, onChunk, onDone) {
-  const q = userInput.toLowerCase();
-  let responseText = '';
-  let matchedSuggestions = [];
-
-  // 1. Check keyword matches in responsesData
-  const matchedKey = Object.keys(responsesData.keywords).find(kw => q.includes(kw));
+  let hasFinished = false;
   
-  if (matchedKey) {
-    responseText = responsesData.keywords[matchedKey].response;
-    matchedSuggestions = responsesData.keywords[matchedKey].suggestions;
-  } else {
-    // 2. If no direct keyword, try university filtering
-    const unis = filterUniversities(userInput);
-    if (unis.length > 0) {
-      responseText = `I found some great universities matching your query:\n\n${unis
-        .map(u => `• **${u.name}** in ${u.country} offers ${u.course} for approx. **$${u.fees.toLocaleString()}/year**.`)
-        .join('\n')}\n\nWould you like to know more about the scholarship options or visa process for these countries?`;
-      matchedSuggestions = ["Visa process", "Scholarships", "Loan options"];
-    } else {
-      // 3. Fallback to default
-      responseText = responsesData.default;
-      matchedSuggestions = ["Canada options", "UK programs", "MBA guide"];
+  const finish = (suggestions = SUGGESTIONS) => {
+    if (!hasFinished) {
+      hasFinished = true;
+      onDone(suggestions);
     }
-  }
+  };
 
-  // Simulate typing effect
-  const words = responseText.split(' ');
-  for (let i = 0; i < words.length; i++) {
-    onChunk(words[i] + (i === words.length - 1 ? '' : ' '));
-    // Small delay to simulate "thinking/typing"
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 30 + 10));
-  }
+  try {
+    const response = await fetch('/api/nvidia/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'mistralai/mixtral-8x7b-instruct-v0.1',
+        messages: [{ role: 'user', content: userInput }],
+        stream: true
+      })
+    });
 
-  onDone(matchedSuggestions);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('NVIDIA API Error:', response.status, errorText);
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') {
+            finish();
+            return;
+          }
+          try {
+            const json = JSON.parse(data);
+            const content = json.choices?.[0]?.delta?.content;
+            if (content) onChunk(content);
+          } catch (e) {}
+        }
+      }
+    }
+    
+    finish();
+  } catch (error) {
+    console.error('Chat API error:', error);
+    onChunk("Sorry, I encountered an error. Please check your API configuration and try again.");
+    finish([]);
+  }
 }
 
 /** Create a user message object */
@@ -102,4 +130,3 @@ export function createUserMessage(text) {
 export function formatTime() {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
-

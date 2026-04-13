@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, GraduationCap, Filter, Search, SlidersHorizontal } from 'lucide-react';
-import { getChatResponseStream, createUserMessage } from '../utils/chatbot';
+import { getChatResponseStream } from '../utils/chatbot';
 import ChatMessage from '../components/ChatMessage';
 import UniversityCard from '../components/UniversityCard';
 import storage from '../utils/storage';
@@ -9,7 +9,10 @@ import { trackEvent } from '../utils/rewards';
 
 const CHAT_KEY = 'edupath_chat_history';
 
+const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
 const welcomeMessage = {
+  id: generateId(),
   text: "👋 **Welcome to EduPath Career Navigator!**\n\nI'm your AI study abroad assistant. Ask me anything about:\n\n- 🌍 Countries: Canada, UK, Australia, Germany, USA\n- 📚 Programs: MBA, CS, Data Science, Engineering\n- 💰 Finance: Loans, ROI, Scholarships\n- 🛂 Visa & Application tips\n- 📝 Tests: IELTS, TOEFL, GRE, GMAT\n\nWhat would you like to explore?",
   isBot: true,
   timestamp: new Date().toISOString(),
@@ -21,11 +24,14 @@ export default function Explore() {
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState(() => {
     const saved = storage.get(CHAT_KEY, null);
-    return saved || [welcomeMessage];
+    if (saved && Array.isArray(saved)) {
+      return saved.map(msg => ({ ...msg, id: msg.id || generateId() }));
+    }
+    return [welcomeMessage];
   });
-  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const isGeneratingRef = useRef(false);
 
   // University filters
   const profile = storage.get('edupath_profile', {});
@@ -58,7 +64,7 @@ export default function Explore() {
   // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [messages]);
 
   // Handle suggestion chip clicks from ChatMessage
   useEffect(() => {
@@ -73,15 +79,21 @@ export default function Explore() {
   const sendMessage = async (text) => {
     const query = (text || inputValue).trim();
     if (!query) return;
+    
+    // Prevent double execution (React StrictMode)
+    if (isGeneratingRef.current) return;
+    isGeneratingRef.current = true;
 
-    const userMsg = createUserMessage(query);
-    setMessages((m) => [...m, userMsg]);
-    setInputValue('');
-    setIsTyping(true);
-    trackEvent('chatbot_queries');
-
-    // Add placeholder bot message immediately (appears within ~300ms)
-    const botMsgId = Date.now();
+    const userMsgId = generateId();
+    const botMsgId = generateId();
+    
+    const userMsg = {
+      id: userMsgId,
+      text: query,
+      isBot: false,
+      timestamp: new Date().toISOString(),
+    };
+    
     const placeholderMsg = {
       id: botMsgId,
       text: '',
@@ -90,11 +102,14 @@ export default function Explore() {
       timestamp: new Date().toISOString(),
       suggestions: [],
     };
-    setMessages((m) => [...m, placeholderMsg]);
-    setIsTyping(false);
+    
+    setMessages((m) => [...m, userMsg, placeholderMsg]);
+    setInputValue('');
+    trackEvent('chatbot_queries');
 
-    // Stream tokens in — update the placeholder message live
     let accumulated = '';
+    let isDone = false;
+    
     await getChatResponseStream(
       query,
       (chunk) => {
@@ -105,15 +120,17 @@ export default function Explore() {
           )
         );
       },
-      () => {
-        // Mark streaming done, add suggestions
+      (suggestions) => {
+        if (isDone) return;
+        isDone = true;
         setMessages((m) =>
           m.map((msg) =>
             msg.id === botMsgId
-              ? { ...msg, isStreaming: false, suggestions: ['Tell me about Canada', 'MBA programs', 'Education loans', 'IELTS tips'] }
+              ? { ...msg, isStreaming: false, suggestions: suggestions.length > 0 ? suggestions : ['Tell me about Canada', 'MBA programs', 'Education loans'] }
               : msg
           )
         );
+        isGeneratingRef.current = false;
       }
     );
   };
@@ -127,7 +144,7 @@ export default function Explore() {
   };
 
   const clearChat = () => {
-    setMessages([welcomeMessage]);
+    setMessages([{ ...welcomeMessage, id: generateId() }]);
     storage.remove(CHAT_KEY);
   };
 
@@ -190,21 +207,9 @@ export default function Explore() {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-5 space-y-1">
-            {messages.map((msg, i) => (
-              <ChatMessage key={i} message={msg} />
+            {messages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} />
             ))}
-            {isTyping && (
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-teal flex items-center justify-center text-xs font-bold">AI</div>
-                <div className="bg-surface-card border border-surface-border rounded-2xl rounded-tl-sm px-4 py-3">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 rounded-full bg-muted animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 rounded-full bg-muted animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 rounded-full bg-muted animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
-                </div>
-              </div>
-            )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -224,7 +229,7 @@ export default function Explore() {
               <button
                 id="chat-send"
                 onClick={() => sendMessage()}
-                disabled={!inputValue.trim() || isTyping}
+                disabled={!inputValue.trim()}
                 className="btn-primary px-4 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send size={18} />

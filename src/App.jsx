@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Navbar from './components/Navbar';
+import Landing from './pages/Landing';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Explore from './pages/Explore';
@@ -19,6 +20,12 @@ function RequireProfile({ children }) {
   const profile = storage.get('edupath_profile', null);
   if (!profile) return <Navigate to="/" replace />;
   return children;
+}
+
+function HomeRedirect() {
+  const profile = storage.get('edupath_profile', null);
+  if (profile) return <Navigate to="/dashboard" replace />;
+  return <Landing />;
 }
 
 function TrackingWrapper({ children }) {
@@ -60,7 +67,8 @@ export default function App() {
     <BrowserRouter>
       <TrackingWrapper>
         <Routes>
-          <Route path="/" element={<Onboarding />} />
+          <Route path="/" element={<HomeRedirect />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           {protectedPages.map(({ path, Component }) => (
             <Route
               key={path}
