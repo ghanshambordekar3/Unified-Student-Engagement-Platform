@@ -16,34 +16,34 @@
     @apply font-sans;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #060912;
+    background: #ffffff;
     min-height: 100vh;
-    color: #e2e8f0;
+    color: #111827;
   }
 
   ::selection {
-    background-color: rgba(45, 212, 191, 0.3);
-    color: #ffffff;
+    background-color: rgba(20, 184, 166, 0.25);
+    color: #111827;
   }
 
-  /* Dark scrollbar */
+  /* Light scrollbar */
   ::-webkit-scrollbar {
     width: 5px;
     height: 5px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #0d1117;
+    background: #f1f5f9;
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #2d3748;
+    background-color: #cbd5e1;
     border-radius: 9999px;
     transition: all 0.2s;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #4a5568;
+    background-color: #94a3b8;
   }
 }
 
@@ -86,7 +86,45 @@
   }
 
   .input-premium {
-    @apply w-full glass text-gray-900 placeholder-gray-400 rounded-xl px-4 py-3 outline-none focus:border-teal-500/70 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300;
+    @apply w-full bg-white text-gray-900 placeholder-gray-400 rounded-xl px-4 py-3 outline-none border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300;
+  }
+
+  /* ── input-field: the class used across Explore, SOP Generator, etc. ── */
+  .input-field {
+    @apply w-full bg-white text-gray-900 placeholder-gray-400 rounded-xl px-4 py-3 outline-none border border-gray-200
+           focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200;
+    caret-color: #0f766e;
+  }
+
+  .input-field:disabled {
+    @apply bg-gray-50 text-gray-400 cursor-not-allowed;
+  }
+
+  /* Textarea variant */
+  textarea.input-field {
+    @apply resize-none leading-relaxed;
+  }
+
+  /* Select variant */
+  select.input-field {
+    @apply bg-white text-gray-900 cursor-pointer;
+  }
+
+  /* Label */
+  .label {
+    @apply block text-xs font-black uppercase tracking-widest text-gray-500 mb-1.5;
+  }
+
+  /* Legacy card class (Explore uses .card) */
+  .card {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm p-6;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold rounded-xl px-5 py-3
+           hover:from-teal-400 hover:to-cyan-400 transition-all duration-200 shadow-md shadow-teal-500/20
+           active:scale-95 flex items-center gap-2;
   }
 
   .text-gradient {
@@ -98,7 +136,7 @@
   }
 
   .nav-link-active {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-900 bg-teal-500/10 border border-teal-500/30 font-medium shadow-[0_0_15px_rgba(20, 184, 166, 0.1)];
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-900 bg-teal-500/10 border border-teal-500/30 font-medium;
   }
 }
 

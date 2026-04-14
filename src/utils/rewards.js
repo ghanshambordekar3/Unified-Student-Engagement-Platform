@@ -20,6 +20,9 @@ export function getRewardsState() {
       referrals: 0,
       loan_applied: 0,
       streak: 0,
+      explore_count: 0,
+      content_viewed: 0,
+      profile_updated: 0,
     },
   };
   
@@ -81,21 +84,27 @@ function evalCondition(condition, stats) {
 
 export function getLevelInfo(xp) {
   const levels = [
-    { level: 1, name: 'Explorer', minXP: 0, maxXP: 200, color: 'text-slate-400' },
-    { level: 2, name: 'Aspirant', minXP: 200, maxXP: 500, color: 'text-blue-400' },
-    { level: 3, name: 'Applicant', minXP: 500, maxXP: 1000, color: 'text-teal-400' },
-    { level: 4, name: 'Scholar', minXP: 1000, maxXP: 2000, color: 'text-purple-400' },
-    { level: 5, name: 'Champion', minXP: 2000, maxXP: 99999, color: 'text-yellow-400' },
+    { level: 1,  name: 'Explorer',        minXP: 0,     maxXP: 300,   color: 'text-slate-400'  },
+    { level: 2,  name: 'Aspirant',         minXP: 300,   maxXP: 700,   color: 'text-blue-400'   },
+    { level: 3,  name: 'Applicant',        minXP: 700,   maxXP: 1400,  color: 'text-cyan-400'   },
+    { level: 4,  name: 'Scholar',          minXP: 1400,  maxXP: 2500,  color: 'text-teal-400'   },
+    { level: 5,  name: 'Achiever',         minXP: 2500,  maxXP: 4000,  color: 'text-green-400'  },
+    { level: 6,  name: 'Trailblazer',      minXP: 4000,  maxXP: 6000,  color: 'text-purple-400' },
+    { level: 7,  name: 'Visionary',        minXP: 6000,  maxXP: 9000,  color: 'text-pink-400'   },
+    { level: 8,  name: 'Champion',         minXP: 9000,  maxXP: 13000, color: 'text-orange-400' },
+    { level: 9,  name: 'Grand Master',     minXP: 13000, maxXP: 18000, color: 'text-red-400'    },
+    { level: 10, name: 'EduPath Legend',   minXP: 18000, maxXP: 99999, color: 'text-yellow-400' },
   ];
 
   const current = [...levels].reverse().find((l) => xp >= l.minXP) || levels[0];
-  const next = levels[Math.min(current.level, levels.length - 1)];
+  const nextLevel = levels[current.level] || null; // levels is 1-indexed by level value
 
-  const progress = next
-    ? Math.round(((xp - current.minXP) / (next.maxXP - current.minXP)) * 100)
+  const rangeMax = nextLevel ? nextLevel.minXP : current.maxXP;
+  const progress = nextLevel
+    ? Math.min(100, Math.round(((xp - current.minXP) / (rangeMax - current.minXP)) * 100))
     : 100;
 
-  return { ...current, next, progress, xp };
+  return { ...current, next: nextLevel, progress, xp };
 }
 
 export function getEarnedBadges() {

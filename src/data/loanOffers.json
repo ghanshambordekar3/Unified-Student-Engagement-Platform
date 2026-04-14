@@ -1,87 +1,1201 @@
 [
   {
     "id": "sbi_scholar",
-    "bank": "SBI",
+    "bank": "State Bank of India",
+    "shortName": "SBI",
     "name": "SBI Scholar Loan",
     "logo": "🏛️",
+    "type": "PSU Bank",
+    "country": "India",
+    "currency": "INR",
     "maxAmount": 4000000,
-    "interest": 8.15,
-    "tenure": [7, 10, 15],
-    "processingFee": "Nil",
+    "maxAmountDisplay": "₹40 Lakhs",
+    "interest": {
+      "min": 8.15,
+      "max": 9.15,
+      "effectiveRate": 8.65,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "Nil",
+      "waiverAbove": 2000000
+    },
     "collateralRequired": false,
+    "collateralNote": "Not required up to ₹40L",
     "incomeMin": 6,
-    "moratorium": "Course duration + 1 year",
-    "features": ["No processing fee", "Repayment holiday", "Covers tuition + living + travel"],
-    "eligibleCourses": ["Computer Science", "Engineering", "MBA", "Data Science"],
-    "eligibleCountries": ["USA", "UK", "Canada", "Australia", "Germany"],
-    "tag": "Best Overall"
+    "incomeMinDisplay": "₹6 LPA",
+    "moratorium": "Course duration + 12 months",
+    "disbursalTime": "15-20 days",
+    "features": [
+      "No processing fee",
+      "Repayment holiday during moratorium",
+      "Covers tuition, living & travel expenses",
+      "Interest concession for female students (0.50%)",
+      "No margin money required"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "Medical",
+      "Law",
+      "Architecture"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany",
+      "France", "Netherlands", "Ireland", "Singapore", "New Zealand"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "Best Overall",
+    "color": "#16a34a",
+    "consensusRank": 1
   },
   {
     "id": "hdfc_credila",
     "bank": "HDFC Credila",
+    "shortName": "HDFC Credila",
     "name": "HDFC Credila Education Loan",
     "logo": "🏦",
+    "type": "NBFC",
+    "country": "India",
+    "currency": "INR",
     "maxAmount": 7500000,
-    "interest": 9.50,
-    "tenure": [10, 12, 15],
-    "processingFee": "1%",
+    "maxAmountDisplay": "₹75 Lakhs",
+    "interest": {
+      "min": 9.50,
+      "max": 11.50,
+      "effectiveRate": 10.25,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 12, 15]
+    },
+    "processingFee": {
+      "amount": 1,
+      "display": "1% of loan amount",
+      "max": 10000,
+      "waiverAbove": null
+    },
     "collateralRequired": false,
+    "collateralNote": "Not required up to ₹40L; Property required above ₹40L",
     "incomeMin": 4,
+    "incomeMinDisplay": "₹4 LPA",
     "moratorium": "Course duration + 6 months",
-    "features": ["Doorstep service", "Quick disbursal in 7 days", "No collateral up to ₹40L", "Covers 100% of costs"],
-    "eligibleCourses": ["Computer Science", "Engineering", "MBA", "Data Science"],
-    "eligibleCountries": ["USA", "UK", "Canada", "Australia", "Germany"],
-    "tag": "Fastest Approval"
+    "disbursalTime": "7-10 days",
+    "features": [
+      "Fastest approval (7 days)",
+      "Doorstep service available",
+      "No collateral up to ₹40L",
+      "100% financing available",
+      "Part-prepayment allowed",
+      "Top-up loan facility"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS",
+      "PhD",
+      "All professional courses"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany",
+      "France", "Netherlands", "Ireland", "Singapore", "Japan", "Europe"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil after course completion",
+    "tag": "Fastest Approval",
+    "color": "#0891b2",
+    "consensusRank": 2
+  },
+  {
+    "id": "bob_edu",
+    "bank": "Bank of Baroda",
+    "shortName": "BoB",
+    "name": "BoB Education Loan",
+    "logo": "🏢",
+    "type": "PSU Bank",
+    "country": "India",
+    "currency": "INR",
+    "maxAmount": 5000000,
+    "maxAmountDisplay": "₹50 Lakhs",
+    "interest": {
+      "min": 8.70,
+      "max": 10.20,
+      "effectiveRate": 9.20,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "Nil",
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "Not required up to ₹7.5L; Tangible collateral above ₹7.5L",
+    "incomeMin": 5,
+    "incomeMinDisplay": "₹5 LPA",
+    "moratorium": "Course duration + 12 months",
+    "disbursalTime": "20-30 days",
+    "features": [
+      "Zero processing fee",
+      "Concessional rate for girl students",
+      "No margin money up to ₹20L",
+      "Covers abroad expenses",
+      "Insurance covered"
+    ],
+    "eligibleCourses": [
+      "All graduation & post-graduation courses",
+      "Professional courses",
+      "Computer Science",
+      "Engineering",
+      "MBA"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany",
+      "France", "Ireland", "Singapore"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "Zero Processing",
+    "color": "#1e40af",
+    "consensusRank": 3
   },
   {
     "id": "axis_education",
     "bank": "Axis Bank",
+    "shortName": "Axis",
     "name": "Axis Education Loan",
-    "logo": "🏢",
+    "logo": "🏦",
+    "type": "Private Bank",
+    "country": "India",
+    "currency": "INR",
     "maxAmount": 5000000,
-    "interest": 10.70,
-    "tenure": [10, 15],
-    "processingFee": "0.5%",
+    "maxAmountDisplay": "₹50 Lakhs",
+    "interest": {
+      "min": 10.70,
+      "max": 12.70,
+      "effectiveRate": 11.50,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 0.5,
+      "display": "0.5% of loan amount",
+      "max": 10000,
+      "waiverAbove": null
+    },
     "collateralRequired": false,
+    "collateralNote": "Not required up to ₹50L for top universities",
     "incomeMin": 5,
-    "moratorium": "Course duration + 1 year",
-    "features": ["Online tracking portal", "Flexible repayment", "Tax benefit u/s 80E"],
-    "eligibleCourses": ["Computer Science", "Engineering", "MBA", "Data Science"],
-    "eligibleCountries": ["USA", "UK", "Canada", "Australia", "Germany"],
-    "tag": "Tax Benefits"
+    "incomeMinDisplay": "₹5 LPA",
+    "moratorium": "Course duration + 12 months",
+    "disbursalTime": "10-15 days",
+    "features": [
+      "Online tracking portal",
+      "Flexible repayment options",
+      "Tax benefit under 80E",
+      "Part-prepayment allowed",
+      "Top-up loan available"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS",
+      "Medical"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany",
+      "France", "Netherlands", "Ireland", "Singapore"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "2% within 6 months",
+    "tag": "Tax Benefits",
+    "color": "#7c3aed",
+    "consensusRank": 4
+  },
+  {
+    "id": "canara_edu",
+    "bank": "Canara Bank",
+    "shortName": "Canara",
+    "name": "Canara Vidya Education Loan",
+    "logo": "🏛️",
+    "type": "PSU Bank",
+    "country": "India",
+    "currency": "INR",
+    "maxAmount": 5000000,
+    "maxAmountDisplay": "₹50 Lakhs",
+    "interest": {
+      "min": 8.85,
+      "max": 10.35,
+      "effectiveRate": 9.35,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "Nil",
+      "waiverAbove": null
+    },
+    "collateralRequired": true,
+    "collateralNote": "Required above ₹7.5L (Property/FDR/LIC)",
+    "incomeMin": 5,
+    "incomeMinDisplay": "₹5 LPA",
+    "moratorium": "Course duration + 12 months",
+    "disbursalTime": "20-25 days",
+    "features": [
+      "Zero processing fee",
+      "Lowest interest among PSU banks",
+      "Concessional rate for girl students (0.50%)",
+      "No margin money up to ₹20L"
+    ],
+    "eligibleCourses": [
+      "All recognized courses",
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Medical",
+      "Law"
+    ],
+    "eligibleCountries": [
+      "India", "USA", "UK", "Canada", "Australia", "Germany"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "Lowest PSU Rate",
+    "color": "#ca8a04",
+    "consensusRank": 5
+  },
+  {
+    "id": "icici_edu",
+    "bank": "ICICI Bank",
+    "shortName": "ICICI",
+    "name": "ICICI Education Loan",
+    "logo": "🏦",
+    "type": "Private Bank",
+    "country": "India",
+    "currency": "INR",
+    "maxAmount": 6000000,
+    "maxAmountDisplay": "₹60 Lakhs",
+    "interest": {
+      "min": 10.25,
+      "max": 12.25,
+      "effectiveRate": 11.00,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 1,
+      "display": "1% of loan amount",
+      "max": 10000,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "Not required up to ₹50L",
+    "incomeMin": 4.5,
+    "incomeMinDisplay": "₹4.5 LPA",
+    "moratorium": "Course duration + 6 months",
+    "disbursalTime": "10-15 days",
+    "features": [
+      "Quick digital processing",
+      "Instant approval for existing customers",
+      "Online tracking",
+      "Part-prepayment allowed",
+      "Top-up loan facility"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS",
+      "All professional courses"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany",
+      "France", "Netherlands", "Ireland", "Singapore"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil after course completion",
+    "tag": "Quick Processing",
+    "color": "#0284c7",
+    "consensusRank": 6
   },
   {
     "id": "avanse",
-    "bank": "Avanse",
+    "bank": "Avanse Financial",
+    "shortName": "Avanse",
     "name": "Avanse Study Abroad Loan",
     "logo": "🎓",
+    "type": "NBFC",
+    "country": "India",
+    "currency": "INR",
     "maxAmount": 10000000,
-    "interest": 11.25,
-    "tenure": [10, 15, 20],
-    "processingFee": "1-2%",
+    "maxAmountDisplay": "₹1 Crore",
+    "interest": {
+      "min": 11.25,
+      "max": 14.00,
+      "effectiveRate": 12.50,
+      "type": "Fixed/Floating",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 20,
+      "options": [5, 7, 10, 15, 20]
+    },
+    "processingFee": {
+      "amount": 1.5,
+      "display": "1-2% of loan amount",
+      "max": 25000,
+      "waiverAbove": null
+    },
     "collateralRequired": false,
+    "collateralNote": "Not required up to ₹75L for top universities",
     "incomeMin": 3,
+    "incomeMinDisplay": "₹3 LPA",
     "moratorium": "Course duration + 12 months",
-    "features": ["Available for Tier 2/3 cities", "Low income families eligible", "No collateral up to ₹75L", "Pre-visa disbursement"],
-    "eligibleCourses": ["Computer Science", "Engineering", "MBA", "Data Science"],
-    "eligibleCountries": ["USA", "UK", "Canada", "Australia", "Germany"],
-    "tag": "Most Inclusive"
+    "disbursalTime": "10-15 days",
+    "features": [
+      "Available for Tier 2/3 cities",
+      "Low income families eligible",
+      "No collateral up to ₹75L",
+      "Pre-visa disbursement option",
+      "Digital application process"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS",
+      "All courses at recognized universities"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany",
+      "France", "Netherlands", "Ireland", "Singapore", "New Zealand", "Europe"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "4% for first year, 3% second year",
+    "tag": "Most Inclusive",
+    "color": "#059669",
+    "consensusRank": 7
   },
   {
     "id": "incred",
-    "bank": "InCred",
+    "bank": "InCred Financial",
+    "shortName": "InCred",
     "name": "InCred Education Loan",
     "logo": "💡",
+    "type": "NBFC",
+    "country": "India",
+    "currency": "INR",
     "maxAmount": 6000000,
-    "interest": 12.00,
-    "tenure": [7, 10],
-    "processingFee": "2%",
+    "maxAmountDisplay": "₹60 Lakhs",
+    "interest": {
+      "min": 12.00,
+      "max": 15.00,
+      "effectiveRate": 13.25,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 10,
+      "options": [5, 7, 10]
+    },
+    "processingFee": {
+      "amount": 2,
+      "display": "2% of loan amount",
+      "max": 15000,
+      "waiverAbove": null
+    },
     "collateralRequired": false,
+    "collateralNote": "Not required for top 100 universities",
     "incomeMin": 3,
+    "incomeMinDisplay": "₹3 LPA",
     "moratorium": "Course duration + 6 months",
-    "features": ["100% digital process", "Decision in 48 hours", "Scholarship-aware structuring"],
-    "eligibleCourses": ["Computer Science", "Engineering", "MBA", "Data Science"],
-    "eligibleCountries": ["USA", "UK", "Canada", "Australia", "Germany"],
-    "tag": "100% Digital"
+    "disbursalTime": "48 hours",
+    "features": [
+      "100% digital process",
+      "Decision in 48 hours",
+      "Scholarship-aware structuring",
+      "Flexible EMI options",
+      "Minimal documentation"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "5% for first year",
+    "tag": "100% Digital",
+    "color": "#dc2626",
+    "consensusRank": 8
+  },
+  {
+    "id": "auxilo",
+    "bank": "Auxilo Finserve",
+    "shortName": "Auxilo",
+    "name": "Auxilo Education Loan",
+    "logo": "🎓",
+    "type": "NBFC",
+    "country": "India",
+    "currency": "INR",
+    "maxAmount": 4000000,
+    "maxAmountDisplay": "₹40 Lakhs",
+    "interest": {
+      "min": 11.00,
+      "max": 14.00,
+      "effectiveRate": 12.50,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 1,
+      "display": "1% of loan amount",
+      "max": 10000,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "Not required up to ₹40L",
+    "incomeMin": 3,
+    "incomeMinDisplay": "₹3 LPA",
+    "moratorium": "Course duration + 12 months",
+    "disbursalTime": "7-10 days",
+    "features": [
+      "Fast processing",
+      "No collateral up to ₹40L",
+      "Available for study abroad",
+      "Flexible repayment"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany", "Ireland"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "4% for first year",
+    "tag": "Fast Track",
+    "color": "#7c3aed",
+    "consensusRank": 9
+  },
+  {
+    "id": "prodigy_india",
+    "bank": "Prodigy Finance India",
+    "shortName": "Prodigy",
+    "name": "Prodigy Finance (India)",
+    "logo": "🌍",
+    "type": "International NBFC",
+    "country": "International",
+    "currency": "USD",
+    "maxAmount": 5000000,
+    "maxAmountDisplay": "Up to $50,000+",
+    "interest": {
+      "min": 5.00,
+      "max": 9.00,
+      "effectiveRate": 7.00,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 20,
+      "options": [5, 7, 10, 15, 20]
+    },
+    "processingFee": {
+      "amount": 2,
+      "display": "2% (built into loan)",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral required; Based on future earning potential",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum",
+    "moratorium": "Course duration + 6 months",
+    "disbursalTime": "10-15 days",
+    "features": [
+      "No co-applicant required",
+      "Based on future earning potential",
+      "International students accepted",
+      "Single currency repayment",
+      "Income-contingent repayment"
+    ],
+    "eligibleCourses": [
+      "MBA",
+      "MS Computer Science",
+      "Data Science",
+      "Engineering",
+      "All top-ranked programs"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Europe"
+    ],
+    "eligibleUniversities": [
+      "Top 1000 QS ranked universities"
+    ],
+    "taxBenefit": false,
+    "taxBenefitNote": "International loan - tax benefits vary by country",
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "No Co-Applicant",
+    "color": "#0891b2",
+    "consensusRank": 10
+  },
+  {
+    "id": "idfc_first",
+    "bank": "IDFC First Bank",
+    "shortName": "IDFC",
+    "name": "IDFC First Education Loan",
+    "logo": "🏦",
+    "type": "Private Bank",
+    "country": "India",
+    "currency": "INR",
+    "maxAmount": 3000000,
+    "maxAmountDisplay": "₹30 Lakhs",
+    "interest": {
+      "min": 10.50,
+      "max": 13.00,
+      "effectiveRate": 11.50,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 10,
+      "options": [5, 7, 10]
+    },
+    "processingFee": {
+      "amount": 1,
+      "display": "1% of loan amount",
+      "max": 10000,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "Not required up to ₹30L",
+    "incomeMin": 4,
+    "incomeMinDisplay": "₹4 LPA",
+    "moratorium": "Course duration + 6 months",
+    "disbursalTime": "7-10 days",
+    "features": [
+      "Digital-first process",
+      "Quick approval",
+      "No collateral up to ₹30L",
+      "Flexible repayment"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil after course completion",
+    "tag": "Digital First",
+    "color": "#ea580c",
+    "consensusRank": 11
+  },
+  {
+    "id": "tat_capital",
+    "bank": "TATA Capital",
+    "shortName": "TATA",
+    "name": "TATA Capital Education Loan",
+    "logo": "🏢",
+    "type": "NBFC",
+    "country": "India",
+    "currency": "INR",
+    "maxAmount": 7500000,
+    "maxAmountDisplay": "₹75 Lakhs",
+    "interest": {
+      "min": 10.50,
+      "max": 13.00,
+      "effectiveRate": 11.50,
+      "type": "Floating",
+      "repoLinked": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 1,
+      "display": "1% of loan amount",
+      "max": 15000,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "Not required up to ₹50L",
+    "incomeMin": 5,
+    "incomeMinDisplay": "₹5 LPA",
+    "moratorium": "Course duration + 12 months",
+    "disbursalTime": "10-15 days",
+    "features": [
+      "Trusted TATA brand",
+      "Doorstep service",
+      "No collateral up to ₹50L",
+      "Flexible repayment",
+      "Top-up loan available"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "Data Science",
+      "MS",
+      "All professional courses"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany",
+      "France", "Netherlands", "Ireland", "Singapore"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil after course completion",
+    "tag": "Trusted Brand",
+    "color": "#1e40af",
+    "consensusRank": 12
+  },
+  {
+    "id": "sallie_mae",
+    "bank": "Sallie Mae",
+    "shortName": "Sallie Mae",
+    "name": "Sallie Mae Graduate Student Loan",
+    "logo": "🇺🇸",
+    "type": "US Private Lender",
+    "country": "USA",
+    "currency": "USD",
+    "maxAmount": 15000000,
+    "maxAmountDisplay": "Up to $150K+",
+    "interest": {
+      "min": 4.50,
+      "max": 11.00,
+      "effectiveRate": 7.25,
+      "type": "Fixed/Variable",
+      "repoLinked": false,
+      "creditScoreDependent": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 25,
+      "options": [5, 7, 10, 15, 20, 25]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "No fees",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral; Creditworthy cosigner recommended",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum (cosigner helps)",
+    "moratorium": "Deferred payments during study",
+    "disbursalTime": "5-7 days",
+    "features": [
+      "No origination fees",
+      "Multiple repayment options",
+      "Cosigner release available",
+      "Career development resources",
+      "Multi-year approval"
+    ],
+    "eligibleCourses": [
+      "MBA",
+      "MS Computer Science",
+      "Data Science",
+      "Engineering",
+      "Medical",
+      "Law"
+    ],
+    "eligibleCountries": [
+      "USA"
+    ],
+    "eligibleUniversities": [
+      "All accredited US universities"
+    ],
+    "taxBenefit": true,
+    "taxBenefitNote": "Interest may be tax-deductible (US)",
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "US Market Leader",
+    "color": "#059669",
+    "consensusRank": 13
+  },
+  {
+    "id": "discover_edu",
+    "bank": "Discover",
+    "shortName": "Discover",
+    "name": "Discover Graduate Student Loan",
+    "logo": "🇺🇸",
+    "type": "US Private Lender",
+    "country": "USA",
+    "currency": "USD",
+    "maxAmount": 9500000,
+    "maxAmountDisplay": "Up to $95,000",
+    "interest": {
+      "min": 5.00,
+      "max": 9.00,
+      "effectiveRate": 6.99,
+      "type": "Fixed",
+      "repoLinked": false,
+      "creditScoreDependent": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 20,
+      "options": [5, 7, 10, 15, 20]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "No fees",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral required",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum",
+    "moratorium": "Deferred payments available",
+    "disbursalTime": "5-7 days",
+    "features": [
+      "No fees whatsoever",
+      "Cash reward for good grades",
+      "Interest-only payments during school",
+      "Cosigner release after 12 months",
+      "100% US-based support"
+    ],
+    "eligibleCourses": [
+      "MBA",
+      "MS",
+      "Graduate programs"
+    ],
+    "eligibleCountries": [
+      "USA"
+    ],
+    "eligibleUniversities": [
+      "Title IV accredited US institutions"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "No Fees + Rewards",
+    "color": "#dc2626",
+    "consensusRank": 14
+  },
+  {
+    "id": "citizens_bank",
+    "bank": "Citizens Bank",
+    "shortName": "Citizens",
+    "name": "Citizens Bank Student Loan",
+    "logo": "🇺🇸",
+    "type": "US Regional Bank",
+    "country": "USA",
+    "currency": "USD",
+    "maxAmount": 7500000,
+    "maxAmountDisplay": "Up to $75,000",
+    "interest": {
+      "min": 4.00,
+      "max": 10.00,
+      "effectiveRate": 6.50,
+      "type": "Fixed/Variable",
+      "repoLinked": false,
+      "creditScoreDependent": true
+    },
+    "tenure": {
+      "min": 5,
+      "max": 20,
+      "options": [5, 7, 10, 15, 20]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "No fees",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral required",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum",
+    "moratorium": "Deferred payments available",
+    "disbursalTime": "5-10 days",
+    "features": [
+      "No fees",
+      "Auto-pay interest rate discount (0.25%)",
+      "Cosigner release after 36 months",
+      "Graduation reward program"
+    ],
+    "eligibleCourses": [
+      "Graduate programs",
+      "Professional degrees"
+    ],
+    "eligibleCountries": [
+      "USA"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "Auto-Pay Discount",
+    "color": "#1e40af",
+    "consensusRank": 15
+  },
+  {
+    "id": "mpower_finance",
+    "bank": "MPOWER Financing",
+    "shortName": "MPOWER",
+    "name": "MPOWER Global Student Loan",
+    "logo": "🌍",
+    "type": "International Lender",
+    "country": "International",
+    "currency": "USD",
+    "maxAmount": 5000000,
+    "maxAmountDisplay": "Up to $50,000",
+    "interest": {
+      "min": 10.00,
+      "max": 13.50,
+      "effectiveRate": 11.50,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 3,
+      "display": "3% origination fee",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral or cosigner required",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum",
+    "moratorium": "Full deferment during study",
+    "disbursalTime": "10-15 days",
+    "features": [
+      "No cosigner required",
+      "No collateral required",
+      "Accepts international students",
+      "Supports DACA recipients",
+      "Career support services"
+    ],
+    "eligibleCourses": [
+      "MBA",
+      "MS Computer Science",
+      "Data Science",
+      "Public Policy",
+      "Engineering"
+    ],
+    "eligibleCountries": [
+      "USA", "Canada"
+    ],
+    "eligibleUniversities": [
+      "MPOWER's list of 400+ supported schools"
+    ],
+    "taxBenefit": false,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "No Cosigner",
+    "color": "#7c3aed",
+    "consensusRank": 16
+  },
+  {
+    "id": "stilt",
+    "bank": "Stilt",
+    "shortName": "Stilt",
+    "name": "Stilt Student Loans",
+    "logo": "🌍",
+    "type": "Fintech Lender",
+    "country": "USA",
+    "currency": "USD",
+    "maxAmount": 3500000,
+    "maxAmountDisplay": "Up to $35,000",
+    "interest": {
+      "min": 8.00,
+      "max": 14.00,
+      "effectiveRate": 11.00,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 3,
+      "max": 10,
+      "options": [3, 5, 7, 10]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "No fees",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral; Visa required",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum",
+    "moratorium": "Deferred payments during study",
+    "disbursalTime": "7-10 days",
+    "features": [
+      "No fees",
+      "Accepts international students",
+      "H-1B and OPT holders eligible",
+      "Visa stamp not required",
+      "Fast online application"
+    ],
+    "eligibleCourses": [
+      "MS Computer Science",
+      "Data Science",
+      "MBA",
+      "Engineering"
+    ],
+    "eligibleCountries": [
+      "USA"
+    ],
+    "eligibleUniversities": [
+      "Accredited US institutions"
+    ],
+    "taxBenefit": false,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "International Friendly",
+    "color": "#0891b2",
+    "consensusRank": 17
+  },
+  {
+    "id": "providian",
+    "bank": "Providian Private",
+    "shortName": "Providian",
+    "name": "Providian Private Student Loans",
+    "logo": "🏦",
+    "type": "US Private Lender",
+    "country": "USA",
+    "currency": "USD",
+    "maxAmount": 5500000,
+    "maxAmountDisplay": "Up to $55,000",
+    "interest": {
+      "min": 6.00,
+      "max": 11.00,
+      "effectiveRate": 8.50,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 20,
+      "options": [5, 7, 10, 15, 20]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "No fees",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral required",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum",
+    "moratorium": "Deferred payments available",
+    "disbursalTime": "5-7 days",
+    "features": [
+      "No fees",
+      "Instant decision available",
+      "Cosigner release option",
+      "Multiple repayment options"
+    ],
+    "eligibleCourses": [
+      "Graduate programs",
+      "Professional degrees"
+    ],
+    "eligibleCountries": [
+      "USA"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "Instant Decision",
+    "color": "#16a34a",
+    "consensusRank": 18
+  },
+  {
+    "id": "gap_financial",
+    "bank": "Gap Financial",
+    "shortName": "Gap",
+    "name": "Gap Financial UK Student Loan",
+    "logo": "🇬🇧",
+    "type": "UK Private Lender",
+    "country": "UK",
+    "currency": "GBP",
+    "maxAmount": 2500000,
+    "maxAmountDisplay": "Up to £25,000",
+    "interest": {
+      "min": 6.00,
+      "max": 10.00,
+      "effectiveRate": 8.00,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 15,
+      "options": [5, 7, 10, 15]
+    },
+    "processingFee": {
+      "amount": 0,
+      "display": "No fees",
+      "max": null,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "No collateral required",
+    "incomeMin": 0,
+    "incomeMinDisplay": "No minimum",
+    "moratorium": "Deferred during study",
+    "disbursalTime": "7-14 days",
+    "features": [
+      "No fees",
+      "UK and EU students",
+      "Accepts international students",
+      "Quick online process"
+    ],
+    "eligibleCourses": [
+      "MBA",
+      "MS",
+      "Graduate programs"
+    ],
+    "eligibleCountries": [
+      "UK"
+    ],
+    "eligibleUniversities": [
+      "UK universities"
+    ],
+    "taxBenefit": true,
+    "taxBenefitNote": "UK postgraduate loans available separately",
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "Nil",
+    "tag": "UK Specialist",
+    "color": "#1e40af",
+    "consensusRank": 19
+  },
+  {
+    "id": "nava Bharat",
+    "bank": "Nava Bharat Finance",
+    "shortName": "Nava Bharat",
+    "name": "Nava Bharat Education Loan",
+    "logo": "🏢",
+    "type": "NBFC",
+    "country": "India",
+    "currency": "INR",
+    "maxAmount": 3000000,
+    "maxAmountDisplay": "₹30 Lakhs",
+    "interest": {
+      "min": 11.50,
+      "max": 14.00,
+      "effectiveRate": 12.75,
+      "type": "Fixed",
+      "repoLinked": false
+    },
+    "tenure": {
+      "min": 5,
+      "max": 10,
+      "options": [5, 7, 10]
+    },
+    "processingFee": {
+      "amount": 1,
+      "display": "1% of loan amount",
+      "max": 8000,
+      "waiverAbove": null
+    },
+    "collateralRequired": false,
+    "collateralNote": "Not required up to ₹30L",
+    "incomeMin": 3,
+    "incomeMinDisplay": "₹3 LPA",
+    "moratorium": "Course duration + 6 months",
+    "disbursalTime": "7-10 days",
+    "features": [
+      "Fast processing",
+      "No collateral up to ₹30L",
+      "Flexible repayment"
+    ],
+    "eligibleCourses": [
+      "Computer Science",
+      "Engineering",
+      "MBA",
+      "MS"
+    ],
+    "eligibleCountries": [
+      "USA", "UK", "Canada", "Australia", "Germany"
+    ],
+    "taxBenefit": true,
+    "prepaymentAllowed": true,
+    "prepaymentPenalty": "3% for first year",
+    "tag": "Budget Friendly",
+    "color": "#ca8a04",
+    "consensusRank": 20
   }
 ]

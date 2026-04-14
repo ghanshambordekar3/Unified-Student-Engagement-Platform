@@ -1,222 +1,366 @@
 [
   {
     "id": 1,
-    "name": "University of Toronto",
-    "country": "Canada",
-    "flag": "🇨🇦",
+    "name": "Massachusetts Institute of Technology",
+    "country": "USA",
+    "flag": "🇺🇸",
     "course": "Computer Science",
-    "fees": 32000,
-    "ranking": 18,
-    "acceptanceRate": 43,
+    "fees": 57000,
+    "ranking": 1,
+    "acceptanceRate": 7,
     "duration": "2 years",
-    "degree": "Masters"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Robotics, Quantum Computing, Systems",
+      "facultyNotable": ["Regina Barzilay", "Tim Berners-Lee", "CSAIL researchers"],
+      "programHighlight": "World-leading CSAIL research lab, unparalleled innovation ecosystem",
+      "countryReason": "MIT sits at the heart of Boston's tech innovation corridor with access to top VC and tech companies"
+    }
   },
   {
     "id": 2,
-    "name": "McGill University",
-    "country": "Canada",
-    "flag": "🇨🇦",
-    "course": "MBA",
-    "fees": 28000,
-    "ranking": 46,
-    "acceptanceRate": 38,
-    "duration": "2 years",
-    "degree": "MBA"
-  },
-  {
-    "id": 3,
-    "name": "University of British Columbia",
-    "country": "Canada",
-    "flag": "🇨🇦",
-    "course": "Data Science",
-    "fees": 27000,
-    "ranking": 34,
-    "acceptanceRate": 52,
-    "duration": "2 years",
-    "degree": "Masters"
-  },
-  {
-    "id": 4,
-    "name": "Imperial College London",
-    "country": "UK",
-    "flag": "🇬🇧",
-    "course": "Computer Science",
-    "fees": 38000,
-    "ranking": 6,
-    "acceptanceRate": 14,
-    "duration": "1 year",
-    "degree": "Masters"
-  },
-  {
-    "id": 5,
-    "name": "University of Edinburgh",
-    "country": "UK",
-    "flag": "🇬🇧",
-    "course": "Data Science",
-    "fees": 29000,
-    "ranking": 27,
-    "acceptanceRate": 35,
-    "duration": "1 year",
-    "degree": "Masters"
-  },
-  {
-    "id": 6,
-    "name": "London Business School",
-    "country": "UK",
-    "flag": "🇬🇧",
-    "course": "MBA",
-    "fees": 55000,
-    "ranking": 4,
-    "acceptanceRate": 22,
-    "duration": "15-21 months",
-    "degree": "MBA"
-  },
-  {
-    "id": 7,
-    "name": "University of Melbourne",
-    "country": "Australia",
-    "flag": "🇦🇺",
-    "course": "Computer Science",
-    "fees": 31000,
-    "ranking": 33,
-    "acceptanceRate": 48,
-    "duration": "2 years",
-    "degree": "Masters"
-  },
-  {
-    "id": 8,
-    "name": "Australian National University",
-    "country": "Australia",
-    "flag": "🇦🇺",
-    "course": "MBA",
-    "fees": 40000,
-    "ranking": 30,
-    "acceptanceRate": 41,
-    "duration": "2 years",
-    "degree": "MBA"
-  },
-  {
-    "id": 9,
-    "name": "TU Munich",
-    "country": "Germany",
-    "flag": "🇩🇪",
-    "course": "Engineering",
-    "fees": 5000,
-    "ranking": 50,
-    "acceptanceRate": 55,
-    "duration": "2 years",
-    "degree": "Masters"
-  },
-  {
-    "id": 10,
-    "name": "Heidelberg University",
-    "country": "Germany",
-    "flag": "🇩🇪",
-    "course": "Data Science",
-    "fees": 3000,
-    "ranking": 65,
-    "acceptanceRate": 60,
-    "duration": "2 years",
-    "degree": "Masters"
-  },
-  {
-    "id": 11,
-    "name": "MIT",
-    "country": "USA",
-    "flag": "🇺🇸",
-    "course": "Computer Science",
-    "fees": 58000,
-    "ranking": 1,
-    "acceptanceRate": 4,
-    "duration": "2 years",
-    "degree": "Masters"
-  },
-  {
-    "id": 12,
     "name": "Stanford University",
     "country": "USA",
     "flag": "🇺🇸",
-    "course": "MBA",
-    "fees": 74000,
-    "ranking": 2,
-    "acceptanceRate": 6,
+    "course": "Computer Science",
+    "fees": 55000,
+    "ranking": 5,
+    "acceptanceRate": 5,
     "duration": "2 years",
-    "degree": "MBA"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Machine Learning, Data Science",
+      "facultyNotable": ["Andrew Ng", "Fei-Fei Li", "Daphne Koller"],
+      "programHighlight": "Direct Silicon Valley connections, hands-on startup culture",
+      "countryReason": "Stanford's location provides unmatched access to tech industry and venture capital"
+    }
   },
   {
-    "id": 13,
+    "id": 3,
+    "name": "Harvard University",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "MBA",
+    "fees": 73000,
+    "ranking": 4,
+    "acceptanceRate": 6,
+    "duration": "2 years",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Leadership, Finance, Strategy, Entrepreneurship",
+      "facultyNotable": ["David Garvin", "Bharat Anand"],
+      "programHighlight": "Case study methodology, extensive alumni network",
+      "countryReason": "Harvard Business School offers unparalleled networking with global business leaders"
+    }
+  },
+  {
+    "id": 4,
     "name": "Carnegie Mellon University",
     "country": "USA",
     "flag": "🇺🇸",
-    "course": "Data Science",
+    "course": "Computer Science",
     "fees": 52000,
     "ranking": 8,
     "acceptanceRate": 15,
     "duration": "2 years",
-    "degree": "Masters"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Machine Learning, Robotics, Software Engineering",
+      "facultyNotable": ["Tom Mitchell", "Yejin Choi"],
+      "programHighlight": "Top-ranked CS school, strong industry partnerships",
+      "countryReason": "CMU's Pittsburgh campus offers growing tech scene with Google, Apple connections"
+    }
   },
   {
-    "id": 14,
-    "name": "University of Waterloo",
-    "country": "Canada",
-    "flag": "🇨🇦",
-    "course": "Engineering",
-    "fees": 24000,
-    "ranking": 114,
-    "acceptanceRate": 55,
+    "id": 5,
+    "name": "University of California Berkeley",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 48000,
+    "ranking": 12,
+    "acceptanceRate": 12,
     "duration": "2 years",
-    "degree": "Masters"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Data Science, EECS, Computer Vision",
+      "facultyNotable": ["Stuart Russell", "Michael Jordan"],
+      "programHighlight": "BAIR lab, Berkeley AI Research, Silicon Valley proximity",
+      "countryReason": "Berkeley bridges academia and Silicon Valley innovation with unmatched research opportunities"
+    }
   },
   {
-    "id": 15,
-    "name": "University of Sydney",
-    "country": "Australia",
-    "flag": "🇦🇺",
+    "id": 6,
+    "name": "Columbia University",
+    "country": "USA",
+    "flag": "🇺🇸",
     "course": "Data Science",
-    "fees": 35000,
-    "ranking": 41,
-    "acceptanceRate": 45,
+    "fees": 56000,
+    "ranking": 23,
+    "acceptanceRate": 13,
     "duration": "2 years",
-    "degree": "Masters"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, Machine Learning, Statistics",
+      "facultyNotable": ["David Blei", "Steven Strogatz"],
+      "programHighlight": "NYC location, strong finance and tech connections",
+      "countryReason": "Columbia offers access to New York's financial and tech ecosystem"
+    }
   },
   {
-    "id": 16,
-    "name": "RWTH Aachen University",
-    "country": "Germany",
-    "flag": "🇩🇪",
-    "course": "Engineering",
-    "fees": 4500,
-    "ranking": 106,
-    "acceptanceRate": 58,
-    "duration": "2 years",
-    "degree": "Masters"
-  },
-  {
-    "id": 17,
-    "name": "University of Manchester",
-    "country": "UK",
-    "flag": "🇬🇧",
+    "id": 7,
+    "name": "University of Pennsylvania",
+    "country": "USA",
+    "flag": "🇺🇸",
     "course": "MBA",
-    "fees": 42000,
-    "ranking": 28,
-    "acceptanceRate": 30,
-    "duration": "1 year",
-    "degree": "MBA"
+    "fees": 76000,
+    "ranking": 13,
+    "acceptanceRate": 16,
+    "duration": "2 years",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Finance, Marketing, Operations Management",
+      "facultyNotable": ["Angela Duckworth", "Brian Rafferty"],
+      "programHighlight": "Wharton School, venture funding culture",
+      "countryReason": "Wharton's Philadelphia campus provides East Coast business hub access"
+    }
   },
   {
-    "id": 18,
-    "name": "University of California, Berkeley",
+    "id": 8,
+    "name": "Georgia Institute of Technology",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 34000,
+    "ranking": 17,
+    "acceptanceRate": 17,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Machine Learning, Cybersecurity, HCI",
+      "facultyNotable": ["Frank Dellaert", "Matthew Blanco"],
+      "programHighlight": "Affordable tuition, strong tech industry ties, Atlanta tech hub",
+      "countryReason": "Georgia Tech offers excellent value with strong placement in Atlanta's growing tech scene"
+    }
+  },
+  {
+    "id": 9,
+    "name": "University of California Los Angeles",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 48000,
+    "ranking": 19,
+    "acceptanceRate": 14,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Embedded Systems, Vision",
+      "facultyNotable": ["Song-Chun Zhu", "Song-Chun Zhu"],
+      "programHighlight": "Strong research, LA tech ecosystem connections",
+      "countryReason": "UCLA provides access to Los Angeles entertainment and tech industries"
+    }
+  },
+  {
+    "id": 10,
+    "name": "University of Michigan Ann Arbor",
     "country": "USA",
     "flag": "🇺🇸",
     "course": "Engineering",
-    "fees": 48000,
-    "ranking": 4,
-    "acceptanceRate": 12,
+    "fees": 52000,
+    "ranking": 21,
+    "acceptanceRate": 22,
     "duration": "2 years",
-    "degree": "Masters"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Automotive Engineering, Robotics, AI",
+      "facultyNotable": ["Nadia K. F. Sun"],
+      "programHighlight": "Strong engineering reputation, auto industry connections",
+      "countryReason": "Michigan offers automotive and manufacturing industry partnerships"
+    }
+  },
+  {
+    "id": 11,
+    "name": "University of Texas Austin",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 38000,
+    "ranking": 24,
+    "acceptanceRate": 29,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Systems, Security",
+      "facultyNotable": "Top CS faculty",
+      "programHighlight": "Growing tech hub, affordable tuition, strong research",
+      "countryReason": "Austin is a booming tech city with companies like Apple, Tesla, Oracle"
+    }
+  },
+  {
+    "id": 12,
+    "name": "Cornell University",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 60000,
+    "ranking": 15,
+    "acceptanceRate": 9,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Systems, Theory, HCI",
+      "facultyNotable": ["Jon Kleinberg", "Bart Selman"],
+      "programHighlight": "Ivy League prestige, excellent CS research",
+      "countryReason": "Cornell offers Ivy League networking with strong Ithaca tech community"
+    }
+  },
+  {
+    "id": 13,
+    "name": "Princeton University",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 56000,
+    "ranking": 11,
+    "acceptanceRate": 6,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "ML, NLP, Theory, Security",
+      "facultyNotable": ["Danqi Chen", "Jennifer Chayes"],
+      "programHighlight": "Ivy League, excellent research opportunities",
+      "countryReason": "Princeton offers intimate Ivy League experience with NYC proximity"
+    }
+  },
+  {
+    "id": 14,
+    "name": "Yale University",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Statistics",
+    "fees": 54000,
+    "ranking": 18,
+    "acceptanceRate": 8,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Statistics, Data Science, Probability",
+      "facultyNotable": ["Andrew Barron"],
+      "programHighlight": "Ivy League, interdisciplinary approach",
+      "countryReason": "Yale provides Ivy League networking in the Northeast corridor"
+    }
+  },
+  {
+    "id": 15,
+    "name": "University of Washington",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 42000,
+    "ranking": 22,
+    "acceptanceRate": 21,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, NLP, Computer Vision",
+      "facultyNotable": ["Jeff Hinich"],
+      "programHighlight": "Seattle location, Microsoft/Amazon connections",
+      "countryReason": "UW sits in Seattle with direct access to Amazon, Microsoft, and tech giants"
+    }
+  },
+  {
+    "id": 16,
+    "name": "University of Toronto",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "course": "Computer Science",
+    "fees": 30000,
+    "ranking": 21,
+    "acceptanceRate": 43,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Deep Learning, NLP, Computer Vision",
+      "facultyNotable": ["Geoffrey Hinton", "Sanja Fidler"],
+      "programHighlight": "Vector Institute partnership, top AI research globally",
+      "countryReason": "Canada offers post-graduation work permits, PR pathways, and diverse tech ecosystem"
+    }
+  },
+  {
+    "id": 17,
+    "name": "University of British Columbia",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "course": "Computer Science",
+    "fees": 28000,
+    "ranking": 34,
+    "acceptanceRate": 52,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, HCI, Computational Biology",
+      "facultyNotable": ["David Poole", "Kevin Leyton-Brown"],
+      "programHighlight": "Co-op programs, Vancouver tech hub connections",
+      "countryReason": "BC offers beautiful environment, co-op opportunities, and growing tech scene"
+    }
+  },
+  {
+    "id": 18,
+    "name": "McGill University",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "course": "MBA",
+    "fees": 32000,
+    "ranking": 30,
+    "acceptanceRate": 38,
+    "duration": "2 years",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Finance, Strategy, Marketing",
+      "facultyNotable": ["Mahesh Joshi"],
+      "programHighlight": "Desautels Faculty, international exchange programs",
+      "countryReason": "Montreal offers bilingual culture, affordable tuition, and vibrant arts scene"
+    }
   },
   {
     "id": 19,
+    "name": "University of Waterloo",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "course": "Computer Science",
+    "fees": 24000,
+    "ranking": 112,
+    "acceptanceRate": 55,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Cybersecurity, Software Engineering",
+      "facultyNotable": ["Ganesh Gopalakrishnan"],
+      "programHighlight": "Co-op integration, Canada's top tech talent pipeline",
+      "countryReason": "Waterloo's co-op model provides the most industry experience of any Canadian program"
+    }
+  },
+  {
+    "id": 20,
+    "name": "University of Alberta",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "course": "Artificial Intelligence",
+    "fees": 22000,
+    "ranking": 111,
+    "acceptanceRate": 58,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Reinforcement Learning, Robotics, NLP",
+      "facultyNotable": ["Rich Sutton", "Patrick Pilarski"],
+      "programHighlight": "Deep RL research leadership, strong industry partnerships",
+      "countryReason": "Alberta offers affordable education with leading AI research"
+    }
+  },
+  {
+    "id": 21,
     "name": "Simon Fraser University",
     "country": "Canada",
     "flag": "🇨🇦",
@@ -225,18 +369,893 @@
     "ranking": 251,
     "acceptanceRate": 62,
     "duration": "2 years",
-    "degree": "Masters"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Big Data, Computational Social Science",
+      "facultyNotable": ["Greg Mori"],
+      "programHighlight": "Vancouver location, co-op options, interdisciplinary approach",
+      "countryReason": "SFU offers accessible entry to Canada's tech ecosystem"
+    }
   },
   {
-    "id": 20,
+    "id": 22,
+    "name": "University of Oxford",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "MBA",
+    "fees": 65000,
+    "ranking": 3,
+    "acceptanceRate": 17,
+    "duration": "1 year",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Business Strategy, Leadership, Finance",
+      "facultyNotable": ["Colin Mayer", "Sue Black"],
+      "programHighlight": "1-year intensive, Saïd Business School, global alumni network",
+      "countryReason": "Oxford offers world-class networking, shorter 1-year format, and global prestige"
+    }
+  },
+  {
+    "id": 23,
+    "name": "University of Cambridge",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "Computer Science",
+    "fees": 60000,
+    "ranking": 2,
+    "acceptanceRate": 21,
+    "duration": "1 year",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, Security, Programming Languages",
+      "facultyNotable": ["Zoubin Ghahramani", "Neil Burgess"],
+      "programHighlight": "World-leading research, Cambridge technology cluster",
+      "countryReason": "Cambridge offers academic excellence with London's financial hub proximity"
+    }
+  },
+  {
+    "id": 24,
+    "name": "Imperial College London",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "Computer Science",
+    "fees": 38000,
+    "ranking": 6,
+    "acceptanceRate": 14,
+    "duration": "1 year",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Data Science, Robotics, Quantum Computing",
+      "facultyNotable": ["Murray Shanahan", "Daniel Rueckert"],
+      "programHighlight": "Cutting-edge research, London tech corridor location",
+      "countryReason": "Imperial offers tech hub placement with 2-year post-study work visa"
+    }
+  },
+  {
+    "id": 25,
+    "name": "University College London",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "Data Science",
+    "fees": 35000,
+    "ranking": 9,
+    "acceptanceRate": 29,
+    "duration": "1 year",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, ML, Statistics",
+      "facultyNotable": ["John Shawe-Taylor"],
+      "programHighlight": "Gatsby Unit, interdisciplinary approach",
+      "countryReason": "UCL provides London location with strong research reputation"
+    }
+  },
+  {
+    "id": 26,
+    "name": "University of Edinburgh",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "Computer Science",
+    "fees": 29000,
+    "ranking": 27,
+    "acceptanceRate": 35,
+    "duration": "1 year",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, NLP, Robotics",
+      "facultyNotable": ["Shane Hegarty", "Charles Sutton"],
+      "programHighlight": "Scotland's AI research hub, Bayes Centre innovation hub",
+      "countryReason": "Edinburgh offers historic yet innovative environment with European research access"
+    }
+  },
+  {
+    "id": 27,
+    "name": "University of Manchester",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "MBA",
+    "fees": 42000,
+    "ranking": 28,
+    "acceptanceRate": 30,
+    "duration": "1 year",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Finance, Innovation Management, Healthcare",
+      "facultyNotable": ["Keith Glancey"],
+      "programHighlight": "Alliance Manchester Business School, oldest UK MBA",
+      "countryReason": "Manchester offers lower cost of living than London with strong business connections"
+    }
+  },
+  {
+    "id": 28,
+    "name": "London School of Economics",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "MBA",
+    "fees": 48000,
+    "ranking": 45,
+    "acceptanceRate": 25,
+    "duration": "1 year",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Finance, Economics, Management",
+      "facultyNotable": ["Nauro Campos"],
+      "programHighlight": "Finance focus, London financial district access",
+      "countryReason": "LSE offers premier business education in London's financial heart"
+    }
+  },
+  {
+    "id": 29,
+    "name": "King's College London",
+    "country": "UK",
+    "flag": "🇬🇧",
+    "course": "Data Science",
+    "fees": 32000,
+    "ranking": 40,
+    "acceptanceRate": 33,
+    "duration": "1 year",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Health Informatics, AI in Medicine",
+      "facultyNotable": ["Richard Dobson"],
+      "programHighlight": "Strong health data research, London location",
+      "countryReason": "King's offers unique health-tech focus with NHS partnerships"
+    }
+  },
+  {
+    "id": 30,
+    "name": "University of Melbourne",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "course": "Computer Science",
+    "fees": 35000,
+    "ranking": 14,
+    "acceptanceRate": 70,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Software Engineering, Cybersecurity",
+      "facultyNotable": ["Shanika De Zoysa"],
+      "programHighlight": "ACS accreditation, Atlassian/Canva partnerships",
+      "countryReason": "Australia offers 485 visa with 2-4 years work rights, Melbourne is world's most livable city"
+    }
+  },
+  {
+    "id": 31,
+    "name": "Australian National University",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "course": "MBA",
+    "fees": 40000,
+    "ranking": 30,
+    "acceptanceRate": 41,
+    "duration": "2 years",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Public Policy, Economics, Innovation",
+      "facultyNotable": ["Warwick McKibbin"],
+      "programHighlight": "National university, government connections in Canberra",
+      "countryReason": "ANU provides access to policy circles and government sector opportunities"
+    }
+  },
+  {
+    "id": 32,
+    "name": "University of Sydney",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "course": "Data Science",
+    "fees": 36000,
+    "ranking": 41,
+    "acceptanceRate": 45,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, ML, Business Analytics",
+      "facultyNotable": ["Sanjay Chawla"],
+      "programHighlight": "Industry partnerships in finance and healthcare",
+      "countryReason": "Sydney offers Asia-Pacific gateway with strong data science job market"
+    }
+  },
+  {
+    "id": 33,
+    "name": "UNSW Sydney",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "course": "Engineering",
+    "fees": 38000,
+    "ranking": 19,
+    "acceptanceRate": 50,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Renewable Energy, Robotics, Mining",
+      "facultyNotable": ["Marcelo Segura"],
+      "programHighlight": "Strong engineering reputation, industry partnerships",
+      "countryReason": "UNSW offers top engineering programs with Australian industry connections"
+    }
+  },
+  {
+    "id": 34,
+    "name": "University of Queensland",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "course": "Data Science",
+    "fees": 34000,
+    "ranking": 43,
+    "acceptanceRate": 55,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Bioinformatics, Environmental Data",
+      "facultyNotable": ["David Mitchell"],
+      "programHighlight": "Strong research, Brisbane tech growth",
+      "countryReason": "Queensland offers excellent lifestyle with growing tech sector"
+    }
+  },
+  {
+    "id": 35,
+    "name": "Technical University of Munich",
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "course": "Engineering",
+    "fees": 3000,
+    "ranking": 50,
+    "acceptanceRate": 30,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Automotive Engineering, Robotics, AI",
+      "facultyNotable": ["Thomas Hofmann"],
+      "programHighlight": "BMW, Siemens, Audi partnerships, near-zero tuition",
+      "countryReason": "Germany offers near-free tuition with 18-month job seeker visa and engineering excellence"
+    }
+  },
+  {
+    "id": 36,
+    "name": "TU Berlin",
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "course": "Computer Science",
+    "fees": 3000,
+    "ranking": 154,
+    "acceptanceRate": 40,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Software Engineering, AI, Media Informatics",
+      "facultyNotable": ["Otthein Herzog"],
+      "programHighlight": "Berlin startup scene, affordable living",
+      "countryReason": "Berlin offers vibrant startup culture with extremely low tuition"
+    }
+  },
+  {
+    "id": 37,
+    "name": "RWTH Aachen University",
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "course": "Engineering",
+    "fees": 4500,
+    "ranking": 106,
+    "acceptanceRate": 58,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Mechanical Engineering, Automotive, Energy",
+      "facultyNotable": ["Stefan Pischinger"],
+      "programHighlight": "Fraunhofer partnerships, Europe's largest technical university",
+      "countryReason": "Aachen offers engineering excellence in Europe's industrial heartland"
+    }
+  },
+  {
+    "id": 38,
+    "name": "Karlsruhe Institute of Technology",
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "course": "Computer Science",
+    "fees": 3000,
+    "ranking": 119,
+    "acceptanceRate": 45,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Robotics, Cybersecurity",
+      "facultyNotable": ["Jürgen Beyerer"],
+      "programHighlight": "Strong research, Google partnerships",
+      "countryReason": "KIT offers excellent CS research with Germany's engineering tradition"
+    }
+  },
+  {
+    "id": 39,
+    "name": "Heidelberg University",
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "course": "Data Science",
+    "fees": 3000,
+    "ranking": 65,
+    "acceptanceRate": 60,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Computational Biology, Biomedical Data Science",
+      "facultyNotable": ["Roland Eils", "Karsten Borgwardt"],
+      "programHighlight": "BioQuant center, EMBL ties, life sciences focus",
+      "countryReason": "Heidelberg offers academic prestige with near-zero tuition"
+    }
+  },
+  {
+    "id": 40,
+    "name": "HEC Paris",
+    "country": "France",
+    "flag": "🇫🇷",
+    "course": "MBA",
+    "fees": 55000,
+    "ranking": 72,
+    "acceptanceRate": 20,
+    "duration": "1 year",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Finance, Luxury Brand Management, Strategy",
+      "facultyNotable": ["Pierre Dussauge"],
+      "programHighlight": "Top European MBA, luxury industry focus",
+      "countryReason": "HEC Paris offers elite business education with access to European luxury and finance sectors"
+    }
+  },
+  {
+    "id": 41,
+    "name": "École Polytechnique",
+    "country": "France",
+    "flag": "🇫🇷",
+    "course": "Computer Science",
+    "fees": 4000,
+    "ranking": 38,
+    "acceptanceRate": 15,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Data Science, Mathematics",
+      "facultyNotable": ["Gérard Berry"],
+      "programHighlight": "French engineering excellence, research-intensive",
+      "countryReason": "École Polytechnique offers world-class engineering with minimal tuition"
+    }
+  },
+  {
+    "id": 42,
+    "name": "Sorbonne University",
+    "country": "France",
+    "flag": "🇫🇷",
+    "course": "Computer Science",
+    "fees": 4000,
+    "ranking": 60,
+    "acceptanceRate": 35,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Theoretical CS, AI, Mathematics",
+      "facultyNotable": ["Jean-Pierre Jouannaud"],
+      "programHighlight": "Historic academic excellence, interdisciplinary research",
+      "countryReason": "Sorbonne offers prestigious education with Paris cultural experience"
+    }
+  },
+  {
+    "id": 43,
+    "name": "PSL University",
+    "country": "France",
+    "flag": "🇫🇷",
+    "course": "Data Science",
+    "fees": 4000,
+    "ranking": 52,
+    "acceptanceRate": 30,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, AI, Social Sciences",
+      "facultyNotable": ["Serge Abiteboul"],
+      "programHighlight": "Federation of Paris institutions, diverse programs",
+      "countryReason": "PSL offers innovative interdisciplinary education in Paris"
+    }
+  },
+  {
+    "id": 44,
+    "name": "TU Delft",
+    "country": "Netherlands",
+    "flag": "🇳🇱",
+    "course": "Engineering",
+    "fees": 20000,
+    "ranking": 47,
+    "acceptanceRate": 40,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Civil Engineering, Aerospace, Sustainable Design",
+      "facultyNotable": ["Bert van Wee"],
+      "programHighlight": "Top engineering innovation, Airbus partnerships",
+      "countryReason": "Netherlands offers English-taught programs with strong innovation ecosystem"
+    }
+  },
+  {
+    "id": 45,
+    "name": "Eindhoven University of Technology",
+    "country": "Netherlands",
+    "flag": "🇳🇱",
+    "course": "Data Science",
+    "fees": 20000,
+    "ranking": 167,
+    "acceptanceRate": 50,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, AI, Signal Processing",
+      "facultyNotable": ["Carla Sch往后"],
+      "programHighlight": "ASML partnerships, high-tech industry focus",
+      "countryReason": "Eindhoven offers tech-focused education in Brainport innovation district"
+    }
+  },
+  {
+    "id": 46,
+    "name": "Leiden University",
+    "country": "Netherlands",
+    "flag": "🇳🇱",
+    "course": "Computer Science",
+    "fees": 20000,
+    "ranking": 77,
+    "acceptanceRate": 45,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Computer Science, Law & Technology",
+      "facultyNotable": ["Aske Plaat"],
+      "programHighlight": "Strong research, international environment",
+      "countryReason": "Leiden offers excellent value with Amsterdam and The Hague proximity"
+    }
+  },
+  {
+    "id": 47,
+    "name": "ETH Zurich",
+    "country": "Switzerland",
+    "flag": "🇨🇭",
+    "course": "Computer Science",
+    "fees": 2000,
+    "ranking": 7,
+    "acceptanceRate": 27,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Robotics, Computer Vision",
+      "facultyNotable": ["Bernd Bickel", "Otmar Hilliges"],
+      "programHighlight": "World-class research, Nobel laureate producing institution",
+      "countryReason": "Switzerland offers safety, world-class research, and excellent career prospects"
+    }
+  },
+  {
+    "id": 48,
+    "name": "EPFL",
+    "country": "Switzerland",
+    "flag": "🇨🇭",
+    "course": "Computer Science",
+    "fees": 2000,
+    "ranking": 36,
+    "acceptanceRate": 22,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "ML, AI, Programming Languages",
+      "facultyNotable": ["Martin Jaggi"],
+      "programHighlight": "MLS group, Lausanne innovation hub",
+      "countryReason": "EPFL offers top-tier CS research with Geneva region tech opportunities"
+    }
+  },
+  {
+    "id": 49,
+    "name": "National University of Singapore",
+    "country": "Singapore",
+    "flag": "🇸🇬",
+    "course": "MBA",
+    "fees": 50000,
+    "ranking": 8,
+    "acceptanceRate": 25,
+    "duration": "1.5 years",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Finance, Strategy, Technology Management",
+      "facultyNotable": ["Bernard Yeung"],
+      "programHighlight": "Asian business hub, NUS Business School prestige",
+      "countryReason": "Singapore is gateway to Asian markets with world-class business infrastructure"
+    }
+  },
+  {
+    "id": 50,
+    "name": "Nanyang Technological University",
+    "country": "Singapore",
+    "flag": "🇸🇬",
+    "course": "Data Science",
+    "fees": 35000,
+    "ranking": 15,
+    "acceptanceRate": 30,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Data Analytics, Smart Cities",
+      "facultyNotable": ["Gan Chee Huat"],
+      "programHighlight": "Strong research, government smart nation initiatives",
+      "countryReason": "NTU offers excellent STEM education in Asia's smartest city"
+    }
+  },
+  {
+    "id": 51,
+    "name": "Trinity College Dublin",
+    "country": "Ireland",
+    "flag": "🇮🇪",
+    "course": "Computer Science",
+    "fees": 22000,
+    "ranking": 81,
+    "acceptanceRate": 33,
+    "duration": "1 year",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, Intelligent Systems",
+      "facultyNotable": ["John Kelleher"],
+      "programHighlight": "Direct Google/Meta connections, tech industry focus",
+      "countryReason": "Ireland hosts EU headquarters of Google, Meta, Apple with 2-year post-study work visa"
+    }
+  },
+  {
+    "id": 52,
+    "name": "University College Dublin",
+    "country": "Ireland",
+    "flag": "🇮🇪",
+    "course": "MBA",
+    "fees": 28000,
+    "ranking": 171,
+    "acceptanceRate": 40,
+    "duration": "1 year",
+    "degree": "MBA",
+    "sopHooks": {
+      "researchFocus": "Finance, Leadership, Strategy",
+      "facultyNotable": ["Anthony Hilton"],
+      "programHighlight": "Smurfit Business School, EU business hub",
+      "countryReason": "UCD offers quality business education with Ireland's EU business advantages"
+    }
+  },
+  {
+    "id": 53,
+    "name": "University of Tokyo",
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "course": "Engineering",
+    "fees": 5000,
+    "ranking": 23,
+    "acceptanceRate": 34,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Robotics, Electronics, AI",
+      "facultyNotable": ["Kenji Doya"],
+      "programHighlight": "World-leading robotics research, industry partnerships",
+      "countryReason": "Japan is robotics and innovation leader with excellent research opportunities"
+    }
+  },
+  {
+    "id": 54,
+    "name": "Kyoto University",
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "course": "Data Science",
+    "fees": 5000,
+    "ranking": 36,
+    "acceptanceRate": 40,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Bioinformatics, AI, Mathematical Sciences",
+      "facultyNotable": ["Shinya Yamanaka"],
+      "programHighlight": "Nobel prize winners, strong research culture",
+      "countryReason": "Kyoto offers traditional excellence with modern research facilities"
+    }
+  },
+  {
+    "id": 55,
+    "name": "KTH Royal Institute of Technology",
+    "country": "Sweden",
+    "flag": "🇸🇪",
+    "course": "Computer Science",
+    "fees": 0,
+    "ranking": 73,
+    "acceptanceRate": 35,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, Distributed Systems",
+      "facultyNotable": ["Sarosh Malik"],
+      "programHighlight": "Free tuition for all, Spotify partnerships",
+      "countryReason": "Sweden offers tuition-free education with excellent tech opportunities"
+    }
+  },
+  {
+    "id": 56,
+    "name": "Uppsala University",
+    "country": "Sweden",
+    "flag": "🇸🇪",
+    "course": "Data Science",
+    "fees": 0,
+    "ranking": 105,
+    "acceptanceRate": 45,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, ML, Statistics",
+      "facultyNotable": ["Pär Matsedal"],
+      "programHighlight": "Historic excellence, Scandinavian research culture",
+      "countryReason": "Uppsala offers tuition-free education with strong academic traditions"
+    }
+  },
+  {
+    "id": 57,
+    "name": "University of Auckland",
+    "country": "New Zealand",
+    "flag": "🇳🇿",
+    "course": "Engineering",
+    "fees": 25000,
+    "ranking": 87,
+    "acceptanceRate": 45,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Civil Engineering, Environmental Engineering",
+      "facultyNotable": ["Mark Bebbington"],
+      "programHighlight": "Strong research, lifestyle balance",
+      "countryReason": "New Zealand offers safe environment with post-study work opportunities"
+    }
+  },
+  {
+    "id": 58,
+    "name": "University of Hong Kong",
+    "country": "Hong Kong",
+    "flag": "🇭🇰",
+    "course": "Data Science",
+    "fees": 28000,
+    "ranking": 21,
+    "acceptanceRate": 35,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "FinTech, Data Science, AI",
+      "facultyNotable": ["Hong Kai Lee"],
+      "programHighlight": "Asian finance hub, China gateway",
+      "countryReason": "HKU offers gateway to Chinese markets with international finance hub status"
+    }
+  },
+  {
+    "id": 59,
+    "name": "Peking University",
+    "country": "China",
+    "flag": "🇨🇳",
+    "course": "Computer Science",
+    "fees": 8000,
+    "ranking": 14,
+    "acceptanceRate": 20,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, Computer Vision",
+      "facultyNotable": ["Andrew Chi-Chih Yao"],
+      "programHighlight": "China's top university, AI research powerhouse",
+      "countryReason": "Peking University offers world-class education in China's tech capital"
+    }
+  },
+  {
+    "id": 60,
+    "name": "Seoul National University",
+    "country": "South Korea",
+    "flag": "🇰🇷",
+    "course": "Engineering",
+    "fees": 6000,
+    "ranking": 29,
+    "acceptanceRate": 25,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Semiconductors, AI, Robotics",
+      "facultyNotable": ["Katherine Yoon"],
+      "programHighlight": "Samsung, LG partnerships, semiconductor focus",
+      "countryReason": "SNU offers excellent engineering with Korea's tech industry connections"
+    }
+  },
+  {
+    "id": 61,
+    "name": "KAIST",
+    "country": "South Korea",
+    "flag": "🇰🇷",
+    "course": "Computer Science",
+    "fees": 6000,
+    "ranking": 53,
+    "acceptanceRate": 30,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Robotics, Blockchain",
+      "facultyNotable": ["Jong-Hoon Won"],
+      "programHighlight": "Korea's MIT, tech innovation focus",
+      "countryReason": "KAIST offers cutting-edge research in Korea's technology hub"
+    }
+  },
+  {
+    "id": 62,
+    "name": "University of Cape Town",
+    "country": "South Africa",
+    "flag": "🇿🇦",
+    "course": "Data Science",
+    "fees": 5000,
+    "ranking": 120,
+    "acceptanceRate": 50,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, AI, African Tech",
+      "facultyNotable": ["Hugh Parsonage"],
+      "programHighlight": "Africa's top university, growing tech ecosystem",
+      "countryReason": "UCT offers African excellence with emerging tech hub opportunities"
+    }
+  },
+  {
+    "id": 63,
     "name": "Monash University",
     "country": "Australia",
     "flag": "🇦🇺",
     "course": "Engineering",
-    "fees": 33000,
-    "ranking": 57,
+    "fees": 38000,
+    "ranking": 37,
     "acceptanceRate": 50,
     "duration": "2 years",
-    "degree": "Masters"
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Mechanical, Civil, Materials Engineering",
+      "programHighlight": "Melbourne tech corridor, BHP partnerships",
+      "countryReason": "Monash offers engineering excellence in Melbourne, world's most livable city"
+    }
+  },
+  {
+    "id": 64,
+    "name": "University of Toronto Scarborough",
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "course": "Data Science",
+    "fees": 28000,
+    "ranking": 21,
+    "acceptanceRate": 48,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, Urban Analytics",
+      "facultyNotable": ["Mark Fox"],
+      "programHighlight": "Co-op options, Toronto tech connections",
+      "countryReason": "UTSC offers affordable entry to Canada's top tech ecosystem"
+    }
+  },
+  {
+    "id": 65,
+    "name": "University of California San Diego",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 48000,
+    "ranking": 25,
+    "acceptanceRate": 24,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, Computer Vision, NLP",
+      "facultyNotable": ["Fei-Fei Li", "Julian McAuley"],
+      "programHighlight": "Strong research, San Diego tech scene",
+      "countryReason": "UCSD offers excellent research with San Diego's growing biotech scene"
+    }
+  },
+  {
+    "id": 66,
+    "name": "NYU",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Data Science",
+    "fees": 58000,
+    "ranking": 35,
+    "acceptanceRate": 12,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Data Science, AI, Finance",
+      "facultyNotable": ["Yann LeCun", "David Rosenberg"],
+      "programHighlight": "NYU Center for Data Science, NYC finance hub",
+      "countryReason": "NYU offers top data science program in the world's business capital"
+    }
+  },
+  {
+    "id": 67,
+    "name": "Boston University",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "course": "Computer Science",
+    "fees": 54000,
+    "ranking": 75,
+    "acceptanceRate": 18,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, Software Engineering, Data Analytics",
+      "facultyNotable": ["John MacCormick"],
+      "programHighlight": "Boston tech hub, strong industry partnerships",
+      "countryReason": "BU offers excellent CS education in Boston's innovation corridor"
+    }
+  },
+  {
+    "id": 68,
+    "name": "Technical University of Denmark",
+    "country": "Denmark",
+    "flag": "🇩🇰",
+    "course": "Engineering",
+    "fees": 0,
+    "ranking": 99,
+    "acceptanceRate": 40,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Sustainable Engineering, Wind Energy, Robotics",
+      "facultyNotable": ["Henrik B. Møller"],
+      "programHighlight": "Green tech focus, Vestas partnerships",
+      "countryReason": "DTU offers tuition-free engineering with focus on sustainability"
+    }
+  },
+  {
+    "id": 69,
+    "name": "Politecnico di Milano",
+    "country": "Italy",
+    "flag": "🇮🇹",
+    "course": "Engineering",
+    "fees": 4000,
+    "ranking": 111,
+    "acceptanceRate": 45,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "Design, Architecture, Aerospace Engineering",
+      "facultyNotable": ["Giuliana Mattioli"],
+      "programHighlight": "Italian engineering excellence, design heritage",
+      "countryReason": "Politecnico offers world-class engineering with Italian cultural experience"
+    }
+  },
+  {
+    "id": 70,
+    "name": "University of Helsinki",
+    "country": "Finland",
+    "flag": "🇫🇮",
+    "course": "Computer Science",
+    "fees": 0,
+    "ranking": 115,
+    "acceptanceRate": 50,
+    "duration": "2 years",
+    "degree": "Masters",
+    "sopHooks": {
+      "researchFocus": "AI, ML, Programming Languages",
+      "facultyNotable": ["Pekka Ala-Pietilä"],
+      "programHighlight": "Free tuition, Nokia connections, Nordic innovation",
+      "countryReason": "Helsinki offers tuition-free CS education with strong tech innovation"
+    }
   }
 ]

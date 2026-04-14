@@ -152,29 +152,31 @@ export default function Explore() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black text-white">Explore</h1>
-        <p className="text-muted text-sm mt-1">Chat with AI or browse universities</p>
+        <h1 className="text-2xl font-black text-gray-900">Explore</h1>
+        <p className="text-gray-500 text-sm mt-1">Chat with AI or browse universities</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 p-1 bg-surface rounded-xl border border-surface-border w-fit">
+      <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit">
         <button
           id="tab-chatbot"
           onClick={() => setActiveTab('chatbot')}
-          className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'chatbot'
-              ? 'bg-primary text-white shadow-lg shadow-primary/30'
-              : 'text-muted hover:text-white'
-            }`}
+          className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+            activeTab === 'chatbot'
+              ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
+              : 'text-gray-500 hover:text-gray-900'
+          }`}
         >
           🤖 Career Chatbot
         </button>
         <button
           id="tab-universities"
           onClick={() => setActiveTab('universities')}
-          className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'universities'
-              ? 'bg-primary text-white shadow-lg shadow-primary/30'
-              : 'text-muted hover:text-white'
-            }`}
+          className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+            activeTab === 'universities'
+              ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
+              : 'text-gray-500 hover:text-gray-900'
+          }`}
         >
           🏫 Universities
         </button>
@@ -184,22 +186,22 @@ export default function Explore() {
       {activeTab === 'chatbot' && (
         <div className="card p-0 overflow-hidden flex flex-col" style={{ height: '600px' }}>
           {/* Chat Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border bg-surface">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-teal flex items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
                 <Bot size={18} className="text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-white text-sm">EduPath AI</h3>
+                <h3 className="font-semibold text-gray-900 text-sm">EduPath AI</h3>
                 <div className="flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse-slow" />
-                  <span className="text-xs text-green-400">Online</span>
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse-slow" />
+                  <span className="text-xs text-green-600">Online</span>
                 </div>
               </div>
             </div>
             <button
               onClick={clearChat}
-              className="text-xs text-muted hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-card"
+              className="text-xs text-gray-400 hover:text-gray-700 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-100"
             >
               Clear Chat
             </button>
@@ -214,7 +216,7 @@ export default function Explore() {
           </div>
 
           {/* Input */}
-          <div className="px-5 py-4 border-t border-surface-border bg-surface">
+          <div className="px-5 py-4 border-t border-gray-100 bg-gray-50">
             <div className="flex gap-3">
               <input
                 ref={inputRef}
@@ -230,7 +232,7 @@ export default function Explore() {
                 id="chat-send"
                 onClick={() => sendMessage()}
                 disabled={!inputValue.trim()}
-                className="btn-primary px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary px-4 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send size={18} />
               </button>
@@ -245,9 +247,9 @@ export default function Explore() {
           {/* Filters */}
           <div className="card space-y-4">
             <div className="flex items-center gap-2 mb-2">
-              <SlidersHorizontal size={18} className="text-primary" />
-              <h3 className="font-semibold text-white">Filters</h3>
-              <span className="ml-auto text-xs text-muted">{filteredUniversities.length} results</span>
+              <SlidersHorizontal size={18} className="text-teal-500" />
+              <h3 className="font-semibold text-gray-900">Filters</h3>
+              <span className="ml-auto text-xs text-gray-400">{filteredUniversities.length} results</span>
             </div>
 
             <div className="relative">
@@ -291,9 +293,9 @@ export default function Explore() {
           {/* University Cards */}
           {filteredUniversities.length === 0 ? (
             <div className="card text-center py-12">
-              <GraduationCap size={40} className="mx-auto text-muted mb-3" />
-              <p className="text-white font-semibold">No universities found</p>
-              <p className="text-muted text-sm mt-1">Try adjusting your filters</p>
+              <GraduationCap size={40} className="mx-auto text-gray-300 mb-3" />
+              <p className="text-gray-900 font-semibold">No universities found</p>
+              <p className="text-gray-400 text-sm mt-1">Try adjusting your filters</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, User, BookOpen, Globe, DollarSign, ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
+import { GraduationCap, User, BookOpen, Globe, DollarSign, ChevronRight, ChevronLeft, Check, Sparkles, School, Award, FileText, FlaskConical, Layers } from 'lucide-react';
 import storage from '../utils/storage';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion';
 import { PageTransition } from '../components/ui/PageTransition';
 import { Button } from '../components/ui/Button';
 import { GlassCard } from '../components/ui/GlassCard';
@@ -10,12 +10,19 @@ import { cn } from '../utils/cn';
 
 const countries = ['Canada', 'UK', 'Australia', 'Germany', 'USA', 'Ireland', 'New Zealand', 'Netherlands'];
 const courses = ['Computer Science', 'MBA', 'Data Science', 'Engineering', 'Medicine', 'Law', 'Arts & Humanities', 'Business'];
-const qualifications = ['Bachelor\'s Degree', 'Master\'s Degree', 'Diploma', '12th Grade', 'PhD'];
+
+const qualifications = [
+  { label: "Bachelor's Degree", value: "Bachelor's Degree", icon: School, desc: 'Undergraduate' },
+  { label: "Master's Degree",   value: "Master's Degree",   icon: Award,  desc: 'Postgraduate' },
+  { label: 'Diploma',           value: 'Diploma',           icon: FileText, desc: 'Vocational' },
+  { label: '12th Grade',        value: '12th Grade',        icon: Layers, desc: 'Pre-university' },
+  { label: 'PhD',               value: 'PhD',               icon: FlaskConical, desc: 'Doctoral' },
+];
 
 const steps = [
-  { id: 1, title: 'Identity', icon: User },
+  { id: 1, title: 'Identity',   icon: User },
   { id: 2, title: 'Aspiration', icon: BookOpen },
-  { id: 3, title: 'Ready', icon: Check },
+  { id: 3, title: 'Ready',      icon: Check },
 ];
 
 export default function Onboarding() {
@@ -104,76 +111,101 @@ export default function Onboarding() {
     <PageTransition transitionKey="onboarding">
       <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
 
-        {/* Animated Background Decoration */}
+        {/* Animated Background Mesh */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
           <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 90, 0],
-              opacity: [0.3, 0.5, 0.3]
-            }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-teal-100 rounded-full blur-[120px]"
+            animate={{ scale: [1, 1.25, 1], rotate: [0, 60, 0], opacity: [0.25, 0.45, 0.25] }}
+            transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
+            className="absolute top-[-15%] right-[-10%] w-[700px] h-[700px] rounded-full blur-[130px]"
+            style={{ background: 'radial-gradient(circle, #5eead4 0%, #0ea5e9 60%, transparent 100%)' }}
           />
           <motion.div
-            animate={{
-              scale: [1, 1.3, 1],
-              rotate: [0, -45, 0],
-              opacity: [0.2, 0.4, 0.2]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-100 rounded-full blur-[100px]"
+            animate={{ scale: [1, 1.3, 1], rotate: [0, -50, 0], opacity: [0.15, 0.35, 0.15] }}
+            transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute bottom-[-15%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[110px]"
+            style={{ background: 'radial-gradient(circle, #818cf8 0%, #38bdf8 60%, transparent 100%)' }}
           />
+          {/* subtle grid overlay */}
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px)',
+            backgroundSize: '48px 48px'
+          }} />
         </div>
 
         <div className="w-full max-w-xl relative">
           {/* Logo & Header */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+          <motion.div
+            initial={{ opacity: 0, y: -24 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="text-center mb-10"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-teal-500 mb-4 shadow-xl shadow-teal-500/20 border border-gray-200">
-              <GraduationCap size={32} className="text-gray-900" />
+            <div className="relative inline-block mb-4">
+              <div className="inline-flex items-center justify-center w-[72px] h-[72px] rounded-[22px] bg-gradient-to-br from-blue-600 via-blue-500 to-teal-400 shadow-2xl shadow-teal-500/30">
+                <GraduationCap size={34} className="text-white" />
+              </div>
+              <motion.div
+                animate={{ scale: [1, 1.18, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -inset-1 rounded-[26px] bg-gradient-to-br from-blue-500/30 to-teal-400/30 blur-md -z-10"
+              />
             </div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">EduPath</h1>
-            <div className="flex items-center justify-center gap-2 mt-1">
-              <Sparkles size={14} className="text-teal-500" />
-              <p className="text-gray-500 font-semibold uppercase tracking-[0.2em] text-[10px]">Your Future Context</p>
+            <h1 className="text-[2.6rem] font-black tracking-tight leading-none"
+              style={{ background: 'linear-gradient(135deg,#1e293b 0%,#0f766e 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
+              EduPath
+            </h1>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <Sparkles size={13} className="text-teal-500" />
+              <p className="text-gray-400 font-bold uppercase tracking-[0.22em] text-[9px]">Your Future Navigator</p>
             </div>
           </motion.div>
 
-          {/* Stepper */}
-          <div className="flex items-center justify-center gap-4 mb-10 relative">
+          {/* ─── Premium Stepper ─── */}
+          <div className="flex items-center justify-center mb-10">
             {steps.map((s, i) => (
               <div key={s.id} className="flex items-center">
-                <div className="flex flex-col items-center gap-2 group cursor-default">
+                <div className="flex flex-col items-center gap-2">
                   <motion.div
-                    animate={{ 
-                      scale: step === s.id ? 1.1 : 1,
-                      backgroundColor: step >= s.id ? 'rgba(20, 184, 166, 1)' : 'rgba(255, 255, 255, 0.05)',
-                      boxShadow: step === s.id ? '0 0 20px rgba(20, 184, 166, 0.4)' : 'none'
+                    animate={{
+                      scale: step === s.id ? 1.12 : 1,
+                      boxShadow: step === s.id
+                        ? '0 0 0 4px rgba(20,184,166,0.18), 0 0 20px rgba(20,184,166,0.35)'
+                        : '0 0 0 0px transparent'
                     }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 24 }}
                     className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 border border-gray-200",
-                      step >= s.id ? "text-gray-900" : "text-gray-500"
+                      'w-11 h-11 rounded-2xl flex items-center justify-center border-2 transition-colors duration-300',
+                      step > s.id
+                        ? 'bg-gradient-to-br from-teal-500 to-emerald-400 border-teal-400 text-white'
+                        : step === s.id
+                        ? 'bg-white border-teal-500 text-teal-600'
+                        : 'bg-gray-50 border-gray-200 text-gray-400'
                     )}
                   >
-                    {step > s.id ? <Check size={20} /> : <s.icon size={20} />}
+                    <AnimatePresence mode="wait">
+                      {step > s.id ? (
+                        <motion.div key="check" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0 }}>
+                          <Check size={18} strokeWidth={3} />
+                        </motion.div>
+                      ) : (
+                        <motion.div key="icon" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                          <s.icon size={18} strokeWidth={2} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                   <span className={cn(
-                    "text-[10px] font-black uppercase tracking-widest transition-colors",
-                    step >= s.id ? "text-teal-500" : "text-gray-500"
-                  )}>
-                    {s.title}
-                  </span>
+                    'text-[9px] font-black uppercase tracking-[0.18em] transition-colors duration-300',
+                    step >= s.id ? 'text-teal-600' : 'text-gray-400'
+                  )}>{s.title}</span>
                 </div>
                 {i < steps.length - 1 && (
-                  <div className="w-12 h-[2px] mb-6 mx-2 bg-gray-100 relative overflow-hidden">
-                    <motion.div 
+                  <div className="w-14 h-[2px] mx-2 mb-6 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: step > s.id ? "100%" : 0 }}
-                      className="absolute inset-y-0 left-0 bg-teal-500/50"
+                      animate={{ width: step > s.id ? '100%' : 0 }}
+                      transition={{ duration: 0.45, ease: 'easeOut' }}
+                      className="h-full rounded-full bg-gradient-to-r from-teal-500 to-emerald-400"
                     />
                   </div>
                 )}
@@ -181,8 +213,8 @@ export default function Onboarding() {
             ))}
           </div>
 
-          {/* Form Content */ }
-              < GlassCard className = "p-0 overflow-hidden border-gray-200 shadow-3xl min-h-[420px] flex flex-col" hoverable = { false} >
+          {/* Form Content */}
+          <GlassCard className="p-0 overflow-hidden border-gray-200 shadow-3xl min-h-[420px] flex flex-col" hoverable={false}>
               <div className="p-8 flex-1">
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
@@ -199,39 +231,168 @@ export default function Onboarding() {
                     className="w-full h-full"
                   >
                     {step === 1 && (
-                      <div className="space-y-6">
-                        <div className="space-y-1">
-                          <h2 className="text-2xl font-black text-gray-900">The Identity</h2>
-                          <p className="text-gray-500 text-sm font-medium">Let's start with the basics.</p>
+                      <div className="space-y-7">
+                        {/* Section header */}
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center shadow-md shadow-teal-400/30">
+                              <User size={14} className="text-white" strokeWidth={2.5} />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-teal-600">Step 1 of 3</span>
+                          </div>
+                          <h2 className="text-[1.75rem] font-black text-gray-900 leading-tight tracking-tight">
+                            Who are <span style={{ background: 'linear-gradient(135deg, #0ea5e9, #14b8a6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>you?</span>
+                          </h2>
+                          <p className="text-gray-400 text-sm font-medium leading-relaxed">
+                            Tell us a bit about yourself so we can personalise your journey.
+                          </p>
                         </div>
 
+                        {/* ─── Full Name Input ─── */}
                         <div className="space-y-2">
-                          <label className="text-xs font-black uppercase tracking-widest text-gray-500">Full Name</label>
-                          <input
-                            id="onboarding-name"
-                            type="text"
-                            className="w-full glass bg-gray-100 border border-gray-200 rounded-2xl px-5 py-4 text-gray-900 placeholder-gray-400 outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 transition-all font-medium"
-                            placeholder="e.g. Alexander Knight"
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
-                          />
-                          {errors.name && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 text-xs font-bold tracking-tight">{errors.name}</motion.p>}
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-xs font-black uppercase tracking-widest text-gray-500">Aspirant Qualification</label>
-                          <select
-                            id="onboarding-qualification"
-                            className="w-full glass bg-gray-100 border border-gray-200 rounded-2xl px-5 py-4 text-gray-900 outline-none focus:border-teal-500 transition-all font-medium appearance-none"
-                            value={form.qualification}
-                            onChange={(e) => setForm({ ...form, qualification: e.target.value })}
+                          <label htmlFor="onboarding-name" className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-gray-500">
+                            <User size={11} className="text-teal-500" />
+                            Full Name
+                          </label>
+                          <motion.div
+                            animate={errors.name ? { x: [0, -6, 6, -6, 6, 0] } : { x: 0 }}
+                            transition={{ duration: 0.4 }}
+                            className="relative group"
                           >
-                            <option value="" className="bg-gray-100">Select level...</option>
-                            {qualifications.map((q) => (
-                              <option key={q} value={q} className="bg-gray-100">{q}</option>
-                            ))}
-                          </select>
-                          {errors.qualification && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 text-xs font-bold tracking-tight">{errors.qualification}</motion.p>}
+                            <div className="pointer-events-none absolute inset-y-0 left-5 flex items-center">
+                              <User size={16} className={cn('transition-colors duration-200', form.name ? 'text-teal-500' : 'text-gray-400')} />
+                            </div>
+                            <input
+                              id="onboarding-name"
+                              type="text"
+                              autoComplete="name"
+                              className={cn(
+                                'w-full rounded-2xl pl-12 pr-5 py-[15px] text-gray-900 font-semibold text-[15px] outline-none transition-all duration-200 bg-gray-50 border-2',
+                                errors.name
+                                  ? 'border-red-400 ring-4 ring-red-100 bg-red-50/40'
+                                  : 'border-gray-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-100 focus:bg-white hover:border-gray-300'
+                              )}
+                              placeholder="e.g. Alexander Knight"
+                              value={form.name}
+                              onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            />
+                            {/* live check */}
+                            <AnimatePresence>
+                              {form.name.trim().length > 1 && (
+                                <motion.div
+                                  initial={{ scale: 0, opacity: 0 }}
+                                  animate={{ scale: 1, opacity: 1 }}
+                                  exit={{ scale: 0, opacity: 0 }}
+                                  className="absolute inset-y-0 right-4 flex items-center"
+                                >
+                                  <div className="w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
+                                    <Check size={11} className="text-white" strokeWidth={3} />
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.div>
+                          <AnimatePresence>
+                            {errors.name && (
+                              <motion.p
+                                initial={{ opacity: 0, y: -4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -4 }}
+                                className="text-red-500 text-[11px] font-bold tracking-tight flex items-center gap-1"
+                              >
+                                <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                                {errors.name}
+                              </motion.p>
+                            )}
+                          </AnimatePresence>
+                        </div>
+
+                        {/* ─── Qualification Cards ─── */}
+                        <div className="space-y-3">
+                          <label className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-gray-500">
+                            <Award size={11} className="text-teal-500" />
+                            Highest Qualification
+                          </label>
+                          <div className="grid grid-cols-1 gap-2.5">
+                            {qualifications.map((q) => {
+                              const Icon = q.icon;
+                              const selected = form.qualification === q.value;
+                              return (
+                                <motion.button
+                                  key={q.value}
+                                  type="button"
+                                  whileHover={{ scale: 1.015 }}
+                                  whileTap={{ scale: 0.985 }}
+                                  onClick={() => setForm({ ...form, qualification: q.value })}
+                                  className={cn(
+                                    'relative w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 overflow-hidden group',
+                                    selected
+                                      ? 'border-teal-500 bg-gradient-to-r from-teal-50 to-blue-50 shadow-lg shadow-teal-200/60'
+                                      : 'border-gray-200 bg-gray-50 hover:border-teal-300 hover:bg-white hover:shadow-md'
+                                  )}
+                                >
+                                  {/* selection stripe */}
+                                  <AnimatePresence>
+                                    {selected && (
+                                      <motion.div
+                                        initial={{ scaleY: 0 }}
+                                        animate={{ scaleY: 1 }}
+                                        exit={{ scaleY: 0 }}
+                                        className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl bg-gradient-to-b from-teal-500 to-blue-500"
+                                        style={{ originY: 0.5 }}
+                                      />
+                                    )}
+                                  </AnimatePresence>
+
+                                  <div className={cn(
+                                    'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200',
+                                    selected
+                                      ? 'bg-gradient-to-br from-teal-500 to-blue-500 text-white shadow-md shadow-teal-400/40'
+                                      : 'bg-gray-100 text-gray-500 group-hover:bg-teal-50 group-hover:text-teal-500'
+                                  )}>
+                                    <Icon size={17} strokeWidth={2} />
+                                  </div>
+
+                                  <div className="flex-1 min-w-0">
+                                    <p className={cn(
+                                      'text-sm font-bold leading-none transition-colors',
+                                      selected ? 'text-gray-900' : 'text-gray-700'
+                                    )}>{q.label}</p>
+                                    <p className={cn(
+                                      'text-[10px] font-semibold mt-0.5 transition-colors',
+                                      selected ? 'text-teal-600' : 'text-gray-400'
+                                    )}>{q.desc}</p>
+                                  </div>
+
+                                  <AnimatePresence>
+                                    {selected && (
+                                      <motion.div
+                                        initial={{ scale: 0, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0, opacity: 0 }}
+                                        className="w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center shrink-0"
+                                      >
+                                        <Check size={11} className="text-white" strokeWidth={3} />
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                          <AnimatePresence>
+                            {errors.qualification && (
+                              <motion.p
+                                initial={{ opacity: 0, y: -4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -4 }}
+                                className="text-red-500 text-[11px] font-bold tracking-tight flex items-center gap-1"
+                              >
+                                <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                                {errors.qualification}
+                              </motion.p>
+                            )}
+                          </AnimatePresence>
                         </div>
                       </div>
                     )}
@@ -356,215 +517,60 @@ export default function Onboarding() {
                 </AnimatePresence>
               </div>
 
-            {/* Footer Navigation */ }
-              < div className = "p-6 bg-gray-100 border-t border-gray-100 flex gap-4" >
-              { step > 1 && (
-                <Button variant="secondary" onClick={handleBack} className="flex-1">
-                  <ChevronLeft size={18} />
-                </Button>
+            {/* ─── Footer Navigation ─── */}
+            <div className="px-6 py-5 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100 flex gap-3">
+              {step > 1 && (
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={handleBack}
+                  className="flex-none w-12 h-12 rounded-xl flex items-center justify-center border-2 border-gray-200 bg-white text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-all duration-200 shadow-sm"
+                >
+                  <ChevronLeft size={20} />
+                </motion.button>
               )}
-            {step < 3 ? (
-              <Button
-                id="onboarding-next"
-                onClick={handleNext}
-                className="flex-[3] flex items-center justify-center gap-2"
-              >
-                Continue Journey
-                <ChevronRight size={18} />
-              </Button>
-            ) : (
-              <Button
-                id="onboarding-submit"
-                onClick={handleSubmit}
-                className="flex-[3] flex items-center justify-center gap-3"
-              >
-                Launch OS
-                <GraduationCap size={18} />
-              </Button>
-            )}
-          </div>
-<<<<<<< HEAD
-          </GlassCard >
-=======
-          ))}
+              {step < 3 ? (
+                <motion.button
+                  id="onboarding-next"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleNext}
+                  className="relative flex-1 h-12 rounded-xl overflow-hidden flex items-center justify-center gap-2.5 text-white font-black text-sm tracking-wide shadow-lg shadow-teal-500/30 transition-all duration-200"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 40%, #14b8a6 100%)', backgroundSize: '200% 200%' }}
+                >
+                  {/* shimmer sweep */}
+                  <motion.div
+                    animate={{ x: ['-100%', '200%'] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: 'linear', repeatDelay: 1.2 }}
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%)' }}
+                  />
+                  <span className="relative z-10">Continue Journey</span>
+                  <ChevronRight size={18} className="relative z-10" />
+                </motion.button>
+              ) : (
+                <motion.button
+                  id="onboarding-submit"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleSubmit}
+                  className="relative flex-1 h-12 rounded-xl overflow-hidden flex items-center justify-center gap-2.5 text-white font-black text-sm tracking-wide shadow-lg shadow-blue-500/30"
+                  style={{ background: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #14b8a6 100%)' }}
+                >
+                  <motion.div
+                    animate={{ x: ['-100%', '200%'] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: 'linear', repeatDelay: 1.2 }}
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%)' }}
+                  />
+                  <span className="relative z-10">Launch OS</span>
+                  <GraduationCap size={18} className="relative z-10" />
+                </motion.button>
+              )}
+            </div>
+          </GlassCard>
         </div>
-
-        {/* Form Card */}
-        <div className="card animate-slide-up">
-          {/* Step 1: Personal Info */}
-          {step === 1 && (
-            <div className="space-y-5">
-              <div>
-                <h2 className="text-xl font-bold text-white mb-1">Tell us about yourself</h2>
-                <p className="text-muted text-sm">We'll personalize your experience</p>
-              </div>
-
-              <div>
-                <label className="label">Full Name *</label>
-                <input
-                  id="onboarding-name"
-                  type="text"
-                  className="input-field"
-                  placeholder="e.g. Priya Sharma"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
-              </div>
-
-              <div>
-                <label className="label">Current Qualification *</label>
-                <select
-                  id="onboarding-qualification"
-                  className="input-field"
-                  value={form.qualification}
-                  onChange={(e) => setForm({ ...form, qualification: e.target.value })}
-                >
-                  <option value="">Select qualification</option>
-                  {qualifications.map((q) => (
-                    <option key={q} value={q}>{q}</option>
-                  ))}
-                </select>
-                {errors.qualification && <p className="text-red-400 text-xs mt-1">{errors.qualification}</p>}
-              </div>
-            </div>
-          )}
-
-          {/* Step 2: Study Goals */}
-          {step === 2 && (
-            <div className="space-y-5">
-              <div>
-                <h2 className="text-xl font-bold text-white mb-1">Your Study Goals</h2>
-                <p className="text-muted text-sm">Help us find the best universities for you</p>
-              </div>
-
-              <div>
-                <label className="label">Target Course *</label>
-                <select
-                  id="onboarding-course"
-                  className="input-field"
-                  value={form.targetCourse}
-                  onChange={(e) => setForm({ ...form, targetCourse: e.target.value })}
-                >
-                  <option value="">Select a course</option>
-                  {courses.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-                {errors.targetCourse && <p className="text-red-400 text-xs mt-1">{errors.targetCourse}</p>}
-              </div>
-
-              <div>
-                <label className="label">Preferred Countries * <span className="text-muted font-normal">(select all that apply)</span></label>
-                <div className="grid grid-cols-2 gap-2">
-                  {countries.map((country) => {
-                    const selected = form.preferredCountries.includes(country);
-                    return (
-                      <button
-                        key={country}
-                        type="button"
-                        id={`country-${country.toLowerCase().replace(' ', '-')}`}
-                        onClick={() => toggleCountry(country)}
-                        className={`px-3 py-2 rounded-xl text-sm font-medium text-left transition-all duration-200 border ${selected
-                            ? 'bg-primary/20 border-primary/50 text-white'
-                            : 'bg-surface border-surface-border text-muted hover:border-primary/30 hover:text-white'
-                          }`}
-                      >
-                        {selected ? '✓ ' : ''}{country}
-                      </button>
-                    );
-                  })}
-                </div>
-                {errors.preferredCountries && <p className="text-red-400 text-xs mt-1">{errors.preferredCountries}</p>}
-              </div>
-
-              <div>
-                <label className="label">Annual Budget (USD) *</label>
-                <select
-                  id="onboarding-budget"
-                  className="input-field"
-                  value={form.budget}
-                  onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                >
-                  <option value="">Select budget range</option>
-                  <option value="under-15k">Under $15,000</option>
-                  <option value="15k-30k">$15,000 – $30,000</option>
-                  <option value="30k-50k">$30,000 – $50,000</option>
-                  <option value="over-50k">Over $50,000</option>
-                </select>
-                {errors.budget && <p className="text-red-400 text-xs mt-1">{errors.budget}</p>}
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Summary */}
-          {step === 3 && (
-            <div className="space-y-5">
-              <div>
-                <h2 className="text-xl font-bold text-white mb-1">You're all set! 🎉</h2>
-                <p className="text-muted text-sm">Here's a summary of your profile</p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-surface rounded-xl">
-                  <span className="text-muted text-sm flex items-center gap-2"><User size={14} /> Name</span>
-                  <span className="text-white font-medium">{form.name}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-surface rounded-xl">
-                  <span className="text-muted text-sm flex items-center gap-2"><BookOpen size={14} /> Qualification</span>
-                  <span className="text-white font-medium">{form.qualification}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-surface rounded-xl">
-                  <span className="text-muted text-sm flex items-center gap-2"><GraduationCap size={14} /> Course</span>
-                  <span className="text-white font-medium">{form.targetCourse}</span>
-                </div>
-                <div className="flex items-start justify-between p-3 bg-surface rounded-xl">
-                  <span className="text-muted text-sm flex items-center gap-2 flex-shrink-0"><Globe size={14} /> Countries</span>
-                  <div className="flex flex-wrap gap-1 justify-end">
-                    {form.preferredCountries.map((c) => (
-                      <span key={c} className="badge bg-primary/20 text-blue-300 border border-primary/30">{c}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-surface rounded-xl">
-                  <span className="text-muted text-sm flex items-center gap-2"><DollarSign size={14} /> Budget</span>
-                  <span className="text-white font-medium">{form.budget}</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Navigation Buttons */}
-          <div className="flex gap-3 mt-8">
-            {step > 1 && (
-              <button onClick={handleBack} className="btn-secondary flex items-center gap-2">
-                <ChevronLeft size={18} />
-                Back
-              </button>
-            )}
-            {step < 3 ? (
-              <button
-                id="onboarding-next"
-                onClick={handleNext}
-                className="btn-primary flex-1 flex items-center justify-center gap-2"
-              >
-                Next Step
-                <ChevronRight size={18} />
-              </button>
-            ) : (
-              <button
-                id="onboarding-submit"
-                onClick={handleSubmit}
-                className="btn-primary flex-1 flex items-center justify-center gap-2"
-              >
-                Launch My Dashboard
-                <GraduationCap size={18} />
-              </button>
-            )}
-          </div>
->>>>>>> 4c73b5a (Edit Code)
-        </div >
-      </div >
-    </PageTransition >
+      </div>
+    </PageTransition>
   );
 }
