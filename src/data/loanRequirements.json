@@ -1,0 +1,541 @@
+{
+  "universal": {
+    "identity": [
+      {
+        "id": "passport",
+        "name": "Passport (Self)",
+        "required": true,
+        "spec": "Valid passport with minimum 6 months validity",
+        "copies": 2,
+        "notes": "Self-attested copies"
+      },
+      {
+        "id": "aadhaar",
+        "name": "Aadhaar Card",
+        "required": true,
+        "spec": "Valid Aadhaar card (for Indian students)",
+        "copies": 2,
+        "alternatives": ["PAN Card", "Voter ID", "Driving License"]
+      },
+      {
+        "id": "pan",
+        "name": "PAN Card",
+        "required": true,
+        "spec": "Permanent Account Number card",
+        "copies": 2
+      }
+    ],
+    "academic": [
+      {
+        "id": "10th_marksheet",
+        "name": "10th Marksheet & Certificate",
+        "required": true,
+        "spec": "Class 10 marksheet and passing certificate",
+        "copies": 2
+      },
+      {
+        "id": "12th_marksheet",
+        "name": "12th Marksheet & Certificate",
+        "required": true,
+        "spec": "Class 12 marksheet and passing certificate",
+        "copies": 2
+      },
+      {
+        "id": "graduation",
+        "name": "Graduation Marksheets & Certificate",
+        "required": true,
+        "spec": "All semester/year marksheets and final degree certificate",
+        "copies": 2
+      },
+      {
+        "id": "gre_gmat",
+        "name": "GRE/GMAT Score Card",
+        "required": false,
+        "spec": "Valid GRE (310+) or GMAT (600+) score",
+        "copies": 2,
+        "notes": "Required for MS/MBA abroad"
+      }
+    ],
+    "admission": [
+      {
+        "id": "offer_letter",
+        "name": "University Offer Letter",
+        "required": true,
+        "spec": "Official admission offer from the university",
+        "copies": 2,
+        "alternatives": ["Confirmation of Admission"]
+      },
+      {
+        "id": "i20",
+        "name": "I-20 Form (USA)",
+        "required": false,
+        "spec": "Certificate of Eligibility for F-1 Student Visa",
+        "copies": 2,
+        "conditional": "required if studying in USA"
+      },
+      {
+        "id": "cas",
+        "name": "CAS Letter (UK)",
+        "required": false,
+        "spec": "Confirmation of Acceptance for Studies",
+        "copies": 2,
+        "conditional": "required if studying in UK"
+      },
+      {
+        "id": "coe",
+        "name": "CoE (Australia)",
+        "required": false,
+        "spec": "Confirmation of Enrolment",
+        "copies": 2,
+        "conditional": "required if studying in Australia"
+      },
+      {
+        "id": "visa",
+        "name": "Student Visa",
+        "required": false,
+        "spec": "Valid student visa for destination country",
+        "copies": 2,
+        "conditional": "Required before disbursement"
+      },
+      {
+        "id": "fee_structure",
+        "name": "Fee Structure from University",
+        "required": true,
+        "spec": "Detailed breakdown of tuition and living costs",
+        "copies": 2
+      }
+    ],
+    "financial": {
+      "salaried": [
+        {
+          "id": "itr_salaried",
+          "name": "Income Tax Returns",
+          "required": true,
+          "spec": "ITR for last 2 years with Acknowledgment",
+          "copies": 2
+        },
+        {
+          "id": "form16",
+          "name": "Form 16",
+          "required": true,
+          "spec": "Form 16 from employer for last 2 years",
+          "copies": 2
+        },
+        {
+          "id": "salary_slips",
+          "name": "Salary Slips",
+          "required": true,
+          "spec": "Last 3 months salary slips",
+          "copies": 2
+        },
+        {
+          "id": "bank_statements",
+          "name": "Bank Statements",
+          "required": true,
+          "spec": "Last 6 months bank statements (Self & Co-applicant)",
+          "copies": 2,
+          "notes": "Must be certified by bank"
+        }
+      ],
+      "business": [
+        {
+          "id": "itr_business",
+          "name": "Income Tax Returns",
+          "required": true,
+          "spec": "ITR for last 3 years with Acknowledgment",
+          "copies": 2
+        },
+        {
+          "id": "balance_sheet",
+          "name": "Balance Sheet",
+          "required": true,
+          "spec": "Audited Balance Sheet for last 3 years",
+          "copies": 2
+        },
+        {
+          "id": "pl_statement",
+          "name": "P&L Statement",
+          "required": true,
+          "spec": "Profit & Loss Statement for last 3 years",
+          "copies": 2
+        },
+        {
+          "id": "gst_returns",
+          "name": "GST Returns",
+          "required": true,
+          "spec": "Last 6 months GST return filings",
+          "copies": 2
+        },
+        {
+          "id": "bank_statements",
+          "name": "Bank Statements",
+          "required": true,
+          "spec": "Last 12 months bank statements (Business + Personal)",
+          "copies": 2
+        }
+      ]
+    },
+    "collateral": [
+      {
+        "id": "property_doc",
+        "name": "Property Documents",
+        "required": false,
+        "spec": "Registered sale agreement, Khata, Encumbrance certificate",
+        "copies": 3,
+        "conditional": "Required if collateral is property"
+      },
+      {
+        "id": "fd_receipts",
+        "name": "FD Receipts",
+        "required": false,
+        "spec": "Fixed Deposit receipts (pledged)",
+        "copies": 2,
+        "conditional": "Required if collateral is FD"
+      },
+      {
+        "id": "lic_policy",
+        "name": "LIC Policy Documents",
+        "required": false,
+        "spec": "LIC policy with surrender value certificate",
+        "copies": 2,
+        "conditional": "Required if collateral is LIC policy"
+      }
+    ]
+  },
+  "bankSpecific": {
+    "sbi_scholar": {
+      "additional": [
+        {
+          "id": "sbi_account",
+          "name": "SBI Account",
+          "required": true,
+          "spec": "Must have SBI account (can open with ₹1000)"
+        },
+        {
+          "id": "marklist",
+          "name": "Academic Marklists",
+          "required": true,
+          "spec": "All marklists from 10th to graduation"
+        },
+        {
+          "id": "course_completion",
+          "name": "Course Completion Proof",
+          "required": true,
+          "spec": "Degree/Provisional degree certificate"
+        }
+      ],
+      "special": [
+        "Interest concession of 0.50% for female students",
+        "No margin money required",
+        "Must submit progress reports every 6 months"
+      ],
+      "processingTime": "15-20 days",
+      "disbursement": "Direct to university after verification"
+    },
+    "hdfc_credila": {
+      "additional": [
+        {
+          "id": "qualifying_exam",
+          "name": "Entrance Exam Score",
+          "required": true,
+          "spec": "GRE/GMAT/IELTS/TOEFL scores"
+        },
+        {
+          "id": "credit_report",
+          "name": "CIBIL Score",
+          "required": true,
+          "spec": "CIBIL score of applicant and co-applicant"
+        },
+        {
+          "id": "course_schedule",
+          "name": "Course Schedule",
+          "required": true,
+          "spec": "Detailed semester-wise schedule and fee break-up"
+        }
+      ],
+      "special": [
+        "Doorstep document collection available",
+        "Digital KYC verification",
+        "Video KYC option for faster processing"
+      ],
+      "processingTime": "7-10 days",
+      "disbursement": "Direct to university; living expenses to student account"
+    },
+    "bob_edu": {
+      "additional": [
+        {
+          "id": "margin_money",
+          "name": "Margin Money Proof",
+          "required": true,
+          "spec": "Evidence of margin money beyond loan amount",
+          "conditional": "Required if loan > ₹20L"
+        },
+        {
+          "id": "category_cert",
+          "name": "Category Certificate",
+          "required": false,
+          "spec": "SC/ST/OBC certificate if applicable",
+          "conditional": "For concession benefits"
+        }
+      ],
+      "special": [
+        "Zero processing fee",
+        "Girl student concession (0.50% reduction)",
+        "Insurance coverage included"
+      ],
+      "processingTime": "20-30 days",
+      "disbursement": "Direct to university"
+    },
+    "axis_education": {
+      "additional": [
+        {
+          "id": "relationship",
+          "name": "Existing Bank Relationship",
+          "required": false,
+          "spec": "Pre-existing Axis Bank account (preferred)",
+          "conditional": "Faster processing if existing customer"
+        },
+        {
+          "id": "visa_status",
+          "name": "Visa Status",
+          "required": true,
+          "spec": "Copy of visa approval or application"
+        }
+      ],
+      "special": [
+        "Online application and tracking",
+        "Flexible repayment: step-up, step-down, bullet options",
+        "Part disbursement allowed"
+      ],
+      "processingTime": "10-15 days",
+      "disbursement": "Multiple disbursements allowed"
+    },
+    "canara_edu": {
+      "additional": [
+        {
+          "id": "canara_account",
+          "name": "Canara Bank Account",
+          "required": true,
+          "spec": "Must have Canara Bank account"
+        },
+        {
+          "id": "collateral_valuation",
+          "name": "Property Valuation",
+          "required": true,
+          "spec": "Valuation report from approved valuer",
+          "conditional": "Required for loans > ₹7.5L"
+        }
+      ],
+      "special": [
+        "Lowest interest among PSU banks",
+        "Girl student concession",
+        "Simple documentation"
+      ],
+      "processingTime": "20-25 days",
+      "disbursement": "Direct to university"
+    },
+    "icici_edu": {
+      "additional": [
+        {
+          "id": "existing_customer",
+          "name": "Customer ID",
+          "required": false,
+          "spec": "ICICI Customer ID if existing customer",
+          "conditional": "Instant approval for existing customers"
+        },
+        {
+          "id": "credit_report",
+          "name": "CIBIL Score",
+          "required": true,
+          "spec": "CIBIL score (preferably > 700)"
+        }
+      ],
+      "special": [
+        "Instant approval for ICICI customers",
+        "Digital process with video KYC",
+        "Top-up loan facility"
+      ],
+      "processingTime": "10-15 days",
+      "disbursement": "Direct to university"
+    },
+    "avanse": {
+      "additional": [
+        {
+          "id": "university_ranking",
+          "name": "University Ranking Proof",
+          "required": false,
+          "spec": "QS/ARWU ranking of target university",
+          "conditional": "Better rates for top 500 universities"
+        },
+        {
+          "id": "income_concession",
+          "name": "Income Proof",
+          "required": true,
+          "spec": "Proof for income concession if applicable"
+        }
+      ],
+      "special": [
+        "Available for Tier 2/3 cities",
+        "Pre-visa disbursement option",
+        "Lowest income requirement"
+      ],
+      "processingTime": "10-15 days",
+      "disbursement": "Can disburse before visa"
+    },
+    "incred": {
+      "additional": [
+        {
+          "id": "university_ranking",
+          "name": "University Ranking",
+          "required": true,
+          "spec": "QS ranking of target university (top 1000 preferred)"
+        },
+        {
+          "id": "scholarship",
+          "name": "Scholarship Details",
+          "required": false,
+          "spec": "Any scholarship or funding received"
+        }
+      ],
+      "special": [
+        "100% digital process",
+        "Decision in 48 hours",
+        "Scholarship-aware loan structuring"
+      ],
+      "processingTime": "48 hours",
+      "disbursement": "Direct to university"
+    },
+    "sallie_mae": {
+      "additional": [
+        {
+          "id": "ssn",
+          "name": "Social Security Number",
+          "required": true,
+          "spec": "SSN or proof of application"
+        },
+        {
+          "id": "cosigner_ssn",
+          "name": "Cosigner SSN",
+          "required": true,
+          "spec": "Cosigner's SSN and credit information"
+        },
+        {
+          "id": "enrollment",
+          "name": "Enrollment Verification",
+          "required": true,
+          "spec": "School enrollment verification form"
+        },
+        {
+          "id": "cost_attendance",
+          "name": "Cost of Attendance",
+          "required": true,
+          "spec": "University's cost of attendance letter"
+        }
+      ],
+      "special": [
+        "No fees",
+        "Cash reward for A grades",
+        "Multiple repayment options",
+        "Career support"
+      ],
+      "processingTime": "5-7 days",
+      "disbursement": "Direct to university or student account"
+    },
+    "discover": {
+      "additional": [
+        {
+          "id": "ssn",
+          "name": "Social Security Number",
+          "required": true,
+          "spec": "SSN required for US students"
+        },
+        {
+          "id": "cosigner_info",
+          "name": "Cosigner Information",
+          "required": true,
+          "spec": "Cosigner credit report and SSN"
+        },
+        {
+          "id": "school_certification",
+          "name": "School Certification",
+          "required": true,
+          "spec": "School certifies loan amount and enrollment"
+        }
+      ],
+      "special": [
+        "No fees whatsoever",
+        "1% cash reward for good grades",
+        "Interest-only payments during school",
+        "Cosigner release after 12 months"
+      ],
+      "processingTime": "5-7 days",
+      "disbursement": "Direct to university"
+    },
+    "mpower_finance": {
+      "additional": [
+        {
+          "id": "university_support",
+          "name": "University Support Letter",
+          "required": true,
+          "spec": "MPOWER's list of 400+ supported schools"
+        },
+        {
+          "id": "enrollment_proof",
+          "name": "Enrollment Proof",
+          "required": true,
+          "spec": "Proof of enrollment or admission"
+        },
+        {
+          "id": "visa_status",
+          "name": "Visa/Permit Status",
+          "required": true,
+          "spec": "F-1, J-1, or other valid visa status"
+        },
+        {
+          "id": "future_income",
+          "name": "Future Income Proof",
+          "required": false,
+          "spec": "Job offer letter or internship confirmation"
+        }
+      ],
+      "special": [
+        "No cosigner required",
+        "No collateral required",
+        "Supports DACA and OPT holders",
+        "Career development services"
+      ],
+      "processingTime": "10-15 days",
+      "disbursement": "Direct to university"
+    },
+    "stilt": {
+      "additional": [
+        {
+          "id": "visa_status",
+          "name": "Visa Status",
+          "required": true,
+          "spec": "Valid F-1, H-1B, OPT, or green card"
+        },
+        {
+          "id": "university_letter",
+          "name": "University Acceptance",
+          "required": true,
+          "spec": "Official letter of acceptance"
+        },
+        {
+          "id": "employment",
+          "name": "Employment Proof",
+          "required": false,
+          "spec": "OPT employment or job offer (strengthens application)"
+        }
+      ],
+      "special": [
+        "Accepts international students",
+        "H-1B and OPT holders eligible",
+        "No SSN required upfront",
+        "Fast online process"
+      ],
+      "processingTime": "7-10 days",
+      "disbursement": "Direct to university"
+    }
+  }
+}

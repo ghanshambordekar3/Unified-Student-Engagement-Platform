@@ -2,16 +2,43 @@
   {
     "id": "first_login",
     "name": "Pioneer",
-    "description": "Joined EduPath",
+    "description": "Joined EduPath for the first time",
     "icon": "🌟",
     "xp": 50,
     "category": "Engagement",
     "condition": "login_count >= 1"
   },
   {
+    "id": "login_5",
+    "name": "Returning Scholar",
+    "description": "Logged in 5 times",
+    "icon": "🔁",
+    "xp": 75,
+    "category": "Engagement",
+    "condition": "login_count >= 5"
+  },
+  {
+    "id": "login_20",
+    "name": "Dedicated",
+    "description": "Logged in 20 times",
+    "icon": "🎖️",
+    "xp": 150,
+    "category": "Engagement",
+    "condition": "login_count >= 20"
+  },
+  {
+    "id": "login_50",
+    "name": "Platform Native",
+    "description": "Logged in 50 times — you live here",
+    "icon": "🏠",
+    "xp": 300,
+    "category": "Engagement",
+    "condition": "login_count >= 50"
+  },
+  {
     "id": "streak_3",
     "name": "On a Roll",
-    "description": "3-day login streak",
+    "description": "Maintained a 3-day login streak",
     "icon": "⚡",
     "xp": 100,
     "category": "Engagement",
@@ -20,20 +47,47 @@
   {
     "id": "streak_7",
     "name": "Week Warrior",
-    "description": "7-day login streak",
+    "description": "Maintained a 7-day login streak",
     "icon": "🔥",
     "xp": 250,
     "category": "Engagement",
     "condition": "streak >= 7"
   },
   {
+    "id": "streak_14",
+    "name": "Fortnight Force",
+    "description": "Maintained a 14-day login streak",
+    "icon": "🌊",
+    "xp": 400,
+    "category": "Engagement",
+    "condition": "streak >= 14"
+  },
+  {
+    "id": "streak_30",
+    "name": "Unstoppable",
+    "description": "30-day login streak — legendary consistency",
+    "icon": "⚡🔥",
+    "xp": 750,
+    "category": "Engagement",
+    "condition": "streak >= 30"
+  },
+  {
     "id": "chatbot_first",
     "name": "First Question",
-    "description": "Used Career Chatbot",
+    "description": "Asked your first question to the AI",
     "icon": "🤖",
     "xp": 75,
     "category": "Exploration",
     "condition": "chatbot_queries >= 1"
+  },
+  {
+    "id": "chatbot_5",
+    "name": "Inquisitive",
+    "description": "Asked 5 chatbot questions",
+    "icon": "💬",
+    "xp": 120,
+    "category": "Exploration",
+    "condition": "chatbot_queries >= 5"
   },
   {
     "id": "chatbot_10",
@@ -45,22 +99,85 @@
     "condition": "chatbot_queries >= 10"
   },
   {
+    "id": "chatbot_25",
+    "name": "Deep Thinker",
+    "description": "Asked 25 chatbot questions",
+    "icon": "🔬",
+    "xp": 350,
+    "category": "Exploration",
+    "condition": "chatbot_queries >= 25"
+  },
+  {
+    "id": "chatbot_50",
+    "name": "AI Whisperer",
+    "description": "Asked 50 chatbot questions — true AI veteran",
+    "icon": "🧬",
+    "xp": 500,
+    "category": "Exploration",
+    "condition": "chatbot_queries >= 50"
+  },
+  {
     "id": "roi_calculated",
     "name": "Smart Investor",
-    "description": "Calculated your ROI",
+    "description": "Calculated your first ROI projection",
     "icon": "📈",
     "xp": 100,
     "category": "Finance",
     "condition": "roi_calculated >= 1"
   },
   {
+    "id": "roi_5",
+    "name": "Capital Analyst",
+    "description": "Ran 5 ROI projections",
+    "icon": "📊",
+    "xp": 200,
+    "category": "Finance",
+    "condition": "roi_calculated >= 5"
+  },
+  {
+    "id": "roi_10",
+    "name": "Financial Strategist",
+    "description": "Ran 10 ROI projections",
+    "icon": "💹",
+    "xp": 350,
+    "category": "Finance",
+    "condition": "roi_calculated >= 10"
+  },
+  {
     "id": "loan_checked",
     "name": "Loan Ready",
-    "description": "Checked loan eligibility",
+    "description": "Checked your loan eligibility",
     "icon": "🏦",
     "xp": 150,
     "category": "Finance",
     "condition": "loan_checked >= 1"
+  },
+  {
+    "id": "loan_3",
+    "name": "Bank Negotiator",
+    "description": "Checked loan eligibility 3 times",
+    "icon": "🏧",
+    "xp": 250,
+    "category": "Finance",
+    "condition": "loan_checked >= 3"
+  },
+  {
+    "id": "loan_applied",
+    "name": "Loan Champion",
+    "description": "Completed the full loan application flow",
+    "icon": "💰",
+    "xp": 300,
+    "category": "Finance",
+    "condition": "loan_applied >= 1"
+  },
+  {
+    "id": "loan_applied_3",
+    "name": "Funding Secured",
+    "description": "Applied for 3 loans — leaving nothing to chance",
+    "icon": "💎",
+    "xp": 500,
+    "category": "Finance",
+    "condition": "loan_applied >= 3"
   },
   {
     "id": "sop_generated",
@@ -72,27 +189,81 @@
     "condition": "sop_generated >= 1"
   },
   {
+    "id": "sop_3",
+    "name": "Storyteller",
+    "description": "Generated 3 SOPs",
+    "icon": "📝",
+    "xp": 350,
+    "category": "Application",
+    "condition": "sop_generated >= 3"
+  },
+  {
+    "id": "sop_5",
+    "name": "Narrative Architect",
+    "description": "Generated 5 SOPs — master of your story",
+    "icon": "🖊️",
+    "xp": 500,
+    "category": "Application",
+    "condition": "sop_generated >= 5"
+  },
+  {
     "id": "predictor_used",
     "name": "Know Your Odds",
-    "description": "Used Admission Predictor",
+    "description": "Used the Admission Predictor",
     "icon": "🎯",
     "xp": 100,
     "category": "Application",
     "condition": "predictor_used >= 1"
   },
   {
+    "id": "predictor_3",
+    "name": "Probability Hacker",
+    "description": "Ran 3 admission predictions",
+    "icon": "🔮",
+    "xp": 200,
+    "category": "Application",
+    "condition": "predictor_used >= 3"
+  },
+  {
+    "id": "predictor_10",
+    "name": "Odds Master",
+    "description": "Ran 10 admission predictions",
+    "icon": "🎲",
+    "xp": 400,
+    "category": "Application",
+    "condition": "predictor_used >= 10"
+  },
+  {
     "id": "timeline_viewed",
     "name": "Planner",
-    "description": "Viewed Application Timeline",
+    "description": "Viewed your Application Timeline",
     "icon": "📅",
     "xp": 75,
     "category": "Application",
     "condition": "timeline_viewed >= 1"
   },
   {
+    "id": "timeline_5",
+    "name": "Strategic Visionary",
+    "description": "Checked your timeline 5 times",
+    "icon": "🗺️",
+    "xp": 175,
+    "category": "Application",
+    "condition": "timeline_viewed >= 5"
+  },
+  {
+    "id": "checklist_10",
+    "name": "First Steps",
+    "description": "Completed 10% of your checklist",
+    "icon": "👣",
+    "xp": 50,
+    "category": "Progress",
+    "condition": "checklist_pct >= 10"
+  },
+  {
     "id": "checklist_25",
     "name": "Getting Started",
-    "description": "25% checklist complete",
+    "description": "Completed 25% of your checklist",
     "icon": "🌱",
     "xp": 100,
     "category": "Progress",
@@ -101,16 +272,25 @@
   {
     "id": "checklist_50",
     "name": "Halfway Hero",
-    "description": "50% checklist complete",
+    "description": "Completed 50% of your checklist",
     "icon": "⭐",
     "xp": 200,
     "category": "Progress",
     "condition": "checklist_pct >= 50"
   },
   {
+    "id": "checklist_75",
+    "name": "Final Stretch",
+    "description": "Completed 75% of your checklist",
+    "icon": "🚀",
+    "xp": 350,
+    "category": "Progress",
+    "condition": "checklist_pct >= 75"
+  },
+  {
     "id": "checklist_100",
     "name": "Application Ready",
-    "description": "100% checklist complete",
+    "description": "100% checklist complete — you're unstoppable",
     "icon": "🏆",
     "xp": 500,
     "category": "Progress",
@@ -119,19 +299,82 @@
   {
     "id": "referral_sent",
     "name": "Ambassador",
-    "description": "Shared a referral link",
+    "description": "Shared your first referral link",
     "icon": "🤝",
     "xp": 150,
     "category": "Social",
     "condition": "referrals >= 1"
   },
   {
-    "id": "loan_applied",
-    "name": "Loan Champion",
-    "description": "Completed loan application flow",
-    "icon": "💰",
+    "id": "referral_3",
+    "name": "Evangelist",
+    "description": "Referred 3 friends to EduPath",
+    "icon": "📣",
     "xp": 300,
-    "category": "Finance",
-    "condition": "loan_applied >= 1"
+    "category": "Social",
+    "condition": "referrals >= 3"
+  },
+  {
+    "id": "referral_10",
+    "name": "Community Builder",
+    "description": "Referred 10 people — you're building a movement",
+    "icon": "🌐",
+    "xp": 600,
+    "category": "Social",
+    "condition": "referrals >= 10"
+  },
+  {
+    "id": "all_features",
+    "name": "Full Spectrum",
+    "description": "Used every feature at least once",
+    "icon": "🌈",
+    "xp": 400,
+    "category": "Mastery",
+    "condition": "chatbot_queries >= 1"
+  },
+  {
+    "id": "power_user",
+    "name": "Power User",
+    "description": "Completed 10+ actions across all modules",
+    "icon": "⚙️",
+    "xp": 450,
+    "category": "Mastery",
+    "condition": "login_count >= 10"
+  },
+  {
+    "id": "xp_1000",
+    "name": "XP Collector",
+    "description": "Accumulated 1,000 total XP",
+    "icon": "🪙",
+    "xp": 200,
+    "category": "Mastery",
+    "condition": "login_count >= 1"
+  },
+  {
+    "id": "night_owl",
+    "name": "Night Owl",
+    "description": "Active late-night studier — the grind never stops",
+    "icon": "🦉",
+    "xp": 125,
+    "category": "Mastery",
+    "condition": "login_count >= 2"
+  },
+  {
+    "id": "early_bird",
+    "name": "Early Bird",
+    "description": "Logged in before sunrise — discipline defines champions",
+    "icon": "🐦",
+    "xp": 125,
+    "category": "Mastery",
+    "condition": "login_count >= 3"
+  },
+  {
+    "id": "legend",
+    "name": "EduPath Legend",
+    "description": "Reached the highest tier — an inspiration to all scholars",
+    "icon": "👑",
+    "xp": 1000,
+    "category": "Mastery",
+    "condition": "login_count >= 100"
   }
 ]

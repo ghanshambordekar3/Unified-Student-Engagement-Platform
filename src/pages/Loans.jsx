@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
-import { Landmark, CheckCircle, ChevronRight, Star, AlertCircle, FileCheck, Calculator, Send, Users, Home, TrendingUp, Clock, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { Landmark, CheckCircle, ChevronRight, FileCheck, Send, Users, Home, ShieldCheck } from 'lucide-react';
 import loanOffersData from '../data/loanOffers.json';
 import storage from '../utils/storage';
 import { calculateLoanEligibility } from '../utils/scoring';
 import { trackEvent } from '../utils/rewards';
-import ProgressBar from '../components/ProgressBar';
 import { GlassCard } from '../components/ui/GlassCard';
 import { Button } from '../components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
+import BankConsensusMatrix from '../components/BankConsensusMatrix';
+import EMIProjection from '../components/EMIProjection';
+import DocumentChecklist from '../components/DocumentChecklist';
 
 const LOAN_APP_KEY = 'edupath_loan_application';
 
@@ -76,11 +78,14 @@ export default function Loans() {
   const filteredOffers = loanOffersData.filter((o) => {
     if (!eligResult) return true;
     return parseFloat(eligForm.income) >= o.incomeMin;
-  });
+  }).sort((a, b) => (a.consensusRank || 999) - (b.consensusRank || 999));
 
-  const handleSelectOffer = (offer) => {
+  const handleSelectOffer = (offer, previewOnly = false) => {
     setSelectedOffer(offer);
-    setStep(3);
+    if (!previewOnly) {
+      setStep(3);
+    }
+    trackEvent('loan_checked');
   };
 
   const handleSubmitApp = () => {
@@ -95,32 +100,21 @@ export default function Loans() {
   };
 
   const loanAmount = eligForm.loanAmount
-    ? parseFloat(eligForm.loanAmount) * 100000 
+    ? parseFloat(eligForm.loanAmount) * 100000
     : 2500000;
-  const emi = selectedOffer ? calcEMI(loanAmount, parseFloat(selectedOffer.interest), tenure * 12) : 0;
+  const emi = selectedOffer ? calcEMI(loanAmount, parseFloat(selectedOffer.interest?.effectiveRate || selectedOffer.interest || 10), tenure * 12) : 0;
   const totalPayable = emi * tenure * 12;
   const totalInterest = totalPayable - loanAmount;
-
-  const docChecklist = [
-    { label: 'Passport (Self)', done: true, prefilled: true },
-    { label: `Admission Offer: ${profile.targetCourse || 'Target Program'}`, done: true, prefilled: true },
-    { label: 'Income Proof (ITR/Form 16)', done: false, prefilled: false },
-    { label: 'Bank Statement (6 Months)', done: false, prefilled: false },
-    { label: 'Academic Meta-Data', done: false, prefilled: false },
-    { label: 'Identity Node (Aadhaar/PAN)', done: false, prefilled: false },
-    { label: eligForm.coApplicant ? 'Co-Applicant Verification ✅' : 'Co-Applicant Node (Optional)', done: eligForm.coApplicant, prefilled: eligForm.coApplicant },
-    { label: eligForm.collateral ? 'Asset Documentation ✅' : 'Asset Documentation (Optional)', done: eligForm.collateral, prefilled: eligForm.collateral },
-  ];
 
   return (
     <div className="space-y-10 pb-20">
       {/* Header */}
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
-          <motion.div 
-             initial={{ opacity: 0, x: -20 }}
-             animate={{ opacity: 1, x: 0 }}
-             className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-full w-fit"
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-full w-fit"
           >
             <ShieldCheck size={14} className="text-teal-400" />
             <span className="text-[10px] font-black uppercase tracking-widest text-teal-700">Financial Logistics Alpha</span>
@@ -133,413 +127,311 @@ export default function Loans() {
       {/* Navigation Progress */}
       <GlassCard className="p-4" hoverable={false}>
         <div className="flex items-center justify-between px-2 md:px-8 relative">
-           <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-px bg-gray-100" />
-           {steps.map((s) => (
-             <motion.div 
-               key={s.id}
-               onClick={() => s.id < step && setStep(s.id)}
-               className="relative z-10 flex flex-col items-center gap-2 cursor-pointer group"
-             >
-                <div className={cn(
-                  "w-12 h-12 rounded-2xl flex items-center justify-center text-xl border transition-all duration-500",
-                  step === s.id ? "bg-teal-500 border-teal-400 text-gray-900 shadow-[0_0_20px_rgba(20,184,166,0.3)]" :
+          <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-px bg-gray-100" />
+          {steps.map((s) => (
+            <motion.div
+              key={s.id}
+              onClick={() => s.id < step && setStep(s.id)}
+              className="relative z-10 flex flex-col items-center gap-2 cursor-pointer group"
+            >
+              <div className={cn(
+                "w-12 h-12 rounded-2xl flex items-center justify-center text-xl border transition-all duration-500",
+                step === s.id ? "bg-teal-500 border-teal-400 text-gray-900 shadow-[0_0_20px_rgba(20,184,166,0.3)]" :
                   step > s.id ? "bg-teal-500/20 border-teal-500/40 text-teal-400" :
-                  "bg-gray-100 border-gray-200 text-gray-900/20 group-hover:border-gray-300"
-                )}>
-                  {step > s.id ? "✓" : s.icon}
-                </div>
-                <span className={cn(
-                  "text-[9px] font-black uppercase tracking-widest hidden md:block",
-                  step >= s.id ? "text-teal-700" : "text-gray-900/20"
-                )}>{s.title}</span>
-             </motion.div>
-           ))}
+                    "bg-gray-100 border-gray-200 text-gray-900/20 group-hover:border-gray-300"
+              )}>
+                {step > s.id ? "✓" : s.icon}
+              </div>
+              <span className={cn(
+                "text-[9px] font-black uppercase tracking-widest hidden md:block",
+                step >= s.id ? "text-teal-700" : "text-gray-900/20"
+              )}>{s.title}</span>
+            </motion.div>
+          ))}
         </div>
       </GlassCard>
 
       <AnimatePresence mode="wait">
         {/* Step 1: Eligibility */}
         {step === 1 && (
-          <motion.div 
-            key="step1" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            key="step1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
           >
             <div className="lg:col-span-7">
-               <GlassCard className="p-10 space-y-8" hoverable={false}>
-                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-primary">
-                       <Landmark size={24} />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Eligibility Diagnostics</h3>
-                      <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Financial Telemetry Submission</p>
-                    </div>
-                 </div>
+              <GlassCard className="p-10 space-y-8" hoverable={false}>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-primary">
+                    <Landmark size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Eligibility Diagnostics</h3>
+                    <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Financial Telemetry Submission</p>
+                  </div>
+                </div>
 
-                 <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Family Income (₹ Lakhs)</label>
-                          <div className="relative">
-                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">₹</span>
-                             <input type="number" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-8 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={eligForm.income} onChange={(e) => setEligForm({ ...eligForm, income: e.target.value })} placeholder="7.5" />
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Family Income (₹ Lakhs)</label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">₹</span>
+                        <input type="number" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-8 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={eligForm.income} onChange={(e) => setEligForm({ ...eligForm, income: e.target.value })} placeholder="7.5" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Required Amount (₹ Lakhs)</label>
+                      <input type="number" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={eligForm.loanAmount} onChange={(e) => setEligForm({ ...eligForm, loanAmount: e.target.value })} placeholder="25" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {[
+                      { key: 'coApplicant', label: 'Co-Applicant Node', sub: 'Reduces interest overhead by 0.5%', icon: <Users size={20} /> },
+                      { key: 'collateral', label: 'Asset Collateral', sub: 'Unlocks high-tier credit limits', icon: <Home size={20} /> },
+                    ].map(({ key, label, sub, icon }) => (
+                      <div
+                        key={key}
+                        onClick={() => setEligForm({ ...eligForm, [key]: !eligForm[key] })}
+                        className={cn(
+                          "flex items-center justify-between p-5 rounded-2xl border cursor-pointer transition-all duration-500",
+                          eligForm[key] ? "bg-teal-100 border-teal-500/40 shadow-[0_0_20px_rgba(20,184,166,0.05)]" : "bg-gray-100 border-gray-100 hover:border-gray-200"
+                        )}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-colors", eligForm[key] ? "text-teal-400 bg-teal-100" : "text-gray-500 bg-gray-100")}>
+                            {icon}
                           </div>
-                       </div>
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Required Amount (₹ Lakhs)</label>
-                          <input type="number" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={eligForm.loanAmount} onChange={(e) => setEligForm({ ...eligForm, loanAmount: e.target.value })} placeholder="25" />
-                       </div>
-                    </div>
+                          <div>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-gray-900">{label}</p>
+                            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mt-0.5">{sub}</p>
+                          </div>
+                        </div>
+                        <div className={cn("w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-500", eligForm[key] ? "bg-teal-500 border-teal-400" : "border-gray-200")}>
+                          {eligForm[key] && <CheckCircle size={14} className="text-gray-900" />}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-                    <div className="space-y-4">
-                       {[
-                         { key: 'coApplicant', label: 'Co-Applicant Node', sub: 'Reduces interest overhead by 0.5%', icon: <Users size={20} /> },
-                         { key: 'collateral', label: 'Asset Collateral', sub: 'Unlocks high-tier credit limits', icon: <Home size={20} /> },
-                       ].map(({ key, label, sub, icon }) => (
-                         <div 
-                           key={key}
-                           onClick={() => setEligForm({ ...eligForm, [key]: !eligForm[key] })}
-                           className={cn(
-                             "flex items-center justify-between p-5 rounded-2xl border cursor-pointer transition-all duration-500",
-                             eligForm[key] ? "bg-teal-100 border-teal-500/40 shadow-[0_0_20px_rgba(20,184,166,0.05)]" : "bg-gray-100 border-gray-100 hover:border-gray-200"
-                           )}
-                         >
-                            <div className="flex items-center gap-4">
-                               <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-colors", eligForm[key] ? "text-teal-400 bg-teal-100" : "text-gray-500 bg-gray-100")}>
-                                 {icon}
-                               </div>
-                               <div>
-                                 <p className="text-[11px] font-black uppercase tracking-widest text-gray-900">{label}</p>
-                                 <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mt-0.5">{sub}</p>
-                               </div>
-                            </div>
-                            <div className={cn("w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-500", eligForm[key] ? "bg-teal-500 border-teal-400" : "border-gray-200")}>
-                               {eligForm[key] && <CheckCircle size={14} className="text-gray-900" />}
-                            </div>
-                         </div>
-                       ))}
-                    </div>
-                 </div>
-
-                 <Button onClick={handleEligibility} disabled={!eligForm.income} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow>
-                    Initialize Selection Matrix
-                 </Button>
-               </GlassCard>
+                <Button onClick={handleEligibility} disabled={!eligForm.income} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow>
+                  Initialize Selection Matrix
+                </Button>
+              </GlassCard>
             </div>
 
             <div className="lg:col-span-5 h-full">
-               <GlassCard className="h-full min-h-[400px] p-10 flex flex-col justify-center items-center text-center border-teal-500/10" hoverable={false}>
-                  <div className="w-20 h-20 rounded-3xl bg-teal-100 border border-teal-500/20 flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(20,184,166,0.1)]">
-                    🏛️
-                  </div>
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Deployment Workflow</h3>
-                  <div className="w-full space-y-4 mt-8">
-                     {steps.map((s, i) => (
-                       <div key={s.id} className="flex items-center gap-4 group">
-                          <div className="w-8 h-8 rounded-xl bg-gray-100 border border-gray-100 flex items-center justify-center text-xs group-hover:border-teal-500/30 transition-colors">
-                            {s.icon}
-                          </div>
-                          <div className={cn("h-px flex-1 bg-gray-100", i === steps.length - 1 && "hidden")} />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-teal-400 transition-colors">{s.title}</span>
-                       </div>
-                     ))}
-                  </div>
-               </GlassCard>
+              <GlassCard className="h-full min-h-[400px] p-10 flex flex-col justify-center items-center text-center border-teal-500/10" hoverable={false}>
+                <div className="w-20 h-20 rounded-3xl bg-teal-100 border border-teal-500/20 flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(20,184,166,0.1)]">
+                  🏛️
+                </div>
+                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Deployment Workflow</h3>
+                <div className="w-full space-y-4 mt-8">
+                  {steps.map((s, i) => (
+                    <div key={s.id} className="flex items-center gap-4 group">
+                      <div className="w-8 h-8 rounded-xl bg-gray-100 border border-gray-100 flex items-center justify-center text-xs group-hover:border-teal-500/30 transition-colors">
+                        {s.icon}
+                      </div>
+                      <div className={cn("h-px flex-1 bg-gray-100", i === steps.length - 1 && "hidden")} />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-teal-400 transition-colors">{s.title}</span>
+                    </div>
+                  ))}
+                </div>
+              </GlassCard>
             </div>
           </motion.div>
         )}
 
         {/* Step 2: Offers */}
         {step === 2 && (
-          <motion.div 
-            key="step2" 
-            initial={{ opacity: 0, x: 20 }} 
-            animate={{ opacity: 1, x: 0 }} 
+          <motion.div
+            key="step2"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             className="space-y-8"
           >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-               <div>
-                  <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Bank Consensus Matrix</h2>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Available Capital nodes based on telemetry</p>
-               </div>
-               <div className={cn("px-4 py-2 rounded-xl border font-black text-[10px] uppercase tracking-widest", 
-                 eligResult?.tier === 'High' ? "bg-teal-100 border-teal-500/20 text-teal-400" : "bg-yellow-100 border-yellow-500/20 text-yellow-400"
-               )}>
-                 Credit Tier: {eligResult?.label || 'Verified'}
-               </div>
+              <div>
+                <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Bank Consensus Matrix</h2>
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Available Capital nodes based on telemetry</p>
+              </div>
+              <div className={cn("px-4 py-2 rounded-xl border font-black text-[10px] uppercase tracking-widest",
+                eligResult?.tier === 'High' ? "bg-teal-100 border-teal-500/20 text-teal-400" : "bg-yellow-100 border-yellow-500/20 text-yellow-400"
+              )}>
+                Credit Tier: {eligResult?.label || 'Verified'}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-               {filteredOffers.map((offer) => (
-                 <GlassCard 
-                   key={offer.id} 
-                   className={cn(
-                     "p-8 transition-all duration-500 group relative overflow-hidden",
-                     selectedOffer?.id === offer.id && "border-primary/30 bg-primary/5"
-                   )}
-                 >
-                    {offer.tag && (
-                      <div className="absolute top-4 right-4">
-                         <span className="text-[8px] font-black px-2 py-1 bg-primary/20 text-blue-300 border border-primary/30 uppercase tracking-[0.2em] rounded-md">{offer.tag}</span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-4 mb-8">
-                       <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-4xl shadow-2xl">
-                          {offer.logo}
-                       </div>
-                       <div>
-                          <h3 className="font-black text-gray-900 text-sm uppercase tracking-tight">{offer.bank}</h3>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{offer.name}</p>
-                       </div>
-                    </div>
+            <BankConsensusMatrix
+              banks={filteredOffers}
+              selectedBank={selectedOffer}
+              onSelectBank={handleSelectOffer}
+            />
 
-                    <div className="grid grid-cols-2 gap-3 mb-8">
-                       <div className="bg-gray-100 rounded-2xl p-4 border border-gray-100">
-                          <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Max Ceiling</p>
-                          <p className="text-xs font-black text-gray-900">{formatINR(offer.maxAmount)}</p>
-                       </div>
-                       <div className="bg-gray-100 rounded-2xl p-4 border border-gray-100 text-right">
-                          <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Base Rate</p>
-                          <p className="text-xs font-black text-teal-400">{offer.interest}% p.a.</p>
-                       </div>
-                    </div>
+            {selectedOffer && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-teal-50 border border-teal-200"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{selectedOffer.logo}</span>
+                  <div>
+                    <p className="text-xs font-black text-gray-900 uppercase tracking-tight">{selectedOffer.bank}</p>
+                    <p className="text-[10px] text-teal-700 font-bold uppercase tracking-widest">{selectedOffer.interest?.effectiveRate}% p.a. · Ready to Proceed</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => setStep(3)}
+                  className="h-12 px-8 uppercase tracking-[0.15em] font-black text-[11px] shrink-0"
+                  glow
+                >
+                  Proceed with {selectedOffer.shortName || selectedOffer.bank} <ChevronRight size={14} className="ml-1" />
+                </Button>
+              </motion.div>
+            )}
 
-                    <div className="space-y-2.5 mb-8">
-                       {offer.features.slice(0, 3).map((f, i) => (
-                         <div key={i} className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-tight">
-                            <CheckCircle size={10} className="text-teal-400 shrink-0" /> {f}
-                         </div>
-                       ))}
-                    </div>
-
-                    <Button onClick={() => handleSelectOffer(offer)} className="w-full text-[10px] font-black uppercase tracking-widest group-hover:scale-[1.02]" variant={selectedOffer?.id === offer.id ? "primary" : "secondary"}>
-                       Analyze Offer <ChevronRight size={14} className="ml-1" />
-                    </Button>
-                 </GlassCard>
-               ))}
-            </div>
-            
             <button onClick={() => setStep(1)} className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-gray-900 transition-colors">← Recalibrate Diagnostics</button>
           </motion.div>
         )}
 
         {/* Step 3: Planner */}
         {step === 3 && selectedOffer && (
-          <motion.div 
-            key="step3" 
-            initial={{ opacity: 0, scale: 0.98 }} 
+          <motion.div
+            key="step3"
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+            className="space-y-8"
           >
-            <div className="lg:col-span-6 space-y-6">
-               <GlassCard className="p-10 space-y-8" hoverable={false}>
-                  <div className="flex items-center gap-4">
-                     <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-4xl shadow-2xl">
-                        {selectedOffer.logo}
-                     </div>
-                     <div>
-                        <h3 className="font-black text-gray-900 uppercase tracking-tight">{selectedOffer.bank}</h3>
-                        <p className="text-[10px] text-teal-400 font-black uppercase tracking-widest">Rate: {selectedOffer.interest}% p.a.</p>
-                     </div>
-                  </div>
+            <EMIProjection
+              bank={selectedOffer}
+              loanAmount={loanAmount}
+              onTenureChange={setTenure}
+            />
 
-                  <div className="space-y-6 pt-4">
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Capital Requirement (₹)</label>
-                        <input type="text" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-black focus:outline-none text-sm transition-all opacity-50 cursor-not-allowed" value={formatINR(loanAmount)} readOnly />
-                     </div>
-
-                     <div className="space-y-4">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Repayment Horizon</label>
-                        <div className="flex gap-2 flex-wrap">
-                           {selectedOffer.tenure.map((t) => (
-                             <button
-                               key={t}
-                               onClick={() => setTenure(t)}
-                               className={cn(
-                                 "flex-1 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all duration-300",
-                                 tenure === t ? "bg-teal-500 border-teal-400 text-gray-900 shadow-lg" : "bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-200"
-                               )}
-                             >
-                               {t} Units
-                             </button>
-                           ))}
-                        </div>
-                     </div>
-
-                     <div className="p-4 bg-teal-50 border border-teal-500/10 rounded-2xl">
-                        <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest mb-1.5">Moratorium Protocol</p>
-                        <p className="text-xs font-bold text-gray-600 italic leading-relaxed">{selectedOffer.moratorium}</p>
-                     </div>
-                  </div>
-
-                  <Button onClick={() => setStep(4)} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow>
-                     Lock Configuration
-                  </Button>
-               </GlassCard>
-            </div>
-
-            <div className="lg:col-span-6 space-y-6">
-               <GlassCard className="p-10 space-y-8" hoverable={false}>
-                  <div>
-                    <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">EMI Projection</h3>
-                    <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Automated Amortization Preview</p>
-                  </div>
-
-                  <div className="bg-gradient-to-br from-teal-500/20 to-blue-500/10 rounded-3xl p-8 text-center border border-teal-500/20 shadow-inner">
-                     <p className="text-[10px] font-black text-teal-700 uppercase tracking-[0.2em] mb-2 opacity-50">Monthly Payload</p>
-                     <p className="text-5xl font-black text-gray-900 tracking-tighter">{formatINR(emi)}</p>
-                     <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-4">For {tenure} Full Cycles</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="bg-gray-100 rounded-2xl p-5 border border-gray-100">
-                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Principal</p>
-                        <p className="text-sm font-black text-gray-900">{formatINR(loanAmount)}</p>
-                     </div>
-                     <div className="bg-gray-100 rounded-2xl p-5 border border-gray-100 text-right">
-                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Interest Component</p>
-                        <p className="text-sm font-black text-red-400">{formatINR(totalInterest)}</p>
-                     </div>
-                  </div>
-
-                  <div className="space-y-4">
-                     <ProgressBar 
-                       percentage={Math.round((loanAmount / totalPayable) * 100)} 
-                       label="Capital Ratio"
-                       color="from-teal-500 to-blue-600"
-                       height="h-4"
-                     />
-                     <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-gray-500">
-                        <span>LTV: Standard</span>
-                        <span>Aggregate: {formatINR(totalPayable)}</span>
-                     </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-4 bg-yellow-50 border border-yellow-400/10 rounded-2xl">
-                     <Star size={16} className="text-yellow-400 shrink-0 mt-0.5" />
-                     <p className="text-[10px] text-gray-500 font-bold uppercase leading-relaxed">
-                       <span className="text-gray-900">Tax Arbitrage (u/s 80E):</span> 100% Interest component is tax-deductible for 8 consecutive cycles.
-                     </p>
-                  </div>
-               </GlassCard>
+            <div className="flex justify-between items-center">
+              <button onClick={() => setStep(2)} className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-gray-900 transition-colors">← Back to Matrix</button>
+              <Button onClick={() => setStep(4)} className="h-12 px-8 uppercase tracking-[0.15em] font-black text-[11px]" glow>
+                Lock Configuration <ChevronRight size={14} className="ml-1" />
+              </Button>
             </div>
           </motion.div>
         )}
 
         {/* Step 4: Apply */}
         {step === 4 && (
-          <motion.div 
-            key="step4" 
-            initial={{ opacity: 0, y: 20 }} 
+          <motion.div
+            key="step4"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
             {appSubmitted ? (
               <GlassCard className="max-w-3xl mx-auto p-12 text-center border-teal-500/30 bg-teal-50" hoverable={false}>
-                 <motion.div 
-                   initial={{ scale: 0 }} 
-                   animate={{ scale: 1 }} 
-                   transition={{ type: "spring", damping: 10 }}
-                   className="w-24 h-24 rounded-full bg-teal-500/20 border-2 border-teal-500/40 flex items-center justify-center text-5xl mx-auto mb-8 shadow-[0_0_40px_rgba(20,184,166,0.2)]"
-                 >
-                   🎉
-                 </motion.div>
-                 <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Transmission Successful</h2>
-                 <p className="text-gray-500 font-medium mt-4 max-w-lg mx-auto leading-relaxed">
-                   Your financial dossier has been transmitted to <span className="text-gray-900 font-black">{selectedOffer?.bank}</span>. Node synchronization will complete within 48 operational hours.
-                 </p>
-                 
-                 <div className="grid grid-cols-3 gap-4 max-w-md mx-auto my-10">
-                    {[
-                      { l: 'Endpoint', v: selectedOffer?.bank },
-                      { l: 'Base Rate', v: `${selectedOffer?.interest}%` },
-                      { l: 'Status', v: 'PENDING', c: 'text-yellow-400' }
-                    ].map((item, i) => (
-                      <div key={i} className="bg-gray-100 p-4 rounded-2xl border border-gray-100">
-                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">{item.l}</p>
-                         <p className={cn("text-xs font-black truncate", item.c || "text-gray-900")}>{item.v}</p>
-                      </div>
-                    ))}
-                 </div>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 10 }}
+                  className="w-24 h-24 rounded-full bg-teal-500/20 border-2 border-teal-500/40 flex items-center justify-center text-5xl mx-auto mb-8 shadow-[0_0_40px_rgba(20,184,166,0.2)]"
+                >
+                  🎉
+                </motion.div>
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Transmission Successful</h2>
+                <p className="text-gray-500 font-medium mt-4 max-w-lg mx-auto leading-relaxed">
+                  Your financial dossier has been transmitted to <span className="text-gray-900 font-black">{selectedOffer?.bank}</span>. Node synchronization will complete within 48 operational hours.
+                </p>
 
-                 <Button glow onClick={() => setStep(5)} className="px-10 h-14 font-black uppercase text-xs tracking-widest">
-                    Manage Documentary Assets <ChevronRight size={16} className="ml-2" />
-                 </Button>
+                <div className="grid grid-cols-3 gap-4 max-w-md mx-auto my-10">
+                  {[
+                    { l: 'Endpoint', v: selectedOffer?.bank },
+                    { l: 'Base Rate', v: `${selectedOffer?.interest?.effectiveRate}%` },
+                    { l: 'Status', v: 'PENDING', c: 'text-yellow-400' }
+                  ].map((item, i) => (
+                    <div key={i} className="bg-gray-100 p-4 rounded-2xl border border-gray-100">
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">{item.l}</p>
+                      <p className={cn("text-xs font-black truncate", item.c || "text-gray-900")}>{item.v}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <Button glow onClick={() => setStep(5)} className="px-10 h-14 font-black uppercase text-xs tracking-widest">
+                  Manage Documentary Assets <ChevronRight size={16} className="ml-2" />
+                </Button>
               </GlassCard>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                 <div className="lg:col-span-7">
-                    <GlassCard className="p-10 space-y-8" hoverable={false}>
-                       <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-4xl shadow-2xl">
-                             {selectedOffer?.logo}
-                          </div>
-                          <div>
-                             <h3 className="font-black text-gray-900 uppercase tracking-tight">Dossier Submission</h3>
-                             <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-0.5">Direct Channel: {selectedOffer?.bank}</p>
-                          </div>
-                       </div>
+                <div className="lg:col-span-7">
+                  <GlassCard className="p-10 space-y-8" hoverable={false}>
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-4xl shadow-2xl">
+                        {selectedOffer?.logo}
+                      </div>
+                      <div>
+                        <h3 className="font-black text-gray-900 uppercase tracking-tight">Dossier Submission</h3>
+                        <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-0.5">Direct Channel: {selectedOffer?.bank}</p>
+                      </div>
+                    </div>
 
-                       <div className="space-y-6">
-                          <div className="grid grid-cols-2 gap-4">
-                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Full Name</label>
-                                <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.fullName} onChange={(e) => setAppForm({ ...appForm, fullName: e.target.value })} placeholder="Full Identity" />
-                             </div>
-                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Contact Number</label>
-                                <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.phone} onChange={(e) => setAppForm({ ...appForm, phone: e.target.value })} placeholder="+91" />
-                             </div>
-                          </div>
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Full Name</label>
+                          <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.fullName} onChange={(e) => setAppForm({ ...appForm, fullName: e.target.value })} placeholder="Full Identity" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Contact Number</label>
+                          <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.phone} onChange={(e) => setAppForm({ ...appForm, phone: e.target.value })} placeholder="+91" />
+                        </div>
+                      </div>
 
-                          <div className="space-y-2">
-                             <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Secure Email</label>
-                             <input type="email" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.email} onChange={(e) => setAppForm({ ...appForm, email: e.target.value })} placeholder="alpha@network.com" />
-                          </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Secure Email</label>
+                        <input type="email" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.email} onChange={(e) => setAppForm({ ...appForm, email: e.target.value })} placeholder="alpha@network.com" />
+                      </div>
 
-                          <div className="grid grid-cols-2 gap-4">
-                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">University Node</label>
-                                <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.universityName} onChange={(e) => setAppForm({ ...appForm, universityName: e.target.value })} placeholder="Institution" />
-                             </div>
-                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Course Genesis</label>
-                                <input type="date" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all appearance-none" value={appForm.courseStart} onChange={(e) => setAppForm({ ...appForm, courseStart: e.target.value })} />
-                             </div>
-                          </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">University Node</label>
+                          <input className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all" value={appForm.universityName} onChange={(e) => setAppForm({ ...appForm, universityName: e.target.value })} placeholder="Institution" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Course Genesis</label>
+                          <input type="date" className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-6 py-4 text-gray-900 font-bold focus:outline-none focus:border-primary/30 text-sm transition-all appearance-none" value={appForm.courseStart} onChange={(e) => setAppForm({ ...appForm, courseStart: e.target.value })} />
+                        </div>
+                      </div>
 
-                          <Button onClick={handleSubmitApp} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow disabled={!appForm.fullName || !appForm.phone}>
-                             Initialize Transmission <Send size={16} className="ml-2" />
-                          </Button>
-                       </div>
-                    </GlassCard>
-                 </div>
+                      <Button onClick={handleSubmitApp} className="w-full h-14 uppercase tracking-[0.2em] font-black text-[12px]" glow disabled={!appForm.fullName || !appForm.phone}>
+                        Initialize Transmission <Send size={16} className="ml-2" />
+                      </Button>
+                    </div>
+                  </GlassCard>
+                </div>
 
-                 <div className="lg:col-span-5">
-                    <GlassCard className="p-8 space-y-6" hoverable={false}>
-                       <h3 className="text-xs font-black uppercase tracking-widest text-gray-900">Application Manifest</h3>
-                       <div className="space-y-2">
-                          {[
-                            { l: 'Capital Endpoint', v: selectedOffer?.bank },
-                            { l: 'Credit Volume', v: formatINR(loanAmount) },
-                            { l: 'Interest Vector', v: `${selectedOffer?.interest}% p.a.` },
-                            { l: 'Temporal Scope', v: `${tenure} Years` },
-                            { l: 'Monthly Payload', v: formatINR(emi) },
-                            { l: 'Co-Applicant Protocol', v: eligForm.coApplicant ? 'ENABLED' : 'DISABLED' },
-                          ].map((item, i) => (
-                            <div key={i} className="flex justify-between py-4 border-b border-gray-100 last:border-0">
-                               <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{item.l}</span>
-                               <span className="text-xs font-black text-gray-900 uppercase tracking-tight">{item.v}</span>
-                            </div>
-                          ))}
-                       </div>
-                    </GlassCard>
-                 </div>
+                <div className="lg:col-span-5">
+                  <GlassCard className="p-8 space-y-6" hoverable={false}>
+                    <h3 className="text-xs font-black uppercase tracking-widest text-gray-900">Application Manifest</h3>
+                    <div className="space-y-2">
+                      {[
+                        { l: 'Capital Endpoint', v: selectedOffer?.bank },
+                        { l: 'Credit Volume', v: formatINR(loanAmount) },
+                        { l: 'Interest Vector', v: `${selectedOffer?.interest?.effectiveRate}% p.a.` },
+                        { l: 'Temporal Scope', v: `${tenure} Years` },
+                        { l: 'Monthly Payload', v: formatINR(emi) },
+                        { l: 'Co-Applicant Protocol', v: eligForm.coApplicant ? 'ENABLED' : 'DISABLED' },
+                      ].map((item, i) => (
+                        <div key={i} className="flex justify-between py-4 border-b border-gray-100 last:border-0">
+                          <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{item.l}</span>
+                          <span className="text-xs font-black text-gray-900 uppercase tracking-tight">{item.v}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </GlassCard>
+                </div>
               </div>
             )}
           </motion.div>
@@ -547,77 +439,18 @@ export default function Loans() {
 
         {/* Step 5: Docs */}
         {step === 5 && (
-          <motion.div 
-            key="step5" 
-            initial={{ opacity: 0, scale: 0.95 }} 
+          <motion.div
+            key="step5"
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-10"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-               <div className="lg:col-span-8 space-y-6">
-                  <div className="flex items-center gap-4 px-4">
-                     <FileCheck size={24} className="text-teal-400" />
-                     <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Requirement Checklist</h2>
-                  </div>
-
-                  <GlassCard className="p-6 space-y-3" hoverable={false}>
-                     {docChecklist.map((doc, i) => (
-                       <div 
-                         key={i} 
-                         className={cn(
-                           "flex items-center gap-4 p-5 rounded-2xl border transition-all duration-500",
-                           doc.done ? "bg-teal-100 border-teal-500/40" : "bg-gray-100 border-gray-100"
-                         )}
-                       >
-                          <div className={cn(
-                            "w-8 h-8 rounded-xl flex items-center justify-center border-2 transition-all duration-500",
-                            doc.done ? "bg-teal-500 border-teal-400 text-gray-900" : "border-gray-200 text-gray-900/10"
-                          )}>
-                             {doc.done && <CheckCircle size={16} />}
-                          </div>
-                          <div className="flex-1">
-                             <p className={cn("text-[11px] font-black uppercase tracking-widest", doc.done ? "text-teal-700/50 line-through" : "text-gray-900")}>
-                               {doc.label}
-                             </p>
-                          </div>
-                          {doc.prefilled && (
-                            <span className="text-[8px] font-black uppercase px-2 py-1 bg-teal-500/20 text-teal-400 border border-teal-500/30 rounded-md">Automated Sync</span>
-                          )}
-                       </div>
-                     ))}
-                  </GlassCard>
-               </div>
-
-               <div className="lg:col-span-4 space-y-6">
-                  <GlassCard className="p-10 text-center space-y-8" hoverable={false}>
-                     <div>
-                        <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Aggregation Stats</h3>
-                        <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-0.5">Asset Verification Status</p>
-                     </div>
-
-                     <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-gray-100 p-6 rounded-3xl border border-gray-100">
-                           <p className="text-4xl font-black text-teal-400 mb-2">{docChecklist.filter(d => d.done).length}</p>
-                           <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Verified</p>
-                        </div>
-                        <div className="bg-gray-100 p-6 rounded-3xl border border-gray-100">
-                           <p className="text-4xl font-black text-red-500 mb-2">{docChecklist.filter(d => !d.done).length}</p>
-                           <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Missing</p>
-                        </div>
-                     </div>
-
-                     <div className="p-6 bg-teal-100 border border-teal-500/20 rounded-2xl text-left">
-                        <div className="flex items-center gap-2 mb-3">
-                           <TrendingUp size={14} className="text-teal-400" />
-                           <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">System Optimization</p>
-                        </div>
-                        <p className="text-[10px] text-gray-500 font-bold uppercase leading-relaxed">
-                          Synchronizing with <span className="text-gray-900">EduPath Cloud Drive</span> increases verification speed by 42%.
-                        </p>
-                     </div>
-                  </GlassCard>
-               </div>
+            <div className="flex items-center gap-4 px-4">
+              <FileCheck size={24} className="text-teal-400" />
+              <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Document Checklist</h2>
             </div>
+
+            <DocumentChecklist bank={selectedOffer} profile={profile} />
           </motion.div>
         )}
       </AnimatePresence>
