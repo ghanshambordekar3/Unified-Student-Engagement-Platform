@@ -43,65 +43,107 @@ function extractFiltersLocally(query) {
 
 function filterUniversities(query) {
   const f = extractFiltersLocally(query);
-  return universitiesData
+  const results = universitiesData
     .filter((u) => {
       if (f.country && !u.country.toLowerCase().includes(f.country.toLowerCase())) return false;
       if (f.course && !u.course.toLowerCase().includes(f.course.toLowerCase())) return false;
       if (f.maxFees && u.fees > f.maxFees) return false;
       return true;
-    })
-    .slice(0, 3);
+    });
+    
+  // Randomize to prevent repetition
+  return results.sort(() => Math.random() - 0.5).slice(0, 3);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // NVIDIA API streaming response
 // ─────────────────────────────────────────────────────────────────────────────
-const SUGGESTIONS = ["Tell me about Canada", "MBA programs", "Education loans"];
+const SUGGESTIONS = ["Tell me about Canada", "Germany free education", "USA vs UK fees", "IELTS requirements"];
 
-export async function getChatResponseStream(userInput, onChunk, onDone) {
+export async function getChatResponseStream(userInput, onChunk, onDone, history = []) {
   let hasFinished = false;
-  
-  const finish = (suggestions = SUGGESTIONS) => {
+  let responseData = null;
+  const q = userInput.toLowerCase();
+
+  // 1. FAST PATH: Check keyword matches (Static rules)
+  const matchedKey = Object.keys(responsesData.keywords).find(kw => q.includes(kw));
+  if (matchedKey && !q.includes('compare') && !q.includes('why') && q.length < 25) {
+    const text = responsesData.keywords[matchedKey].response;
+    const suggestions = responsesData.keywords[matchedKey].suggestions;
+    
+    const words = text.split(' ');
+    for (let i = 0; i < words.length; i++) {
+        onChunk(words[i] + (i === words.length - 1 ? '' : ' '));
+        await new Promise(r => setTimeout(r, 10));
+    }
+    
+    const unis = filterUniversities(matchedKey);
+    if (unis.length > 0) responseData = { universities: unis };
+    
+    onDone(suggestions, responseData);
+    return;
+  }
+
+  // 2. DYNAMIC PATH: NVIDIA AI with Data Grounding
+  const finish = (suggestions = SUGGESTIONS, data = responseData) => {
     if (!hasFinished) {
       hasFinished = true;
-      onDone(suggestions);
+      onDone(suggestions, data);
     }
   };
 
-  const q = userInput.toLowerCase();
-  
-  // 1. Check keyword matches in responsesData ONLY if we want prioritized static responses
-  // For now, we prefer the dynamic streaming AI but define matchedKey for future use if needed.
-  const matchedKey = Object.keys(responsesData.keywords).find(kw => q.includes(kw));
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
 
   try {
+    const filteredUnis = filterUniversities(userInput);
+    const dataContext = filteredUnis.length > 0 
+      ? `\nRelevant Universities Found: ${JSON.stringify(filteredUnis.map(u => ({name: u.name, country: u.country, fees: u.fees, rank: u.ranking})))}`
+      : "";
+
+    if (filteredUnis.length > 0 && !q.match(/^(hi|hello|hey|thanks)(\s|$)/)) {
+       responseData = { universities: filteredUnis };
+    }
+
+    const recentHistory = (history || []).slice(-4).map(m => `${m.isBot ? 'Assistant' : 'User'}: ${m.text}`).join('\n');
+
+    const prompt = `You are EduPath Career AI, a world-class study abroad consultant.
+
+GLOBAL KNOWLEDGE BASE:
+- USA: Fees $40k-$75k/yr. Ivy Leagues (Harvard, MIT) are elite. F1 Visa. STEM OPT is 3 yrs.
+- UK: Fees $25k-$45k/yr. Masters are 1 yr. Tier 4 Visa. Graduate Route (2yr PSW).
+- CANADA: Fees $20k-$35k/yr. Study Permit. PGWP leads to PR. University of Toronto/Waterloo are top.
+- GERMANY: Public unis are Free/Low-fee ($0-$5k). Masters 2yrs. Blocked Account (~€11k) needed.
+- AUSTRALIA: Fees $30k-$50k/yr. Masters 2yrs. Subclass 500 visa. High quality of life.
+
+GUIDELINES:
+1. STRUCTURE: Use ### Headers for sections. Use Bullet points for comparison.
+2. COMPLETENESS: Answer ALL parts of the user's question.
+3. DATA: Always prioritize the provided 'Relevant Universities' data if it exists.
+4. STYLE: Professional, insightful, and encouraging. Use Markdown.
+5. NO REPETITION: Do not repeat sentences from history.
+
+${dataContext}
+
+Conversation History:
+${recentHistory}
+
+User Query: ${userInput}`;
+
     const response = await fetch('/api/nvidia/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
-        model: 'mistralai/mixtral-8x7b-instruct-v0.1',
-        messages: [{ role: 'user', content: userInput }],
-        stream: true
+        model: 'meta/llama-3.1-8b-instruct',
+        messages: [{ role: 'user', content: prompt }],
+        stream: true,
+        max_tokens: 512
       })
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('NVIDIA API Error:', response.status, errorText);
-      
-      // Fallback to local filtering if API is down
-      const unis = filterUniversities(userInput);
-      if (unis.length > 0) {
-        onChunk(`I found some great universities matching your query:\n\n${unis
-          .map(u => `• **${u.name}** in ${u.country} offers ${u.course} for approx. **$${u.fees.toLocaleString()}/year**.`)
-          .join('\n')}\n\nWould you like to know more about the scholarship options or visa process for these countries?`);
-        finish(["Visa process", "Scholarships", "Loan options"]);
-      } else {
-        onChunk(responsesData.default);
-        finish(["Canada options", "UK programs", "MBA guide"]);
-      }
-      return;
-    }
+    clearTimeout(timeoutId);
+    if (!response.ok) throw new Error(`Status: ${response.status}`);
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -117,13 +159,13 @@ export async function getChatResponseStream(userInput, onChunk, onDone) {
 
       for (const line of lines) {
         if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') {
+          const dataContent = line.slice(6);
+          if (dataContent === '[DONE]') {
             finish();
             return;
           }
           try {
-            const json = JSON.parse(data);
+            const json = JSON.parse(dataContent);
             const content = json.choices?.[0]?.delta?.content;
             if (content) onChunk(content);
           } catch (e) {}
@@ -133,8 +175,26 @@ export async function getChatResponseStream(userInput, onChunk, onDone) {
     
     finish();
   } catch (error) {
-    console.error('Chat API error:', error);
-    onChunk("Sorry, I encountered an error. Please check your API configuration and try again.");
-    finish([]);
+    clearTimeout(timeoutId);
+    console.error('Chat error:', error.name === 'AbortError' ? 'Timeout' : error);
+    
+    if (error.name === 'AbortError') {
+      onChunk("Taking a bit longer than expected... here's some info based on my database:");
+    } else {
+      onChunk("Sorry, I encountered an occasional connection issue. Let me help you with my local database:");
+    }
+    
+    const unis = filterUniversities(userInput);
+    if (unis.length > 0) {
+        finish(["Visa process", "Scholarships"], { universities: unis });
+    } else {
+        onChunk(`\n${responsesData.default}`);
+        finish(["Canada options", "UK programs"]);
+    }
   }
 }
+
+export const formatTime = (isoString) => {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};

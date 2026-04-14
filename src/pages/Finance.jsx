@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Calculator, Landmark, TrendingUp, AlertCircle, CheckCircle, Globe, DollarSign, Wallet, ArrowUpRight, Percent, Calendar } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Calculator, Landmark, TrendingUp, AlertCircle, CheckCircle, Globe, DollarSign, Wallet, ArrowUpRight, Percent, Calendar, ChevronRight, Sparkles } from 'lucide-react';
 import { calculateROI, calculateLoanEligibility } from '../utils/scoring';
 import storage from '../utils/storage';
 import { trackEvent } from '../utils/rewards';
@@ -11,6 +11,69 @@ import { cn } from '../utils/cn';
 
 const courses = ['Computer Science', 'MBA', 'Data Science', 'Engineering'];
 const countries = ['Canada', 'UK', 'Australia', 'Germany', 'USA'];
+
+function CustomDropdown({ label, options, value, onChange, placeholder }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="space-y-2 relative" ref={dropdownRef}>
+      <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">
+        {label}
+      </label>
+      
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-gray-50 border border-gray-200 text-gray-900 font-bold rounded-2xl px-4 py-3.5 flex items-center justify-between hover:border-blue-500/50 transition-all duration-300 shadow-sm text-sm"
+      >
+        <span className="truncate">{value || placeholder}</span>
+        <motion.div animate={{ rotate: isOpen ? 180 : 0 }}>
+          <ChevronRight size={14} className="text-gray-400 rotate-90" />
+        </motion.div>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            className="absolute z-[100] top-full left-0 right-0 bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden mt-1 max-h-60 overflow-y-auto"
+          >
+            <div className="py-2 bg-white">
+              {options.map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => {
+                    onChange(opt);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full px-4 py-3 text-left text-sm font-bold transition-all ${
+                    value === opt 
+                      ? 'bg-blue-50 text-blue-600' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 function VerdictBadge({ verdict }) {
   const styles = {
@@ -41,7 +104,7 @@ export default function Finance() {
 
   // Loan State
   const [loanForm, setLoanForm] = useState({
-    income: '',
+    income: '12',
     coApplicant: false,
     collateral: false,
   });
@@ -144,37 +207,33 @@ export default function Finance() {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Specialization Path</label>
-                    <select
-                      className="w-full glass bg-gray-100 border border-gray-100 rounded-xl px-4 py-3.5 text-sm text-gray-900 outline-none focus:border-blue-500/30 transition-all font-medium appearance-none"
+                  <div className="relative z-50">
+                    <CustomDropdown
+                      label="Specialization Path"
+                      placeholder="Select Sector"
+                      options={courses}
                       value={roiForm.course}
-                      onChange={(e) => setRoiForm({ ...roiForm, course: e.target.value })}
-                    >
-                      <option value="" className="bg-gray-100">Select Sector</option>
-                      {courses.map((c) => <option key={c} value={c} className="bg-gray-100">{c}</option>)}
-                    </select>
+                      onChange={(val) => setRoiForm({ ...roiForm, course: val })}
+                    />
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Geo-Target Node</label>
-                    <select
-                      className="w-full glass bg-gray-100 border border-gray-100 rounded-xl px-4 py-3.5 text-sm text-gray-900 outline-none focus:border-blue-500/30 transition-all font-medium appearance-none"
+                  <div className="relative z-40">
+                    <CustomDropdown
+                      label="Geo-Target Node"
+                      placeholder="Select Region"
+                      options={countries}
                       value={roiForm.country}
-                      onChange={(e) => setRoiForm({ ...roiForm, country: e.target.value })}
-                    >
-                      <option value="" className="bg-gray-100">Select Region</option>
-                      {countries.map((c) => <option key={c} value={c} className="bg-gray-100">{c}</option>)}
-                    </select>
+                      onChange={(val) => setRoiForm({ ...roiForm, country: val })}
+                    />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 relative z-30 mb-8">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Capital Outlay (USD)</label>
                     <div className="relative group">
                       <DollarSign size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                       <input
                         type="number"
-                        className="w-full glass bg-gray-100 border border-gray-100 rounded-xl pl-12 pr-4 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500/30 transition-all font-medium"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500/50 transition-all font-black shadow-sm"
                         placeholder="e.g. 45000"
                         value={roiForm.cost}
                         onChange={(e) => setRoiForm({ ...roiForm, cost: e.target.value })}
@@ -183,14 +242,19 @@ export default function Finance() {
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleROI}
-                  disabled={!roiForm.course || !roiForm.country || !roiForm.cost}
-                  className="w-full py-4"
-                >
-                  <ArrowUpRight size={18} className="mr-2" />
-                  Generate ROI Projection
-                </Button>
+                <div className="relative z-10">
+                  <Button
+                    onClick={handleROI}
+                    disabled={!roiForm.course || !roiForm.country || !roiForm.cost}
+                    className="w-full h-16 uppercase tracking-[0.2em] font-black text-[13px] shadow-xl group border-2 border-transparent hover:border-blue-500/30"
+                    glow
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <TrendingUp size={20} className="group-hover:translate-y-[-2px] transition-transform" />
+                      <span>Generate ROI Projection</span>
+                    </div>
+                  </Button>
+                </div>
               </GlassCard>
 
               {/* Result Preview */}
@@ -364,14 +428,20 @@ export default function Finance() {
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleLoan}
-                  disabled={!loanForm.income}
-                  className="w-full py-4 variant-teal"
-                >
-                  <Percent size={18} className="mr-2" />
-                  Validate Credit Eligibility
-                </Button>
+                <div className="relative z-10">
+                  <Button
+                    onClick={handleLoan}
+                    disabled={!loanForm.income}
+                    variant="teal"
+                    className="w-full h-16 uppercase tracking-[0.2em] font-black text-[13px] shadow-xl group border-2 border-transparent hover:border-teal-500/30"
+                    glow
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <Percent size={20} className="group-hover:rotate-12 transition-transform" />
+                      <span>Validate Credit Eligibility</span>
+                    </div>
+                  </Button>
+                </div>
               </GlassCard>
 
               {/* Loan Preview */}
